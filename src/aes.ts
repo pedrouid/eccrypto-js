@@ -19,6 +19,6 @@ export async function aesCbcDecrypt(
 ): Promise<Buffer> {
   const aesCbc = new aesJs.ModeOfOperation.cbc(key, iv);
   const encryptedBytes = aesCbc.decrypt(data);
-  const result = pkcs7.unpad(Buffer.from(encryptedBytes));
+  const result: Buffer = pkcs7.unpad(Buffer.from(encryptedBytes));
   return result;
 }
