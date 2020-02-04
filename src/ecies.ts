@@ -1,4 +1,4 @@
-import { aesCbcEncrypt, aesCbcDecrypt } from './aes';
+import { getAes } from './aes';
 import { derive } from './ecdh';
 import { getPublic } from './ecdsa';
 import { randomBytes } from './random';
@@ -26,6 +26,7 @@ export async function encrypt(
   iv = opts?.iv || randomBytes(16);
   let encryptionKey = hash.slice(0, 32);
   macKey = Buffer.from(hash.slice(32));
+  const aesCbcEncrypt = getAes('encrypt');
   const data = await aesCbcEncrypt(iv, Buffer.from(encryptionKey), msg);
 
   ciphertext = data;
@@ -60,6 +61,7 @@ export async function decrypt(privateKey: Buffer, opts: Encrypted) {
   );
 
   assert(macGood, 'Bad MAC');
+  const aesCbcDecrypt = getAes('decrypt');
   const msg = await aesCbcDecrypt(opts.iv, encryptionKey, opts.ciphertext);
 
   return Buffer.from(new Uint8Array(msg));
