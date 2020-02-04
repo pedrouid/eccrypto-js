@@ -68,6 +68,9 @@ describe('ECIES', () => {
     const decrypted = await eccryptoJS.decrypt(keyPair.privateKey, encrypted);
     expect(decrypted).toBeTruthy();
 
+    console.log('str', str);
+    console.log('decrypted.toString()', decrypted.toString());
+
     const isMatch = decrypted.toString() === str;
     expect(isMatch).toBeTruthy();
   });
