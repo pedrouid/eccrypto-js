@@ -1,6 +1,6 @@
-# eccrypto-js
+# eccrypto-js [![npm version](https://badge.fury.io/js/eccrypto-js.svg)](https://badge.fury.io/js/eccrypto-js)
 
-[![npm version](https://badge.fury.io/js/eccrypto-js.svg)](https://badge.fury.io/js/eccrypto-js) Pure JavaScript Elliptic curve cryptography library
+Pure JavaScript Elliptic curve cryptography library
 
 ## Description
 
