@@ -57,8 +57,18 @@ describe('ECIES', () => {
     keyPair = testGenerateKeyPair();
   });
 
-  it.skip('should encrypt successfully', async () => {
-    const encrypted = await testEncrypt(keyPair.publicKey);
+  it('should encrypt successfully', async () => {
+    const { encrypted } = await testEncrypt(keyPair.publicKey);
     expect(encrypted).toBeTruthy();
+  });
+
+  it('should decrypt successfully', async () => {
+    const { str, encrypted } = await testEncrypt(keyPair.publicKey);
+
+    const decrypted = await eccryptoJS.decrypt(keyPair.privateKey, encrypted);
+    expect(decrypted).toBeTruthy();
+
+    const isMatch = decrypted.toString() === str;
+    expect(isMatch).toBeTruthy();
   });
 });

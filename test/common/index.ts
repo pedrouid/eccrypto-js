@@ -32,7 +32,7 @@ export async function testSharedKeys() {
 
 export async function testEncrypt(publicKey: Buffer) {
   const str = 'message to sign';
-  const msg = Buffer.from(str);
+  const msg = eccryptoJS.utf8ToBuffer(str);
   const encrypted = await eccryptoJS.encrypt(publicKey, msg);
-  return encrypted;
+  return { str, msg, encrypted };
 }

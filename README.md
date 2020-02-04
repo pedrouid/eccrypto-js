@@ -19,7 +19,7 @@ const keyPair = eccryptoJS.generateKeyPair();
 
 const str = 'message to sign';
 const hash = await eccryptoJS.sha256(str);
-const msg = Buffer.from(hash, 'hex');
+const msg = eccryptoJS.hexToBuffer(hash);
 
 const sig = await eccryptoJS.sign(keyPair.privateKey, msg);
 
@@ -46,7 +46,7 @@ const sharedKey2 = await eccryptoJS.derive(
   keyPairA.publicKey
 );
 
-// sharedKey1 === sharedKey2
+// sharedKey1.toString('hex') === sharedKey2.toString('hex')
 ```
 
 ### ECIES
@@ -57,14 +57,13 @@ import * as eccryptoJS from 'eccrypto-js';
 const keyPair = eccryptoJS.generateKeyPair();
 
 const str = 'message to sign';
-
-const msg = Buffer.from(str);
+const msg = eccryptoJS.utf8ToBuffer(str);
 
 const encrypted = await eccryptoJS.encrypt(keyPairB.publicKey, msg);
 
 const decrypted = await eccryptoJS.decrypt(keyPairB.privateKey, encrypted);
 
-// decrypted === msg
+// decrypted.toString() === str
 ```
 
 ## License
