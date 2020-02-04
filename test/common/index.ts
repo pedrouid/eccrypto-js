@@ -10,7 +10,7 @@ export function testGenerateKeyPair() {
 export async function testSign(privateKey: Buffer) {
   const str = 'message to sign';
   const hash = await eccryptoJS.sha256(str);
-  const msg = Buffer.from(hash);
+  const msg = Buffer.from(hash, 'hex');
   const sig = await eccryptoJS.sign(privateKey, msg);
   return { str, msg, sig };
 }
@@ -28,4 +28,11 @@ export async function testSharedKeys() {
     keyPairA.publicKey
   );
   return { sharedKey1, sharedKey2 };
+}
+
+export async function testEncrypt(publicKey: Buffer) {
+  const str = 'message to sign';
+  const msg = Buffer.from(str);
+  const encrypted = await eccryptoJS.encrypt(publicKey, msg);
+  return encrypted;
 }

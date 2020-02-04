@@ -1,5 +1,10 @@
 import * as eccryptoJS from '../src';
-import { testGenerateKeyPair, testSign, testSharedKeys } from './common';
+import {
+  testGenerateKeyPair,
+  testSign,
+  testSharedKeys,
+  testEncrypt,
+} from './common';
 
 describe('ECDSA', () => {
   let keyPair: eccryptoJS.KeyPair;
@@ -42,5 +47,18 @@ describe('ECDH', () => {
   it('derived shared keys should match', () => {
     const isMatch = sharedKey1.toString('hex') === sharedKey2.toString('hex');
     expect(isMatch).toBeTruthy();
+  });
+});
+
+describe('ECIES', () => {
+  let keyPair: eccryptoJS.KeyPair;
+
+  beforeEach(() => {
+    keyPair = testGenerateKeyPair();
+  });
+
+  it.skip('should encrypt successfully', async () => {
+    const encrypted = await testEncrypt(keyPair.publicKey);
+    expect(encrypted).toBeTruthy();
   });
 });

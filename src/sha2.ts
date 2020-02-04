@@ -1,5 +1,5 @@
-import { toUtf8Bytes } from '@ethersproject/strings';
 import { arrayify } from '@ethersproject/bytes';
+import { toUtf8Bytes } from '@ethersproject/strings';
 import {
   sha256 as _sha256,
   sha512 as _sha512,
@@ -7,38 +7,39 @@ import {
   SupportedAlgorithm,
 } from '@ethersproject/sha2';
 
+import { removeTrailing0x } from './util';
 import { equalConstTime } from './validators';
 
-export function sha256(msg: string): Promise<Uint8Array> {
-  return new Promise(async resolve => {
-    const bytes = toUtf8Bytes(msg);
-    const hash = _sha256(bytes);
-    resolve(arrayify(hash));
-  });
+export async function sha256(msg: string): Promise<string> {
+  const bytes = toUtf8Bytes(msg);
+  const hash = _sha256(bytes);
+  return removeTrailing0x(hash);
 }
 
-export function sha512(msg: string): Promise<Uint8Array> {
-  return new Promise(async resolve => {
-    const bytes = toUtf8Bytes(msg);
-    const hash = _sha512(bytes);
-    resolve(arrayify(hash));
-  });
+export async function sha512(msg: string): Promise<string> {
+  const bytes = toUtf8Bytes(msg);
+  const hash = _sha512(bytes);
+  return removeTrailing0x(hash);
 }
 
-export function hmacSha256Sign(key: Buffer, msg: Buffer): Promise<Buffer> {
-  return new Promise(async resolve => {
-    const result = computeHmac(SupportedAlgorithm.sha256, key, msg);
-    resolve(Buffer.from(result));
-  });
+export async function hashSharedKey(sharedKey: Buffer): Promise<Uint8Array> {
+  const hash = _sha512(sharedKey);
+  return arrayify(hash);
 }
 
-export function hmacSha256Verify(
+export async function hmacSha256Sign(
+  key: Buffer,
+  msg: Buffer
+): Promise<Buffer> {
+  const result = computeHmac(SupportedAlgorithm.sha256, key, msg);
+  return Buffer.from(result);
+}
+
+export async function hmacSha256Verify(
   key: Buffer,
   msg: Buffer,
   sig: Buffer
 ): Promise<boolean> {
-  return new Promise(async resolve => {
-    const expectedSig = await hmacSha256Sign(key, msg);
-    resolve(equalConstTime(expectedSig, sig));
-  });
+  const expectedSig = await hmacSha256Sign(key, msg);
+  return equalConstTime(expectedSig, sig);
 }

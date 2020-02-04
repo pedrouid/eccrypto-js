@@ -59,38 +59,33 @@ export function generateKeyPair(): KeyPair {
   return { privateKey, publicKey };
 }
 
-export function sign(privateKey: Buffer, msg: Buffer): Promise<Buffer> {
-  return new Promise(async resolve => {
-    assert(privateKey.length === 32, 'Bad private key');
-    assert(isValidPrivateKey(privateKey), 'Bad private key');
-    assert(msg.length > 0, 'Message should not be empty');
-    assert(msg.length <= 32, 'Message is too long');
-    resolve(
-      Buffer.from(
-        secp256k1curve.sign(msg, privateKey, { canonical: true }).toDER()
-      )
-    );
-  });
+export async function sign(privateKey: Buffer, msg: Buffer): Promise<Buffer> {
+  assert(privateKey.length === 32, 'Bad private key');
+  assert(isValidPrivateKey(privateKey), 'Bad private key');
+  assert(msg.length > 0, 'Message should not be empty');
+  assert(msg.length <= 32, 'Message is too long');
+  return Buffer.from(
+    secp256k1curve.sign(msg, privateKey, { canonical: true }).toDER()
+  );
 }
 
-export function verify(publicKey: Buffer, msg: Buffer, sig: Buffer) {
-  return new Promise(function(resolve, reject) {
-    assert(
-      publicKey.length === 65 || publicKey.length === 33,
-      'Bad public key'
-    );
-    if (publicKey.length === 65) {
-      assert(publicKey[0] === 4, 'Bad public key');
-    }
-    if (publicKey.length === 33) {
-      assert(publicKey[0] === 2 || publicKey[0] === 3, 'Bad public key');
-    }
-    assert(msg.length > 0, 'Message should not be empty');
-    assert(msg.length <= 32, 'Message is too long');
-    if (secp256k1curve.verify(msg, sig, publicKey)) {
-      resolve(null);
-    } else {
-      reject(new Error('Bad signature'));
-    }
-  });
+export async function verify(
+  publicKey: Buffer,
+  msg: Buffer,
+  sig: Buffer
+): Promise<null> {
+  assert(publicKey.length === 65 || publicKey.length === 33, 'Bad public key');
+  if (publicKey.length === 65) {
+    assert(publicKey[0] === 4, 'Bad public key');
+  }
+  if (publicKey.length === 33) {
+    assert(publicKey[0] === 2 || publicKey[0] === 3, 'Bad public key');
+  }
+  assert(msg.length > 0, 'Message should not be empty');
+  assert(msg.length <= 32, 'Message is too long');
+  if (secp256k1curve.verify(msg, sig, publicKey)) {
+    return null;
+  } else {
+    throw new Error('Bad signature');
+  }
 }

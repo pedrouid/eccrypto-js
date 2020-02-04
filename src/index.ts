@@ -5,4 +5,5 @@ export * from './ecies';
 export * from './random';
 export * from './sha2';
 export * from './types';
+export * from './util';
 export * from './validators';
