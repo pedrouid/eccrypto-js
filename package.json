@@ -1,11 +1,35 @@
 {
-  "version": "0.2.0",
+  "name": "eccrypto-js",
+  "description": "Pure JavaScript Elliptic curve cryptography library",
+  "version": "0.2.1",
+  "author": "Pedro Gomes <github.com/pedrouid>",
   "license": "MIT",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "keywords": [
+    "ecc",
+    "ecdsa",
+    "ecdh",
+    "ecies",
+    "crypto",
+    "cryptography",
+    "secp256k1",
+    "K-256",
+    "elliptic",
+    "curve"
+  ],
   "files": [
     "dist"
   ],
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "module": "dist/eccrypto-js.esm.js",
+  "homepage": "https://github.com/pedrouid/eccrypto-js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pedrouid/eccrypto-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pedrouid/eccrypto-js/issues"
+  },
   "scripts": {
     "start": "tsdx watch",
     "build": "tsdx build",
@@ -13,22 +37,14 @@
     "lint": "tsdx lint",
     "prepare": "tsdx build"
   },
-  "peerDependencies": {},
-  "husky": {
-    "hooks": {
-      "pre-commit": "tsdx lint"
-    }
+  "dependencies": {
+    "@ethersproject/bytes": "^5.0.0-beta.136",
+    "@ethersproject/random": "^5.0.0-beta.133",
+    "@ethersproject/sha2": "^5.0.0-beta.134",
+    "@ethersproject/strings": "^5.0.0-beta.136",
+    "aes-js": "^3.1.2",
+    "elliptic": "^6.5.2"
   },
-  "prettier": {
-    "printWidth": 80,
-    "semi": true,
-    "singleQuote": true,
-    "trailingComma": "es5"
-  },
-  "name": "eccrypto-js",
-  "description": "Pure JavaScript Elliptic curve cryptography library",
-  "author": "Pedro Gomes",
-  "module": "dist/eccrypto-js.esm.js",
   "devDependencies": {
     "@types/aes-js": "^3.1.0",
     "@types/elliptic": "^6.4.12",
@@ -39,12 +55,15 @@
     "tslib": "^1.10.0",
     "typescript": "^3.7.5"
   },
-  "dependencies": {
-    "@ethersproject/bytes": "^5.0.0-beta.136",
-    "@ethersproject/random": "^5.0.0-beta.133",
-    "@ethersproject/sha2": "^5.0.0-beta.134",
-    "@ethersproject/strings": "^5.0.0-beta.136",
-    "aes-js": "^3.1.2",
-    "elliptic": "^6.5.2"
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint"
+    }
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
   }
 }
