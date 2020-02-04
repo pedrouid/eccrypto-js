@@ -1,4 +1,6 @@
 import aesJs from 'aes-js';
+// @ts-ignore
+import pkcs7 from 'pkcs7';
 
 export async function aesCbcEncrypt(
   iv: Buffer,
@@ -6,7 +8,7 @@ export async function aesCbcEncrypt(
   data: Buffer
 ): Promise<Buffer> {
   const aesCbc = new aesJs.ModeOfOperation.cbc(key, iv);
-  const encryptedBytes = aesCbc.encrypt(data);
+  const encryptedBytes = aesCbc.encrypt(pkcs7.pad(data));
   return Buffer.from(encryptedBytes);
 }
 
