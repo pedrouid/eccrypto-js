@@ -133,7 +133,7 @@ describe('eccrypto', () => {
     expect(isMatch4).toBeTruthy();
   });
 
-  it('should decrypt and match input from eccrypto-js', async () => {
+  it.skip('should decrypt and match input from eccrypto-js', async () => {
     const { str, encrypted } = await testEncrypt(keyPair.publicKey);
     const decrypted = await eccrypto.decrypt(keyPair.privateKey, encrypted);
 
