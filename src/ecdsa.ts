@@ -24,14 +24,19 @@ export function generatePrivate() {
   return privateKey;
 }
 
-export function getPublic(privateKey: Buffer) {
-  // This function has sync API so we throw an error immediately.
+export function checkPrivateKey(privateKey: Buffer) {
   assert(privateKey.length === 32, 'Bad private key');
   assert(isValidPrivateKey(privateKey), 'Bad private key');
+}
+
+export function getPublic(privateKey: Buffer) {
+  // This function has sync API so we throw an error immediately.
+  checkPrivateKey(privateKey);
   // XXX(Kagami): `elliptic.utils.encode` returns array for every
   // encoding except `hex`.
   return Buffer.from(
-    secp256k1curve.keyFromPrivate(privateKey).getPublic('hex')
+    secp256k1curve.keyFromPrivate(privateKey).getPublic('hex'),
+    'hex'
   );
 }
 
@@ -39,12 +44,12 @@ export function getPublic(privateKey: Buffer) {
  * Get compressed version of public key.
  */
 export function getPublicCompressed(privateKey: Buffer) {
-  assert(privateKey.length === 32, 'Bad private key');
-  assert(isValidPrivateKey(privateKey), 'Bad private key');
+  checkPrivateKey(privateKey);
   // See https://github.com/wanderer/secp256k1-node/issues/46
   const compressed = true;
   return Buffer.from(
-    secp256k1curve.keyFromPrivate(privateKey).getPublic(compressed, 'hex')
+    secp256k1curve.keyFromPrivate(privateKey).getPublic(compressed, 'hex'),
+    'hex'
   );
 }
 
@@ -54,7 +59,7 @@ export function generateKeyPair(): KeyPair {
   return { privateKey, publicKey };
 }
 
-export function sign(privateKey: Buffer, msg: Buffer) {
+export function sign(privateKey: Buffer, msg: Buffer): Promise<Buffer> {
   return new Promise(async resolve => {
     assert(privateKey.length === 32, 'Bad private key');
     assert(isValidPrivateKey(privateKey), 'Bad private key');
