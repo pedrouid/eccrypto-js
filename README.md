@@ -12,77 +12,59 @@ This library is a port from [eccrypto](https://github.com/bitchan/eccrypto) usin
 
 ### ECDSA
 
-```js
-var crypto = require('crypto');
-var eccrypto = require('eccrypto');
+```typescript
+import * as eccryptoJS from 'eccrypto-js';
 
-// A new random 32-byte private key.
-var privateKey = eccrypto.generatePrivate();
-// Corresponding uncompressed (65-byte) public key.
-var publicKey = eccrypto.getPublic(privateKey);
+const keyPair = eccryptoJS.generateKeyPair();
 
-var str = 'message to sign';
-// Always hash you message to sign!
-var msg = crypto
-  .createHash('sha256')
-  .update(str)
-  .digest();
+const str = 'message to sign';
 
-eccrypto.sign(privateKey, msg).then(function(sig) {
-  console.log('Signature in DER format:', sig);
-  eccrypto
-    .verify(publicKey, msg, sig)
-    .then(function() {
-      console.log('Signature is OK');
-    })
-    .catch(function() {
-      console.log('Signature is BAD');
-    });
-});
+const msg = eccryptoJS.sha256(str);
+
+const sig = await eccryptoJS.sign(keyPair.privateKey, msg);
+
+await eccryptoJS.verify(keyPair.publicKey, msg, sig);
+
+// verify will throw if signature is BAD
 ```
 
 ### ECDH
 
-```js
-var eccrypto = require('eccrypto');
+```typescript
+import * as eccryptoJS from 'eccrypto-js';
 
-var privateKeyA = eccrypto.generatePrivate();
-var publicKeyA = eccrypto.getPublic(privateKeyA);
-var privateKeyB = eccrypto.generatePrivate();
-var publicKeyB = eccrypto.getPublic(privateKeyB);
+const keyPairA = eccryptoJS.generateKeyPair();
+const keyPairB = eccryptoJS.generateKeyPair();
 
-eccrypto.derive(privateKeyA, publicKeyB).then(function(sharedKey1) {
-  eccrypto.derive(privateKeyB, publicKeyA).then(function(sharedKey2) {
-    console.log('Both shared keys are equal:', sharedKey1, sharedKey2);
-  });
-});
+const sharedKey1 = await eccryptoJS.derive(
+  keyPairA.privateKey,
+  keyPairB.publicKey
+);
+
+const sharedKey2 = await eccryptoJS.derive(
+  keyPairB.privateKey,
+  keyPairA.publicKey
+);
+
+// sharedKey1 === sharedKey2
 ```
 
 ### ECIES
 
-```js
-var eccrypto = require('eccrypto');
+```typescript
+import * as eccryptoJS from 'eccrypto-js';
 
-var privateKeyA = eccrypto.generatePrivate();
-var publicKeyA = eccrypto.getPublic(privateKeyA);
-var privateKeyB = eccrypto.generatePrivate();
-var publicKeyB = eccrypto.getPublic(privateKeyB);
+const keyPair = eccryptoJS.generateKeyPair();
 
-// Encrypting the message for B.
-eccrypto.encrypt(publicKeyB, Buffer.from('msg to b')).then(function(encrypted) {
-  // B decrypting the message.
-  eccrypto.decrypt(privateKeyB, encrypted).then(function(plaintext) {
-    console.log('Message to part B:', plaintext.toString());
-  });
-});
+const str = 'message to sign';
 
-// Encrypting the message for A.
-eccrypto.encrypt(publicKeyA, Buffer.from('msg to a')).then(function(encrypted) {
-  // A decrypting the message.
-  eccrypto.decrypt(privateKeyA, encrypted).then(function(plaintext) {
-    console.log('Message to part A:', plaintext.toString());
-  });
-});
+const msg = Buffer.from(str);
+
+const encrypted = await eccryptoJS.encrypt(keyPairB.publicKey, msg);
+
+const decrypted = await eccryptoJS.decrypt(keyPairB.privateKey, encrypted);
+
+// decrypted === msg
 ```
 
 ## License
