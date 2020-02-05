@@ -1,7 +1,14 @@
 // @ts-ignore
 import pkcs7 from 'pkcs7';
 import aesJs from 'aes-js';
-import { computeHmac, SupportedAlgorithm } from '@ethersproject/sha2';
+
+import { arrayify, isHexString } from '@ethersproject/bytes';
+import {
+  sha256,
+  sha512,
+  computeHmac,
+  SupportedAlgorithm,
+} from '@ethersproject/sha2';
 
 export async function fallbackCreateHmac(
   key: Buffer,
@@ -30,4 +37,18 @@ export async function fallbackAesDecrypt(
   const encryptedBytes = aesCbc.decrypt(data);
   const result: Buffer = pkcs7.unpad(Buffer.from(encryptedBytes));
   return result;
+}
+
+export async function fallbackSha256(msg: Buffer | string): Promise<Buffer> {
+  const enc = isHexString(msg) ? 'hex' : undefined;
+  const buf = typeof msg === 'string' ? Buffer.from(msg, enc) : msg;
+  const hash = sha256(buf);
+  return Buffer.from(arrayify(hash));
+}
+
+export async function fallbackSha512(msg: Buffer | string): Promise<Buffer> {
+  const enc = isHexString(msg) ? 'hex' : undefined;
+  const buf = typeof msg === 'string' ? Buffer.from(msg, enc) : msg;
+  const hash = sha512(buf);
+  return Buffer.from(arrayify(hash));
 }

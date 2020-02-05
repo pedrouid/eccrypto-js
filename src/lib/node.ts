@@ -1,4 +1,9 @@
-import { HMAC_NODE_ALGO, AES_NODE_ALGO } from '../helpers/constants';
+import {
+  HMAC_NODE_ALGO,
+  AES_NODE_ALGO,
+  SHA512_NODE_ALGO,
+  SHA256_NODE_ALGO,
+} from '../helpers/constants';
 
 const nodeCrypto = require('crypto');
 
@@ -34,4 +39,14 @@ export async function nodeAesDecrypt(
   const decipher = nodeCrypto.createDecipheriv(AES_NODE_ALGO, key, iv);
   decipher.update(data);
   return decipher.final();
+}
+
+export async function nodeSha256(data: Buffer) {
+  const hash = nodeCrypto.createHash(SHA256_NODE_ALGO);
+  return hash.update(data).digest();
+}
+
+export async function nodeSha512(data: Buffer) {
+  const hash = nodeCrypto.createHash(SHA512_NODE_ALGO);
+  return hash.update(data).digest();
 }

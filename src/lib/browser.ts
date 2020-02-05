@@ -8,6 +8,8 @@ import {
   HMAC_BROWSER_ALGO,
   HMAC_BROWSER,
   HMAC_LENGTH,
+  SHA256_BROWSER_ALGO,
+  SHA512_BROWSER_ALGO,
 } from '../helpers/constants';
 
 // @ts-ignore
@@ -83,4 +85,24 @@ export async function browserCreateHmac(
     data
   );
   return Buffer.from(signature);
+}
+
+export async function browserSha256(data: Buffer): Promise<Buffer> {
+  const result = await subtle.digest(
+    {
+      name: SHA256_BROWSER_ALGO,
+    },
+    data
+  );
+  return Buffer.from(result);
+}
+
+export async function browserSha512(data: Buffer): Promise<Buffer> {
+  const result = await subtle.digest(
+    {
+      name: SHA512_BROWSER_ALGO,
+    },
+    data
+  );
+  return Buffer.from(result);
 }
