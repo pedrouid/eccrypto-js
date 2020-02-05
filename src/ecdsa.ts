@@ -1,14 +1,11 @@
-import { ec as EC } from 'elliptic';
-
-import { randomBytes } from './random';
 import { KeyPair } from './types';
 import { assert, isValidPrivateKey } from './validators';
-
-const secp256k1curve = new EC('secp256k1');
-
-export function getCurve() {
-  return secp256k1curve;
-}
+import {
+  createPrivateKey,
+  createPublicKey,
+  ecdsaSign,
+  ecdsaVerify,
+} from './secp256k1';
 
 /**
  * Generate a new valid private key. Will use the window.crypto or window.msCrypto as source
@@ -17,11 +14,7 @@ export function getCurve() {
  * @function
  */
 export function generatePrivate() {
-  let privateKey = randomBytes(32);
-  while (!isValidPrivateKey(privateKey)) {
-    privateKey = randomBytes(32);
-  }
-  return privateKey;
+  return createPrivateKey();
 }
 
 export function checkPrivateKey(privateKey: Buffer) {
@@ -34,10 +27,7 @@ export function getPublic(privateKey: Buffer) {
   checkPrivateKey(privateKey);
   // XXX(Kagami): `elliptic.utils.encode` returns array for every
   // encoding except `hex`.
-  return Buffer.from(
-    secp256k1curve.keyFromPrivate(privateKey).getPublic('hex'),
-    'hex'
-  );
+  return createPublicKey(privateKey, false);
 }
 
 /**
@@ -45,12 +35,7 @@ export function getPublic(privateKey: Buffer) {
  */
 export function getPublicCompressed(privateKey: Buffer) {
   checkPrivateKey(privateKey);
-  // See https://github.com/wanderer/secp256k1-node/issues/46
-  const compressed = true;
-  return Buffer.from(
-    secp256k1curve.keyFromPrivate(privateKey).getPublic(compressed, 'hex'),
-    'hex'
-  );
+  return createPublicKey(privateKey);
 }
 
 export function generateKeyPair(): KeyPair {
@@ -64,9 +49,7 @@ export async function sign(privateKey: Buffer, msg: Buffer): Promise<Buffer> {
   assert(isValidPrivateKey(privateKey), 'Bad private key');
   assert(msg.length > 0, 'Message should not be empty');
   assert(msg.length <= 32, 'Message is too long');
-  return Buffer.from(
-    secp256k1curve.sign(msg, privateKey, { canonical: true }).toDER()
-  );
+  return ecdsaSign(msg, privateKey);
 }
 
 export async function verify(
@@ -83,7 +66,7 @@ export async function verify(
   }
   assert(msg.length > 0, 'Message should not be empty');
   assert(msg.length <= 32, 'Message is too long');
-  if (secp256k1curve.verify(msg, sig, publicKey)) {
+  if (ecdsaVerify(sig, msg, publicKey)) {
     return null;
   } else {
     throw new Error('Bad signature');

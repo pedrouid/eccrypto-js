@@ -24,10 +24,18 @@ export function hexToBuffer(hex: string): Buffer {
   return Buffer.from(aesJs.utils.hex.toBytes(hex));
 }
 
-export function bufferToUtf8(data: Buffer): string {
-  return aesJs.utils.utf8.fromBytes(data);
+export function arrayToBuffer(arr: Uint8Array): Buffer {
+  return Buffer.from(arr);
 }
 
-export function bufferToHex(data: Buffer): string {
-  return aesJs.utils.hex.fromBytes(data);
+export function bufferToUtf8(buf: Buffer): string {
+  return aesJs.utils.utf8.fromBytes(buf);
+}
+
+export function bufferToHex(buf: Buffer): string {
+  return aesJs.utils.hex.fromBytes(buf);
+}
+
+export function bufferToArray(buf: Buffer): Uint8Array {
+  return new Uint8Array(buf);
 }
