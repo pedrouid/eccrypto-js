@@ -1,3 +1,4 @@
+// @ts-ignore
 import * as _secp256k1 from 'secp256k1';
 
 import { ISecp256k1 } from './typings';

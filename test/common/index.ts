@@ -13,14 +13,12 @@ export async function testSign(
   lib: eccryptoJS.IEccrypto = eccryptoJS
 ) {
   const str = 'message to sign';
-  const hash = lib.sha256
+  const msg = lib.sha256
     ? await lib.sha256(str)
     : crypto
         .createHash('sha256')
         .update(str)
-        .digest()
-        .toString('hex');
-  const msg = Buffer.from(hash, 'hex');
+        .digest();
   const sig = await lib.sign(privateKey, msg);
   return { str, msg, sig };
 }

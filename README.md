@@ -18,8 +18,7 @@ import * as eccryptoJS from 'eccrypto-js';
 const keyPair = eccryptoJS.generateKeyPair();
 
 const str = 'message to sign';
-const hash = await eccryptoJS.sha256(str);
-const msg = eccryptoJS.hexToBuffer(hash);
+const msg = await eccryptoJS.sha256(str);
 
 const sig = await eccryptoJS.sign(keyPair.privateKey, msg);
 

@@ -2,15 +2,15 @@ import { aesCbcEncrypt, aesCbcDecrypt } from './aes';
 import { derive } from './ecdh';
 import { getPublic } from './ecdsa';
 import { hmacSha256Sign, hmacSha256Verify } from './hmac';
-import { hashSharedKey } from './sha2';
 import { randomBytes } from './random';
+import { sha512 } from './sha2';
 
 import { Encrypted, PreEncryptOpts } from './helpers/types';
 import { assert, isValidPrivateKey } from './helpers/validators';
 
 async function getEncryptionKeys(privateKey: Buffer, publicKey: Buffer) {
   const sharedKey = await derive(privateKey, publicKey);
-  const hash = await hashSharedKey(sharedKey);
+  const hash = await sha512(sharedKey);
   const encryptionKey = Buffer.from(hash.slice(0, 32));
   const macKey = Buffer.from(hash.slice(32));
   return { encryptionKey, macKey };
