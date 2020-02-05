@@ -33,7 +33,7 @@
   "scripts": {
     "start": "tsdx watch",
     "build": "tsdx build",
-    "test": "tsdx test",
+    "test": "ECCRYPTO_NO_FALLBACK=true tsdx test",
     "lint": "tsdx lint",
     "prepare": "tsdx build"
   },

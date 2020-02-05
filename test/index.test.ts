@@ -134,14 +134,12 @@ describe('eccrypto', () => {
     expect(isMatch4).toBeTruthy();
   });
 
-  it.skip('should decrypt and match input from eccrypto-js', async () => {
-    const ephemKeyPair = testGenerateKeyPair();
-    const { str, msg, encrypted } = await testEncrypt(keyPair.publicKey, {
-      ephemPrivateKey: ephemKeyPair.privateKey,
-    });
+  it('should decrypt and match input from eccrypto-js', async () => {
+    const opts = { ephemPrivateKey: testGenerateKeyPair().privateKey };
+    const { str, msg, encrypted } = await testEncrypt(keyPair.publicKey, opts);
     const { str: str2, msg: msg2, encrypted: encrypted2 } = await testEncrypt(
       keyPair.publicKey,
-      { ephemPrivateKey: ephemKeyPair.privateKey },
+      opts,
       eccrypto as any
     );
 
