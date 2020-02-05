@@ -19,6 +19,7 @@ import * as eccryptoJS from './index';
 export type IEccrypto = typeof eccryptoJS;
 
 export type OutputModifier = Uint8Array | ((len: number) => Uint8Array);
+
 export interface ISecp256k1 {
   contextRandomize(seed: Uint8Array): void;
 

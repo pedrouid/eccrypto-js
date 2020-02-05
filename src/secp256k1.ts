@@ -1,4 +1,5 @@
 import * as _secp256k1 from 'secp256k1';
+
 import { randomBytes } from './random';
 import { bufferToArray } from './util';
 import { ISecp256k1 } from './types';
