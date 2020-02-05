@@ -5,6 +5,7 @@ import {
   testSign,
   testSharedKeys,
   testEncrypt,
+  prettyPrint,
 } from './common';
 
 describe('ECDSA', () => {
@@ -88,7 +89,7 @@ describe('eccrypto', () => {
   });
 
   it('should be able to sign with eccrypto-js keys', async () => {
-    const { sig } = await testSign(keyPair.privateKey, eccrypto);
+    const { sig } = await testSign(keyPair.privateKey, eccrypto as any);
     expect(sig).toBeTruthy();
   });
 
@@ -134,9 +135,26 @@ describe('eccrypto', () => {
   });
 
   it.skip('should decrypt and match input from eccrypto-js', async () => {
-    const { str, encrypted } = await testEncrypt(keyPair.publicKey);
-    const decrypted = await eccrypto.decrypt(keyPair.privateKey, encrypted);
+    const ephemKeyPair = testGenerateKeyPair();
+    const { str, msg, encrypted } = await testEncrypt(keyPair.publicKey, {
+      ephemPrivateKey: ephemKeyPair.privateKey,
+    });
+    const { str: str2, msg: msg2, encrypted: encrypted2 } = await testEncrypt(
+      keyPair.publicKey,
+      { ephemPrivateKey: ephemKeyPair.privateKey },
+      eccrypto as any
+    );
 
+    // TODO: fix encrypted - currently not matching eccrypto result
+    console.log('str', str);
+    console.log(`msg.toString('hex')`, msg.toString('hex'));
+    prettyPrint('encrypted', encrypted);
+    console.log('------------------------------------------');
+    console.log('str2', str2);
+    console.log(`msg2.toString('hex')`, msg2.toString('hex'));
+    prettyPrint('encrypted2', encrypted2);
+
+    const decrypted = await eccrypto.decrypt(keyPair.privateKey, encrypted);
     expect(decrypted).toBeTruthy();
 
     const isMatch = decrypted.toString() === str;

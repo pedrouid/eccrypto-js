@@ -3,22 +3,25 @@ import { derive } from './ecdh';
 import { getPublic } from './ecdsa';
 import { randomBytes } from './random';
 import { hashSharedKey, hmacSha256Sign, hmacSha256Verify } from './sha2';
-import { Encrypted } from './types';
-import { assert } from './validators';
+import { Encrypted, PreEncryptOpts } from './types';
+import { assert, isValidPrivateKey } from './validators';
 
 export async function encrypt(
   publicKeyTo: Buffer,
   msg: Buffer,
-  opts?: Encrypted
+  opts?: PreEncryptOpts
 ) {
-  opts = (opts || {}) as Encrypted;
+  opts = (opts || {}) as PreEncryptOpts;
   // Tmp variables to save context from flat promises;
   let iv: Buffer;
   let ephemPublicKey: Buffer;
   let ciphertext: Buffer;
   let macKey: Buffer;
-  let ephemPrivateKey = randomBytes(32);
+  var ephemPrivateKey = opts.ephemPrivateKey || randomBytes(32);
   // There is a very unlikely possibility that it is not a valid key
+  while (!isValidPrivateKey(ephemPrivateKey)) {
+    ephemPrivateKey = opts.ephemPrivateKey || randomBytes(32);
+  }
   ephemPublicKey = getPublic(ephemPrivateKey);
   const sharedKey = await derive(ephemPrivateKey, publicKeyTo);
   const hash = await hashSharedKey(sharedKey);
