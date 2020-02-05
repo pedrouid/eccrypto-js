@@ -2,15 +2,15 @@ import { aesCbcEncrypt, aesCbcDecrypt } from './aes';
 import { derive } from './ecdh';
 import { getPublic } from './ecdsa';
 import { randomBytes } from './random';
-import { hashSharedKey, hmacSha256Sign, hmacSha256Verify } from './sha2';
+import { hmacSha256Sign, hmacSha256Verify, sha512 } from './sha2';
 import { Encrypted, PreEncryptOpts } from './types';
 import { assert, isValidPrivateKey } from './validators';
 
 async function getEncryptionKeys(privateKey: Buffer, publicKey: Buffer) {
-  const sharedKey: Buffer = await derive(privateKey, publicKey);
-  const hash: Uint8Array = await hashSharedKey(sharedKey);
-  const encryptionKey: Buffer = Buffer.from(hash.slice(0, 32));
-  const macKey: Buffer = Buffer.from(hash.slice(32));
+  const sharedKey = await derive(privateKey, publicKey);
+  const hash = await sha512(sharedKey);
+  const encryptionKey = Buffer.from(hash.slice(0, 32));
+  const macKey = Buffer.from(hash.slice(32));
   return { encryptionKey, macKey };
 }
 
@@ -20,7 +20,7 @@ async function handleEphemKeyPair(opts?: PreEncryptOpts) {
   while (!isValidPrivateKey(ephemPrivateKey)) {
     ephemPrivateKey = opts.ephemPrivateKey || randomBytes(32);
   }
-  const ephemPublicKey: Buffer = getPublic(ephemPrivateKey);
+  const ephemPublicKey = getPublic(ephemPrivateKey);
   return { ephemPrivateKey, ephemPublicKey };
 }
 
@@ -34,8 +34,8 @@ export async function encrypt(
     ephemPrivateKey,
     publicKeyTo
   );
-  const iv: Buffer = opts?.iv || randomBytes(16);
-  const ciphertext: Buffer = await aesCbcEncrypt(iv, encryptionKey, msg);
+  const iv = opts?.iv || randomBytes(16);
+  const ciphertext = await aesCbcEncrypt(iv, encryptionKey, msg);
   const dataToMac = Buffer.concat([iv, ephemPublicKey, ciphertext]);
   const mac = await hmacSha256Sign(macKey, dataToMac);
   return { iv, ephemPublicKey, ciphertext, mac };
