@@ -1,11 +1,12 @@
-import { KeyPair } from './helpers/types';
-import { assert, isValidPrivateKey } from './helpers/validators';
 import {
   createPrivateKey,
   createPublicKey,
   ecdsaSign,
   ecdsaVerify,
 } from './lib/secp256k1';
+
+import { KeyPair } from './helpers/types';
+import { assert, isValidPrivateKey } from './helpers/validators';
 
 export function generatePrivate() {
   return createPrivateKey();

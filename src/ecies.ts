@@ -1,17 +1,12 @@
-import { getAes } from './aes';
+import { aesCbcEncrypt, aesCbcDecrypt } from './aes';
 import { derive } from './ecdh';
 import { getPublic } from './ecdsa';
-import { randomBytes } from './random';
+import { hmacSha256Sign, hmacSha256Verify } from './hmac';
 import { hashSharedKey } from './sha2';
-import { getHmac } from './hmac';
+import { randomBytes } from './random';
+
 import { Encrypted, PreEncryptOpts } from './helpers/types';
 import { assert, isValidPrivateKey } from './helpers/validators';
-import {
-  ENCRYPT_OP,
-  SIGN_OP,
-  VERIFY_OP,
-  DECRYPT_OP,
-} from './helpers/constants';
 
 async function getEncryptionKeys(privateKey: Buffer, publicKey: Buffer) {
   const sharedKey = await derive(privateKey, publicKey);
@@ -42,10 +37,8 @@ export async function encrypt(
     publicKeyTo
   );
   const iv = opts?.iv || randomBytes(16);
-  const aesCbcEncrypt = getAes(ENCRYPT_OP);
   const ciphertext = await aesCbcEncrypt(iv, encryptionKey, msg);
   const dataToMac = Buffer.concat([iv, ephemPublicKey, ciphertext]);
-  const hmacSha256Sign = getHmac(SIGN_OP);
   const mac = await hmacSha256Sign(macKey, dataToMac);
   return { iv, ephemPublicKey, ciphertext, mac: mac as Buffer };
 }
@@ -60,10 +53,8 @@ export async function decrypt(
     ephemPublicKey
   );
   const dataToMac = Buffer.concat([iv, ephemPublicKey, ciphertext]);
-  const hmacSha256Verify = getHmac(VERIFY_OP);
   const macTest = await hmacSha256Verify(macKey, dataToMac, mac);
   assert(macTest as boolean, 'Bad MAC');
-  const aesCbcDecrypt = getAes(DECRYPT_OP);
   const msg = await aesCbcDecrypt(opts.iv, encryptionKey, opts.ciphertext);
   return msg;
 }

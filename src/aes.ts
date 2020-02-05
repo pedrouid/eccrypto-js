@@ -1,7 +1,8 @@
-import { ENCRYPT_OP, DECRYPT_OP, EMPTY_BUFFER } from './helpers/constants';
 import { isBrowser, browserAesEncrypt, browserAesDecrypt } from './lib/browser';
 import { isNode, nodeAesEncrypt, nodeAesDecrypt } from './lib/node';
 import { fallbackAesEncrypt, fallbackAesDecrypt } from './lib/fallback';
+
+import { ENCRYPT_OP, DECRYPT_OP, EMPTY_BUFFER } from './helpers/constants';
 
 export function getAes(op: string) {
   return async (iv: Buffer, key: Buffer, data: Buffer) => {
@@ -33,3 +34,6 @@ export function getAes(op: string) {
     return EMPTY_BUFFER;
   };
 }
+
+export const aesCbcEncrypt = getAes(ENCRYPT_OP);
+export const aesCbcDecrypt = getAes(DECRYPT_OP);

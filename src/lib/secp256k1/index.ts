@@ -1,9 +1,9 @@
 import * as _secp256k1 from 'secp256k1';
 
+import { ISecp256k1 } from './typings';
+
 import { randomBytes } from '../../random';
 import { bufferToArray } from '../../helpers/util';
-
-import { ISecp256k1 } from './typings';
 
 const secp256k1: ISecp256k1 = _secp256k1 as any;
 

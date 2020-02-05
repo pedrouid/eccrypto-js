@@ -1,7 +1,7 @@
-import { computeHmac, SupportedAlgorithm } from '@ethersproject/sha2';
-import aesJs from 'aes-js';
 // @ts-ignore
 import pkcs7 from 'pkcs7';
+import aesJs from 'aes-js';
+import { computeHmac, SupportedAlgorithm } from '@ethersproject/sha2';
 
 export async function fallbackCreateHmac(
   key: Buffer,
