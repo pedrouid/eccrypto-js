@@ -7,12 +7,6 @@ import {
   ecdsaVerify,
 } from './secp256k1';
 
-/**
- * Generate a new valid private key. Will use the window.crypto or window.msCrypto as source
- * depending on your browser.
- * @return {Buffer} A 32-byte private key.
- * @function
- */
 export function generatePrivate() {
   return createPrivateKey();
 }
@@ -42,6 +36,14 @@ export function generateKeyPair(): KeyPair {
   const privateKey = generatePrivate();
   const publicKey = getPublic(privateKey);
   return { privateKey, publicKey };
+}
+
+export function keyFromPrivate(privateKey: Buffer) {
+  return secp256k1curve.keyFromPrivate(privateKey);
+}
+
+export function keyFromPublic(publicKey: Buffer) {
+  return secp256k1curve.keyFromPublic(publicKey);
 }
 
 export async function sign(privateKey: Buffer, msg: Buffer): Promise<Buffer> {
