@@ -143,12 +143,9 @@ describe('eccrypto', () => {
       eccrypto as any
     );
 
-    // TODO: fix encrypted - currently not matching eccrypto result
-    console.log('------------------------------------------');
+    // TODO: fix mac
     prettyPrint('encrypted', encrypted);
-    console.log('------------------------------------------');
     prettyPrint('encrypted2', encrypted2);
-    console.log('------------------------------------------');
 
     const decrypted = await eccrypto.decrypt(keyPair.privateKey, encrypted);
     expect(decrypted).toBeTruthy();
