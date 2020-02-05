@@ -36,9 +36,9 @@ export async function browserImportKey(
 }
 
 export async function browserAesEncrypt(
-  data: Buffer,
+  iv: Buffer,
   key: Buffer,
-  iv: Buffer
+  data: Buffer
 ): Promise<Buffer> {
   const cryptoKey = await browserImportKey(key, AES_BROWSER_ALGO);
   const result = await subtle.encrypt(
@@ -53,9 +53,9 @@ export async function browserAesEncrypt(
 }
 
 export async function browserAesDecrypt(
-  data: Buffer,
+  iv: Buffer,
   key: Buffer,
-  iv: Buffer
+  data: Buffer
 ): Promise<Buffer> {
   const cryptoKey = await browserImportKey(key, AES_BROWSER_ALGO);
   const result = await subtle.decrypt(
@@ -70,8 +70,8 @@ export async function browserAesDecrypt(
 }
 
 export async function browserCreateHmac(
-  data: Buffer,
-  key: Buffer
+  key: Buffer,
+  data: Buffer
 ): Promise<Buffer> {
   const cryptoKey = await browserImportKey(key, HMAC_BROWSER);
   const signature = await subtle.sign(

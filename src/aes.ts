@@ -8,10 +8,10 @@ export function getAes(op: string) {
   return async (iv: Buffer, key: Buffer, data: Buffer) => {
     if (isBrowser()) {
       if (op === ENCRYPT_OP) {
-        const result = await browserAesEncrypt(data, key, iv);
+        const result = await browserAesEncrypt(iv, key, data);
         return result;
       } else if (op === DECRYPT_OP) {
-        const result = await browserAesDecrypt(data, key, iv);
+        const result = await browserAesDecrypt(iv, key, data);
         return result;
       }
     } else if (isNode()) {

@@ -8,10 +8,10 @@ export function isNode() {
 
 export async function nodeCreateHmac(
   key: Buffer,
-  msg: Buffer
+  data: Buffer
 ): Promise<Buffer> {
   const hmac = nodeCrypto.createHmac(HMAC_NODE_ALGO, Buffer.from(key));
-  hmac.update(msg);
+  hmac.update(data);
   const result = hmac.digest();
   return result;
 }

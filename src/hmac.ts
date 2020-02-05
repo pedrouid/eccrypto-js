@@ -9,10 +9,10 @@ export function getHmac(op: string) {
   return async (key: Buffer, msg: Buffer, sig?: Buffer) => {
     if (isBrowser()) {
       if (op === SIGN_OP) {
-        const result = await browserCreateHmac(msg, key);
+        const result = await browserCreateHmac(key, msg);
         return result;
       } else if (op === VERIFY_OP && sig) {
-        const expectedSig = await browserCreateHmac(msg, key);
+        const expectedSig = await browserCreateHmac(key, msg);
         const result = equalConstTime(expectedSig, sig);
         return result;
       }

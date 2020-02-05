@@ -5,9 +5,9 @@ import { computeHmac, SupportedAlgorithm } from '@ethersproject/sha2';
 
 export async function fallbackCreateHmac(
   key: Buffer,
-  msg: Buffer
+  data: Buffer
 ): Promise<Buffer> {
-  const result = computeHmac(SupportedAlgorithm.sha256, key, msg);
+  const result = computeHmac(SupportedAlgorithm.sha256, key, data);
   return Buffer.from(result);
 }
 
