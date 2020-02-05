@@ -8,7 +8,7 @@ import {
   HMAC_BROWSER_ALGO,
   HMAC_BROWSER,
   HMAC_LENGTH,
-} from './constants';
+} from '../helpers/constants';
 
 // @ts-ignore
 const browserCrypto = global.crypto || global.msCrypto || {};

@@ -1,9 +1,9 @@
-import { SIGN_OP, VERIFY_OP, EMPTY_BUFFER } from './constants';
+import { SIGN_OP, VERIFY_OP, EMPTY_BUFFER } from './helpers/constants';
 
-import { equalConstTime } from './validators';
-import { isBrowser, browserCreateHmac } from './browser';
-import { fallbackCreateHmac } from './fallback';
-import { isNode, nodeCreateHmac } from './node';
+import { equalConstTime } from './helpers/validators';
+import { isBrowser, browserCreateHmac } from './lib/browser';
+import { fallbackCreateHmac } from './lib/fallback';
+import { isNode, nodeCreateHmac } from './lib/node';
 
 export function getHmac(op: string) {
   return async (key: Buffer, msg: Buffer, sig?: Buffer) => {

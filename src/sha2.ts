@@ -2,7 +2,7 @@ import { arrayify } from '@ethersproject/bytes';
 import { toUtf8Bytes } from '@ethersproject/strings';
 import { sha256 as _sha256, sha512 as _sha512 } from '@ethersproject/sha2';
 
-import { removeTrailing0x } from './util';
+import { removeTrailing0x } from './helpers/util';
 
 export async function sha256(msg: string): Promise<string> {
   const bytes = toUtf8Bytes(msg);

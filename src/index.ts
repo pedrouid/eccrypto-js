@@ -1,15 +1,17 @@
+export * from './helpers/constants';
+export * from './helpers/types';
+export * from './helpers/util';
+export * from './helpers/validators';
+
+export * from './lib/browser';
+export * from './lib/fallback';
+export * from './lib/node';
+export * from './lib/secp256k1';
+
 export * from './aes';
-export * from './browser';
-export * from './constants';
 export * from './ecdh';
 export * from './ecdsa';
 export * from './ecies';
-export * from './fallback';
 export * from './hmac';
-export * from './node';
 export * from './random';
-export * from './secp256k1';
 export * from './sha2';
-export * from './types';
-export * from './util';
-export * from './validators';

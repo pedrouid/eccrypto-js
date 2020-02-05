@@ -1,4 +1,4 @@
-import { HMAC_NODE_ALGO, AES_NODE_ALGO } from './constants';
+import { HMAC_NODE_ALGO, AES_NODE_ALGO } from '../helpers/constants';
 
 const nodeCrypto = require('crypto');
 

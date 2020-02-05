@@ -15,3 +15,8 @@ export const AES_NODE_ALGO = `aes-${AES_LENGTH}-cbc`;
 export const HMAC_NODE_ALGO = `sha${HMAC_LENGTH}`;
 
 export const EMPTY_BUFFER = Buffer.from(new Uint8Array(0));
+export const EC_GROUP_ORDER = Buffer.from(
+  'fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141',
+  'hex'
+);
+export const ZERO32 = Buffer.alloc(32, 0);
