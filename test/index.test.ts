@@ -134,10 +134,17 @@ describe('eccrypto', () => {
   });
 
   it('should decrypt and match input from eccrypto-js', async () => {
-    const ephemKeyPair = testGenerateKeyPair();
-    const { str, encrypted } = await testEncrypt(keyPair.publicKey, {
-      ephemPrivateKey: ephemKeyPair.privateKey,
-    });
+    const opts = { ephemPrivateKey: testGenerateKeyPair().privateKey };
+    const { str, encrypted } = await testEncrypt(keyPair.publicKey, opts);
+    const { encrypted: encrypted2 } = await testEncrypt(
+      keyPair.publicKey,
+      { ...opts, iv: encrypted.iv },
+      eccrypto as any
+    );
+
+    // TODO: fix mac
+    prettyPrint('encrypted', encrypted);
+    prettyPrint('encrypted2', encrypted2);
 
     const decrypted = await eccrypto.decrypt(keyPair.privateKey, encrypted);
     expect(decrypted).toBeTruthy();
