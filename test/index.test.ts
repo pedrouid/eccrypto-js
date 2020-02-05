@@ -5,6 +5,7 @@ import {
   testSign,
   testSharedKeys,
   testEncrypt,
+  prettyPrint,
 } from './common';
 
 describe('ECDSA', () => {

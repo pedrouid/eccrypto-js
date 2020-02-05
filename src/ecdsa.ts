@@ -38,14 +38,6 @@ export function generateKeyPair(): KeyPair {
   return { privateKey, publicKey };
 }
 
-export function keyFromPrivate(privateKey: Buffer) {
-  return secp256k1curve.keyFromPrivate(privateKey);
-}
-
-export function keyFromPublic(publicKey: Buffer) {
-  return secp256k1curve.keyFromPublic(publicKey);
-}
-
 export async function sign(privateKey: Buffer, msg: Buffer): Promise<Buffer> {
   assert(privateKey.length === 32, 'Bad private key');
   assert(isValidPrivateKey(privateKey), 'Bad private key');
