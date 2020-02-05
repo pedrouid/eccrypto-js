@@ -1,5 +1,5 @@
 import { assert, isValidPrivateKey } from './validators';
-import { getCurve } from './ecdsa';
+import { keyFromPrivate, keyFromPublic } from './ecdsa';
 
 export async function derive(
   privateKeyA: Buffer,
@@ -19,8 +19,8 @@ export async function derive(
   if (publicKeyB.length === 33) {
     assert(publicKeyB[0] === 2 || publicKeyB[0] === 3, 'Bad public key');
   }
-  const keyA = getCurve().keyFromPrivate(privateKeyA);
-  const keyB = getCurve().keyFromPublic(publicKeyB);
+  const keyA = keyFromPrivate(privateKeyA);
+  const keyB = keyFromPublic(publicKeyB);
   const sharedKey = keyA.derive(keyB.getPublic()); // BN instance
   return Buffer.from(sharedKey.toArray());
 }
