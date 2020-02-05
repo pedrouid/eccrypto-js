@@ -1,10 +1,10 @@
 # eccrypto-js [![npm version](https://badge.fury.io/js/eccrypto-js.svg)](https://badge.fury.io/js/eccrypto-js)
 
-Pure JavaScript Elliptic curve cryptography library
+Elliptic curve cryptography library (NodeJS, Browser and Pure JS)
 
 ## Description
 
-This library is a port from [eccrypto](https://github.com/bitchan/eccrypto) using only pure javascript libraries from [ethers.js](https://github.com/ethers-io/ethers.js) version 5
+This library is a port from [eccrypto](https://github.com/bitchan/eccrypto) it makes use of native libraries on NodeJS and Browser enviroments with pure javascript fallbacks.
 
 **NOTE:** This library is still experimental and hasn't been thoroughly tested yet
 
