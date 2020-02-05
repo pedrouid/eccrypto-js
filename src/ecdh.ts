@@ -1,5 +1,5 @@
 import { assert, isValidPrivateKey } from './validators';
-import { ecdhDerive } from 'secp256k1';
+import { ecdhDerive } from './secp256k1';
 
 export async function derive(
   privateKeyA: Buffer,
