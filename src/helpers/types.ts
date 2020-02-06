@@ -1,3 +1,7 @@
+import * as eccryptoJS from '../index';
+
+export type IEccrypto = typeof eccryptoJS;
+
 export interface Encrypted {
   ciphertext: Buffer;
   ephemPublicKey: Buffer;
@@ -13,7 +17,3 @@ export interface KeyPair {
   privateKey: Buffer;
   publicKey: Buffer;
 }
-
-import * as eccryptoJS from '../index';
-
-export type IEccrypto = typeof eccryptoJS;

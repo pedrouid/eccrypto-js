@@ -6,7 +6,6 @@ import {
   testSign,
   testSharedKeys,
   testEncrypt,
-  prettyPrint,
   testRandomBytes,
   testEncryptedStepByStep,
 } from './common';
@@ -96,7 +95,7 @@ describe('eccrypto', () => {
     expect(sig).toBeTruthy();
   });
 
-  it.skip('should be able to verify with eccrypto-js signature', async () => {
+  it('should be able to verify with eccrypto-js signature', async () => {
     const { sig, msg } = await testSign(keyPair.privateKey);
     // @ts-ignore
     await eccrypto.verify(keyPair.publicKey, msg, sig);
@@ -143,15 +142,6 @@ describe('eccrypto', () => {
       keyPair.publicKey,
       opts
     );
-    const { encrypted: encrypted2 } = await testEncrypt(
-      keyPair.publicKey,
-      { ...opts, iv: encrypted1.iv },
-      eccrypto as any
-    );
-
-    // TODO: fix mac
-    prettyPrint('encrypted1', encrypted1);
-    prettyPrint('encrypted2', encrypted2);
 
     const decrypted = await eccrypto.decrypt(keyPair.privateKey, encrypted1);
     expect(decrypted).toBeTruthy();
@@ -195,54 +185,17 @@ describe('eccrypto', () => {
       dataToMac: dataToMac2,
       mac: mac2,
     } = await testEncryptedStepByStep(keyPair.publicKey, opts, eccrypto as any);
-
-    console.log('str', str1);
-    console.log('str2', str2);
     expect(str1 === str2).toBeTruthy();
-
-    console.log('msg1', msg1.toString('hex'));
-    console.log('msg2', msg2.toString('hex'));
     expect(compare(msg1, msg2)).toBeTruthy();
-
-    console.log('ephemPrivateKey1', ephemPrivateKey1.toString('hex'));
-    console.log('ephemPrivateKey2', ephemPrivateKey2.toString('hex'));
     expect(compare(ephemPrivateKey1, ephemPrivateKey2)).toBeTruthy();
-
-    console.log('ephemPublicKey1', ephemPublicKey1.toString('hex'));
-    console.log('ephemPublicKey2', ephemPublicKey2.toString('hex'));
     expect(compare(ephemPublicKey1, ephemPublicKey2)).toBeTruthy();
-
-    // TODO: fix sharedKey
-    console.log('sharedKey1', sharedKey1.toString('hex'));
-    console.log('sharedKey2', sharedKey2.toString('hex'));
     expect(compare(sharedKey1, sharedKey2)).toBeTruthy();
-
-    console.log('hash1', hash1.toString('hex'));
-    console.log('hash2', hash2.toString('hex'));
     expect(compare(hash1, hash2)).toBeTruthy();
-
-    console.log('encryptionKey1', encryptionKey1.toString('hex'));
-    console.log('encryptionKey2', encryptionKey2.toString('hex'));
     expect(compare(encryptionKey1, encryptionKey2)).toBeTruthy();
-
-    console.log('macKey1', macKey1.toString('hex'));
-    console.log('macKey2', macKey2.toString('hex'));
     expect(compare(macKey1, macKey2)).toBeTruthy();
-
-    console.log('iv1', iv1.toString('hex'));
-    console.log('iv2', iv2.toString('hex'));
     expect(compare(iv1, iv2)).toBeTruthy();
-
-    console.log('ciphertext1', ciphertext1.toString('hex'));
-    console.log('ciphertext2', ciphertext2.toString('hex'));
     expect(compare(ciphertext1, ciphertext2)).toBeTruthy();
-
-    console.log('dataToMac', dataToMac1.toString('hex'));
-    console.log('dataToMac2', dataToMac2.toString('hex'));
     expect(compare(dataToMac1, dataToMac2)).toBeTruthy();
-
-    console.log('mac', mac1.toString('hex'));
-    console.log('mac2', mac2.toString('hex'));
     expect(compare(mac1, mac2)).toBeTruthy();
   });
 });

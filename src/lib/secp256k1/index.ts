@@ -4,7 +4,6 @@ import * as _secp256k1 from 'secp256k1';
 import { ISecp256k1 } from './typings';
 
 import { randomBytes } from '../../random';
-import { bufferToArray } from '../../helpers/util';
 
 const secp256k1: ISecp256k1 = _secp256k1 as any;
 
@@ -17,28 +16,20 @@ export function createPrivateKey(): Buffer {
 }
 
 export function verifyPrivateKey(privateKey: Buffer): boolean {
-  return secp256k1.privateKeyVerify(bufferToArray(privateKey));
+  return secp256k1.privateKeyVerify(privateKey);
 }
 
 export function createPublicKey(
   privateKey: Buffer,
-  compressed: boolean = true
+  compressed?: boolean
 ): Buffer {
-  const result = secp256k1.publicKeyCreate(
-    bufferToArray(privateKey),
-    compressed
-  );
-  const buf = Buffer.from(result);
-  return buf;
+  const result = secp256k1.publicKeyCreate(privateKey, compressed);
+  return result;
 }
 
 export function ecdsaSign(msg: Buffer, privateKey: Buffer): Buffer {
-  const { signature } = secp256k1.ecdsaSign(
-    bufferToArray(msg),
-    bufferToArray(privateKey)
-  );
-  const buf = Buffer.from(signature);
-  return buf;
+  const { signature } = secp256k1.sign(msg, privateKey);
+  return signature;
 }
 
 export function ecdsaVerify(
@@ -46,18 +37,17 @@ export function ecdsaVerify(
   msg: Buffer,
   publicKey: Buffer
 ): boolean {
-  return secp256k1.ecdsaVerify(
-    bufferToArray(sig),
-    bufferToArray(msg),
-    bufferToArray(publicKey)
-  );
+  return secp256k1.verify(msg, sig, publicKey);
 }
 
-export function ecdhDerive(publicKey: Buffer, privateKey: Buffer) {
-  const result = secp256k1.ecdh(
-    bufferToArray(publicKey),
-    bufferToArray(privateKey)
-  );
-  const buf = Buffer.from(result);
-  return buf;
+export function ecdhDerive(
+  publicKey: Buffer,
+  privateKey: Buffer,
+  compressed?: boolean
+) {
+  let result = secp256k1.ecdhUnsafe(publicKey, privateKey, compressed);
+  if (result.length === 33) {
+    result = result.slice(1);
+  }
+  return result;
 }

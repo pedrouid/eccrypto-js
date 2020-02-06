@@ -1,109 +1,65 @@
 export type OutputModifier = Uint8Array | ((len: number) => Uint8Array);
 
+export type NonceFunction = (
+  message: Buffer,
+  privateKey: Buffer,
+  algo?: Buffer,
+  data?: Buffer,
+  attempt?: number
+) => Buffer;
+
+export interface SignOptions {
+  noncefn: NonceFunction;
+  data: Buffer;
+}
+
+export interface SignResult {
+  signature: Buffer;
+  recovery: number;
+}
+
 export interface ISecp256k1 {
-  contextRandomize(seed: Uint8Array): void;
-
-  privateKeyVerify(privateKey: Uint8Array): boolean;
-
-  privateKeyNegate(privateKey: Uint8Array): Uint8Array;
-
-  privateKeyTweakAdd(privateKey: Uint8Array, tweak: Uint8Array): Uint8Array;
-
-  privateKeyTweakMul(privateKey: Uint8Array, tweak: Uint8Array): Uint8Array;
-
-  publicKeyVerify(publicKey: Uint8Array): boolean;
-
-  publicKeyCreate(
-    privateKey: Uint8Array,
-    compressed?: boolean,
-    output?: OutputModifier
-  ): Uint8Array;
-
-  publicKeyConvert(
-    publicKey: Uint8Array,
-    compressed?: boolean,
-    output?: OutputModifier
-  ): Uint8Array;
-
-  publicKeyNegate(
-    publicKey: Uint8Array,
-    compressed?: boolean,
-    output?: OutputModifier
-  ): Uint8Array;
-
-  publicKeyCombine(
-    publicKeys: Uint8Array[],
-    compressed?: boolean,
-    output?: OutputModifier
-  ): Uint8Array;
-
+  privateKeyVerify(privateKey: Buffer): boolean;
+  privateKeyExport(privateKey: Buffer, compressed?: boolean): Buffer;
+  privateKeyImport(privateKey: Buffer): Buffer;
+  privateKeyNegate(privateKey: Buffer): Buffer;
+  privateKeyModInverse(privateKey: Buffer): Buffer;
+  privateKeyTweakAdd(privateKey: Buffer, tweak: Buffer): Buffer;
+  privateKeyTweakMul(privateKey: Buffer, tweak: Buffer): Buffer;
+  publicKeyCreate(privateKey: Buffer, compressed?: boolean): Buffer;
+  publicKeyConvert(publicKey: Buffer, compressed?: boolean): Buffer;
+  publicKeyVerify(publicKey: Buffer): boolean;
   publicKeyTweakAdd(
-    publicKey: Uint8Array,
-    tweak: Uint8Array,
-    compressed?: boolean,
-    output?: OutputModifier
-  ): Uint8Array;
-
+    publicKey: Buffer,
+    tweak: Buffer,
+    compressed?: boolean
+  ): Buffer;
   publicKeyTweakMul(
-    publicKey: Uint8Array,
-    tweak: Uint8Array,
-    compressed?: boolean,
-    output?: OutputModifier
-  ): Uint8Array;
-
-  signatureNormalize(signature: Uint8Array): Uint8Array;
-
-  signatureExport(signature: Uint8Array, output?: OutputModifier): Uint8Array;
-
-  signatureImport(signature: Uint8Array, output?: OutputModifier): Uint8Array;
-
-  ecdsaSign(
-    message: Uint8Array,
-    privateKey: Uint8Array,
-    {
-      data,
-      noncefn,
-    }?: {
-      data?: Uint8Array;
-      noncefn?: (
-        message: Uint8Array,
-        privateKey: Uint8Array,
-        algo: null,
-        data: Uint8Array,
-        counter: number
-      ) => Uint8Array;
-    },
-    output?: OutputModifier
-  ): { signature: Uint8Array; recid: number };
-
-  ecdsaVerify(
-    signature: Uint8Array,
-    message: Uint8Array,
-    publicKey: Uint8Array
-  ): boolean;
-
-  ecdsaRecover(
-    signature: Uint8Array,
-    recid: number,
-    message: Uint8Array,
-    compressed?: boolean,
-    output?: OutputModifier
-  ): Uint8Array;
-
-  ecdh(
-    publicKey: Uint8Array,
-    privateKey: Uint8Array,
-    {
-      data,
-      xbuf,
-      ybuf,
-      hashfn,
-    }?: {
-      data?: Uint8Array;
-      xbuf?: Uint8Array;
-      ybuf?: Uint8Array;
-      hashfn?: (x: Uint8Array, y: Uint8Array, data: Uint8Array) => Uint8Array;
-    },
-    output?: OutputModifier
-  ): Uint8Array;
+    publicKey: Buffer,
+    tweak: Buffer,
+    compressed?: boolean
+  ): Buffer;
+  publicKeyCombine(publicKeys: Buffer[], compressed?: boolean): Buffer;
+  signatureNormalize(signature: Buffer): Buffer;
+  signatureExport(signature: Buffer): Buffer;
+  signatureImport(signature: Buffer): Buffer;
+  signatureImportLax(signature: Buffer): Buffer;
+  sign(
+    message: Buffer,
+    privateKey: Buffer,
+    options?: Partial<SignOptions>
+  ): SignResult;
+  verify(message: Buffer, signature: Buffer, publicKey: Buffer): boolean;
+  recover(
+    message: Buffer,
+    signature: Buffer,
+    recovery: number,
+    compressed?: boolean
+  ): Buffer;
+  ecdh(publicKey: Buffer, privateKey: Buffer): Buffer;
+  ecdhUnsafe(
+    publicKey: Buffer,
+    privateKey: Buffer,
+    compressed?: boolean
+  ): Buffer;
 }

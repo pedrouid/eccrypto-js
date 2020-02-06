@@ -18,19 +18,13 @@ export function checkPrivateKey(privateKey: Buffer) {
 }
 
 export function getPublic(privateKey: Buffer) {
-  // This function has sync API so we throw an error immediately.
-  checkPrivateKey(privateKey);
-  // XXX(Kagami): `elliptic.utils.encode` returns array for every
-  // encoding except `hex`.
-  return createPublicKey(privateKey, false);
-}
-
-/**
- * Get compressed version of public key.
- */
-export function getPublicCompressed(privateKey: Buffer) {
   checkPrivateKey(privateKey);
   return createPublicKey(privateKey);
+}
+
+export function getPublicCompressed(privateKey: Buffer) {
+  checkPrivateKey(privateKey);
+  return createPublicKey(privateKey, true);
 }
 
 export function generateKeyPair(): KeyPair {
