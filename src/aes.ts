@@ -2,38 +2,34 @@ import { isBrowser, browserAesEncrypt, browserAesDecrypt } from './lib/browser';
 import { isNode, nodeAesEncrypt, nodeAesDecrypt } from './lib/node';
 import { fallbackAesEncrypt, fallbackAesDecrypt } from './lib/fallback';
 
-import { ENCRYPT_OP, DECRYPT_OP, EMPTY_BUFFER } from './helpers/constants';
-
-export function getAes(op: string) {
-  return async (iv: Buffer, key: Buffer, data: Buffer) => {
-    if (isBrowser()) {
-      if (op === ENCRYPT_OP) {
-        const result = await browserAesEncrypt(iv, key, data);
-        return result;
-      } else if (op === DECRYPT_OP) {
-        const result = await browserAesDecrypt(iv, key, data);
-        return result;
-      }
-    } else if (isNode()) {
-      if (op === ENCRYPT_OP) {
-        const result = await nodeAesEncrypt(iv, key, data);
-        return result;
-      } else if (op === DECRYPT_OP) {
-        const result = await nodeAesDecrypt(iv, key, data);
-        return result;
-      }
-    } else {
-      if (op === ENCRYPT_OP) {
-        const result = await fallbackAesEncrypt(iv, key, data);
-        return result;
-      } else if (op === DECRYPT_OP) {
-        const result = await fallbackAesDecrypt(iv, key, data);
-        return result;
-      }
-    }
-    return EMPTY_BUFFER;
-  };
+export async function aesCbcEncrypt(
+  iv: Buffer,
+  key: Buffer,
+  data: Buffer
+): Promise<Buffer> {
+  let result;
+  if (isBrowser()) {
+    result = await browserAesEncrypt(iv, key, data);
+  } else if (isNode()) {
+    result = await nodeAesEncrypt(iv, key, data);
+  } else {
+    result = await fallbackAesEncrypt(iv, key, data);
+  }
+  return result;
 }
 
-export const aesCbcEncrypt = getAes(ENCRYPT_OP);
-export const aesCbcDecrypt = getAes(DECRYPT_OP);
+export async function aesCbcDecrypt(
+  iv: Buffer,
+  key: Buffer,
+  data: Buffer
+): Promise<Buffer> {
+  let result;
+  if (isBrowser()) {
+    result = await browserAesDecrypt(iv, key, data);
+  } else if (isNode()) {
+    result = await nodeAesDecrypt(iv, key, data);
+  } else {
+    result = await fallbackAesDecrypt(iv, key, data);
+  }
+  return result;
+}

@@ -40,7 +40,7 @@ export async function encrypt(
   const ciphertext = await aesCbcEncrypt(iv, encryptionKey, msg);
   const dataToMac = Buffer.concat([iv, ephemPublicKey, ciphertext]);
   const mac = await hmacSha256Sign(macKey, dataToMac);
-  return { iv, ephemPublicKey, ciphertext, mac: mac as Buffer };
+  return { iv, ephemPublicKey, ciphertext, mac: mac };
 }
 
 export async function decrypt(
@@ -54,7 +54,7 @@ export async function decrypt(
   );
   const dataToMac = Buffer.concat([iv, ephemPublicKey, ciphertext]);
   const macTest = await hmacSha256Verify(macKey, dataToMac, mac);
-  assert(macTest as boolean, 'Bad MAC');
+  assert(macTest, 'Bad MAC');
   const msg = await aesCbcDecrypt(opts.iv, encryptionKey, opts.ciphertext);
   return msg;
 }
