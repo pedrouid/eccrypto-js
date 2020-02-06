@@ -12,8 +12,9 @@ import {
   SHA512_BROWSER_ALGO,
 } from '../helpers/constants';
 
-// @ts-ignore
-const browserCrypto = global.crypto || global.msCrypto || {};
+const browserCrypto =
+  // @ts-ignore
+  global.crypto || global.msCrypto || window.crypto || window.msCrypto || {};
 const subtle: SubtleCrypto = browserCrypto.subtle || browserCrypto.webkitSubtle;
 
 export function isBrowser() {
