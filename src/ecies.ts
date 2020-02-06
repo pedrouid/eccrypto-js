@@ -16,7 +16,7 @@ async function getEncryptionKeys(privateKey: Buffer, publicKey: Buffer) {
   return { encryptionKey, macKey };
 }
 
-async function handleEphemKeyPair(opts?: PreEncryptOpts) {
+async function getEphemKeyPair(opts?: PreEncryptOpts) {
   opts = (opts || {}) as PreEncryptOpts;
   let ephemPrivateKey = opts.ephemPrivateKey || randomBytes(32);
   while (!isValidPrivateKey(ephemPrivateKey)) {
@@ -31,7 +31,7 @@ export async function encrypt(
   msg: Buffer,
   opts?: PreEncryptOpts
 ): Promise<Encrypted> {
-  const { ephemPrivateKey, ephemPublicKey } = await handleEphemKeyPair(opts);
+  const { ephemPrivateKey, ephemPublicKey } = await getEphemKeyPair(opts);
   const { encryptionKey, macKey } = await getEncryptionKeys(
     ephemPrivateKey,
     publicKeyTo
