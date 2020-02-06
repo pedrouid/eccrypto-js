@@ -11,6 +11,7 @@ describe('HMAC', () => {
   let key: Buffer;
   let macKey: Buffer;
   let dataToMac: Buffer;
+  let mac: Buffer;
 
   beforeEach(async () => {
     const toEncrypt = await getTestMessageToEncrypt();
@@ -19,17 +20,15 @@ describe('HMAC', () => {
     key = testRandomBytes(32);
     macKey = Buffer.concat([iv, key]);
     dataToMac = Buffer.concat([iv, key, msg]);
+    mac = await testHmacSign(macKey, dataToMac);
   });
 
   it('should sign sucessfully', async () => {
-    const mac = await testHmacSign(macKey, dataToMac);
     expect(mac).toBeTruthy();
   });
 
-  // TODO: fix hmac verify test
-  it.skip('should verify sucessfully', async () => {
-    const mac = await testHmacSign(macKey, dataToMac);
-    const result = await testHmacVerify(key, dataToMac, mac);
-    expect(result).toBeTruthy();
+  it('should verify sucessfully', async () => {
+    const macGood = await testHmacVerify(macKey, dataToMac, mac);
+    expect(macGood).toBeTruthy();
   });
 });
