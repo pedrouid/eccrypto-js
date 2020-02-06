@@ -98,11 +98,6 @@ describe('eccrypto', () => {
   it('should be able to verify with eccrypto-js signature', async () => {
     const { sig: sig1, msg } = await testSign(keyPair.privateKey);
 
-    const { sig: sig2 } = await testSign(keyPair.privateKey, eccrypto as any);
-
-    console.log('sig1', sig1.toString('hex'));
-    console.log('sig2', sig2.toString('hex'));
-
     // @ts-ignore
     await eccrypto.verify(keyPair.publicKey, msg, sig1);
   });
