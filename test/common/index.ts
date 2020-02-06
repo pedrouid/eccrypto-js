@@ -132,7 +132,7 @@ export async function testEncrypt(
   return { str, msg, encrypted };
 }
 
-export async function testEncryptedStepByStep(
+export async function testEcies(
   publicKeyTo: Buffer,
   opts?: Partial<eccryptoJS.PreEncryptOpts>,
   lib: eccryptoJS.IEccrypto = eccryptoJS
