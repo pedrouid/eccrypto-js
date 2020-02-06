@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import * as eccryptoJS from '../../src';
 
-const TEST_MESSAGE = 'message to sign';
+export const TEST_MESSAGE = 'message to sign';
 
 export function compare(buf1: Buffer, buf2: Buffer) {
   return buf1.toString('hex') === buf2.toString('hex');
@@ -15,30 +15,30 @@ export function testGenerateKeyPair(lib: eccryptoJS.IEccrypto = eccryptoJS) {
 }
 
 export async function testSha2(
-  str: string,
+  msg: string,
   algo: string,
   lib: eccryptoJS.IEccrypto = eccryptoJS
 ) {
   // @ts-ignore
   const shaMethod = lib[algo];
-  const msg: Buffer = shaMethod
-    ? await shaMethod(str)
+  const hash: Buffer = shaMethod
+    ? await shaMethod(msg)
     : crypto
         .createHash(algo)
-        .update(str)
+        .update(msg)
         .digest();
 
-  return msg;
+  return hash;
 }
 
 export function testRandomBytes(
   length: number,
   lib: eccryptoJS.IEccrypto = eccryptoJS
 ) {
-  const msg = lib.randomBytes
+  const result = lib.randomBytes
     ? lib.randomBytes(length)
     : crypto.randomBytes(length);
-  return msg;
+  return result;
 }
 
 export function testAesEncrypt(
