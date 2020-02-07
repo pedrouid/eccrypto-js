@@ -1,8 +1,4 @@
-const EC_GROUP_ORDER = Buffer.from(
-  'fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141',
-  'hex'
-);
-const ZERO32 = Buffer.alloc(32, 0);
+import { ZERO32, EC_GROUP_ORDER } from './constants';
 
 export function assert(condition: boolean, message: string): void {
   if (!condition) {

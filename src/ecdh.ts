@@ -1,5 +1,6 @@
-import { assert, isValidPrivateKey } from './validators';
-import { keyFromPrivate, keyFromPublic } from './ecdsa';
+import { ecdhDerive } from './lib/secp256k1';
+
+import { assert, isValidPrivateKey } from './helpers/validators';
 
 export async function derive(
   privateKeyA: Buffer,
@@ -19,8 +20,5 @@ export async function derive(
   if (publicKeyB.length === 33) {
     assert(publicKeyB[0] === 2 || publicKeyB[0] === 3, 'Bad public key');
   }
-  const keyA = keyFromPrivate(privateKeyA);
-  const keyB = keyFromPublic(publicKeyB);
-  const sharedKey = keyA.derive(keyB.getPublic()); // BN instance
-  return Buffer.from(sharedKey.toArray());
+  return ecdhDerive(publicKeyB, privateKeyA);
 }
