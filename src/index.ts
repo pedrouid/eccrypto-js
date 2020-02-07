@@ -15,3 +15,4 @@ export * from './ecies';
 export * from './hmac';
 export * from './random';
 export * from './sha2';
+export * from './sha3';

@@ -1,19 +1,12 @@
 import aesJs from 'aes-js';
+import { isHexString } from '@ethersproject/bytes';
 
-export function removeTrailing0x(str: string) {
-  if (str.startsWith('0x')) {
-    return str.substring(2);
-  } else {
-    return str;
-  }
+export function removeHexPrefix(hex: string): string {
+  return hex.replace(/^0x/, '');
 }
 
-export function addTrailing0x(str: string) {
-  if (!str.startsWith('0x')) {
-    return '0x' + str;
-  } else {
-    return str;
-  }
+export function addHexPrefix(hex: string): string {
+  return hex.startsWith('0x') ? hex : `0x${hex}`;
 }
 
 export function utf8ToBuffer(utf8: string): Buffer {
@@ -38,4 +31,18 @@ export function bufferToHex(buf: Buffer): string {
 
 export function bufferToArray(buf: Buffer): Uint8Array {
   return new Uint8Array(buf);
+}
+
+export function ensureLength(data: Buffer, expectedLength: number) {
+  const diff = data.length - expectedLength;
+  if (diff > 0) {
+    data = data.slice(diff);
+  }
+  return data;
+}
+
+export function prepareHash(msg: Buffer | string) {
+  const enc = isHexString(msg) ? 'hex' : undefined;
+  const buf = typeof msg === 'string' ? Buffer.from(msg, enc) : msg;
+  return buf;
 }

@@ -4,16 +4,9 @@ import * as _secp256k1 from 'secp256k1';
 import { ISecp256k1 } from './typings';
 
 import { randomBytes } from '../../random';
+import { ensureLength } from '../../helpers/util';
 
 const secp256k1: ISecp256k1 = _secp256k1 as any;
-
-function ensureLength(data: Buffer, expectedLength: number) {
-  const diff = data.length - expectedLength;
-  if (diff > 0) {
-    data = data.slice(diff);
-  }
-  return data;
-}
 
 export function createPrivateKey(): Buffer {
   let privateKey = randomBytes(32);
