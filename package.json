@@ -46,6 +46,7 @@
     "secp256k1": "3.8.0"
   },
   "devDependencies": {
+    "@peculiar/webcrypto": "^1.0.22",
     "@types/aes-js": "3.1.0",
     "@types/eccrypto": "1.1.1",
     "@types/jest": "25.1.1",

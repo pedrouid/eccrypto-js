@@ -1,24 +1,31 @@
 import * as eccryptoJS from '../src';
 import { testRandomBytes } from './common';
-// import { WebCrypto } from 'node-webcrypto-ossl';
+import { Crypto } from '@peculiar/webcrypto';
 
-// declare global {
-//   interface Window {
-//     crypto: SubtleCrypto;
-//   }
-// }
+declare global {
+  interface Window {
+    msCrypto: Crypto;
+  }
+}
+
+//  using msCrypto because Typescript was complaing read-only
+window.msCrypto = new Crypto();
 
 describe('Browser', () => {
   let length: number;
   let key: Buffer;
 
   beforeEach(async () => {
-    // window.crypto = new WebCrypto();
     length = 32;
     key = testRandomBytes(length);
   });
 
-  it.skip('should import key from buffer successfully', async () => {
+  it('should return true for isBrowser check', () => {
+    const result = eccryptoJS.isBrowser();
+    expect(result).toBeTruthy();
+  });
+
+  it('should import key from buffer successfully', async () => {
     const result = await eccryptoJS.browserImportKey(key);
     expect(result).toBeTruthy();
   });

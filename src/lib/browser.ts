@@ -12,26 +12,29 @@ import {
   SHA512_BROWSER_ALGO,
 } from '../helpers/constants';
 
-const browserCrypto =
-  // @ts-ignore
-  global?.crypto ||
-  // @ts-ignore
-  global?.msCrypto ||
-  // @ts-ignore
-  window?.crypto ||
-  // @ts-ignore
-  window?.msCrypto ||
-  {};
-const subtle: SubtleCrypto = browserCrypto.subtle || browserCrypto.webkitSubtle;
+export function getSubtleCrypto(): SubtleCrypto {
+  const browserCrypto =
+    // @ts-ignore
+    global?.crypto ||
+    // @ts-ignore
+    global?.msCrypto ||
+    // @ts-ignore
+    window?.crypto ||
+    // @ts-ignore
+    window?.msCrypto ||
+    {};
+  return browserCrypto.subtle || browserCrypto.webkitSubtle;
+}
 
-export function isBrowser() {
-  return !!subtle;
+export function isBrowser(): boolean {
+  return !!getSubtleCrypto();
 }
 
 export async function browserImportKey(
   buffer: Buffer,
   type: string = AES_BROWSER_ALGO
 ): Promise<CryptoKey> {
+  const subtle = getSubtleCrypto();
   const algo: AesKeyAlgorithm | HmacImportParams =
     type === AES_BROWSER_ALGO
       ? { length: AES_LENGTH, name: AES_BROWSER_ALGO }
@@ -50,6 +53,7 @@ export async function browserAesEncrypt(
   key: Buffer,
   data: Buffer
 ): Promise<Buffer> {
+  const subtle = getSubtleCrypto();
   const cryptoKey = await browserImportKey(key, AES_BROWSER_ALGO);
   const result = await subtle.encrypt(
     {
@@ -67,6 +71,7 @@ export async function browserAesDecrypt(
   key: Buffer,
   data: Buffer
 ): Promise<Buffer> {
+  const subtle = getSubtleCrypto();
   const cryptoKey = await browserImportKey(key, AES_BROWSER_ALGO);
   const result = await subtle.decrypt(
     {
@@ -83,6 +88,7 @@ export async function browserCreateHmac(
   key: Buffer,
   data: Buffer
 ): Promise<Buffer> {
+  const subtle = getSubtleCrypto();
   const cryptoKey = await browserImportKey(key, HMAC_BROWSER);
   const signature = await subtle.sign(
     {
@@ -96,6 +102,7 @@ export async function browserCreateHmac(
 }
 
 export async function browserSha256(data: Buffer): Promise<Buffer> {
+  const subtle = getSubtleCrypto();
   const result = await subtle.digest(
     {
       name: SHA256_BROWSER_ALGO,
@@ -106,6 +113,7 @@ export async function browserSha256(data: Buffer): Promise<Buffer> {
 }
 
 export async function browserSha512(data: Buffer): Promise<Buffer> {
+  const subtle = getSubtleCrypto();
   const result = await subtle.digest(
     {
       name: SHA512_BROWSER_ALGO,
