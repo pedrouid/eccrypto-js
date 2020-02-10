@@ -34,8 +34,8 @@
     "start": "tsdx watch",
     "build": "tsdx build",
     "test": "ECCRYPTO_NO_FALLBACK=true tsdx test",
-    "lint": "tsdx lint",
-    "prepare": "tsdx build"
+    "lint": "tsdx lint src test",
+    "prepare": "yarn lint && yarn build && yarn test"
   },
   "dependencies": {
     "@ethersproject/bytes": "5.0.0-beta.136",
