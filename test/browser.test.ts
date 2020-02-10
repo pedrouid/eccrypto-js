@@ -3,7 +3,12 @@ import {
   testRandomBytes,
   getTestMessageToEncrypt,
   compare,
-  TEST_MESSAGE,
+  TEST_MESSAGE_STR,
+  TEST_SHA256_HASH,
+  TEST_SHA512_HASH,
+  TEST_FIXED_KEY,
+  TEST_FIXED_IV,
+  TEST_HMAC_SIG,
 } from './common';
 import { Crypto } from '@peculiar/webcrypto';
 
@@ -87,28 +92,22 @@ describe('Browser', () => {
   });
 
   describe('SHA2', () => {
-    const SHA256_HASH =
-      '3819ff1b5125e14102ae429929e815d6fada758d4a6886a03b1b1c64aca3a53a';
-
-    const SHA512_HASH =
-      '1ea15b17a445109c6709d54e8d3e3640ad2d8b87a8b020a2d99e2123d24a42eda8b6d3d71419438a7fe8ac3d8b7f1968113544b7ef4289340a5810f05cb2479f';
-
     describe('SHA256', () => {
       let expectedLength: number;
       let expectedOutput: Buffer;
 
       beforeEach(async () => {
         expectedLength = 32;
-        expectedOutput = Buffer.from(SHA256_HASH, 'hex');
+        expectedOutput = Buffer.from(TEST_SHA256_HASH, 'hex');
       });
       it('should hash buffer sucessfully', async () => {
-        const input = Buffer.from(TEST_MESSAGE);
+        const input = Buffer.from(TEST_MESSAGE_STR);
         const output = await eccryptoJS.browserSha256(input);
         expect(compare(output, expectedOutput)).toBeTruthy();
       });
 
       it('should output with expected length', async () => {
-        const input = Buffer.from(TEST_MESSAGE);
+        const input = Buffer.from(TEST_MESSAGE_STR);
         const output = await eccryptoJS.browserSha256(input);
         expect(output.length === expectedLength).toBeTruthy();
       });
@@ -120,20 +119,44 @@ describe('Browser', () => {
 
       beforeEach(async () => {
         expectedLength = 64;
-        expectedOutput = Buffer.from(SHA512_HASH, 'hex');
+        expectedOutput = Buffer.from(TEST_SHA512_HASH, 'hex');
       });
 
       it('should hash buffer sucessfully', async () => {
-        const input = Buffer.from(TEST_MESSAGE);
+        const input = Buffer.from(TEST_MESSAGE_STR);
         const output = await eccryptoJS.browserSha512(input);
         expect(compare(output, expectedOutput)).toBeTruthy();
       });
 
       it('should output with expected length', async () => {
-        const input = Buffer.from(TEST_MESSAGE);
+        const input = Buffer.from(TEST_MESSAGE_STR);
         const output = await eccryptoJS.browserSha512(input);
         expect(output.length === expectedLength).toBeTruthy();
       });
+    });
+  });
+
+  describe('HMAC', () => {
+    const msg: Buffer = Buffer.from(TEST_MESSAGE_STR);
+    const iv: Buffer = Buffer.from(TEST_FIXED_KEY, 'hex');
+    const key: Buffer = Buffer.from(TEST_FIXED_IV, 'hex');
+    const macKey: Buffer = Buffer.concat([iv, key]);
+    const dataToMac: Buffer = Buffer.concat([iv, key, msg]);
+    const expectedLength: number = 32;
+    const expectedOutput: Buffer = Buffer.from(TEST_HMAC_SIG, 'hex');
+
+    let mac: Buffer;
+
+    beforeEach(async () => {
+      mac = await eccryptoJS.browserCreateHmac(macKey, dataToMac);
+    });
+
+    it('should sign sucessfully', async () => {
+      expect(compare(mac, expectedOutput)).toBeTruthy();
+    });
+
+    it('should output with expected length', async () => {
+      expect(mac.length === expectedLength).toBeTruthy();
     });
   });
 });

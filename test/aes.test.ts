@@ -7,31 +7,35 @@ import {
 } from './common';
 
 describe('AES', () => {
-  let msg: Buffer;
-  let iv: Buffer;
+  let keyLength: number;
   let key: Buffer;
+  let ivLength: number;
+  let iv: Buffer;
+  let data: Buffer;
 
   beforeEach(async () => {
+    keyLength = 32;
+    key = testRandomBytes(keyLength);
+    ivLength = 16;
+    iv = testRandomBytes(ivLength);
     const toEncrypt = await getTestMessageToEncrypt();
-    msg = toEncrypt.msg;
-    iv = testRandomBytes(16);
-    key = testRandomBytes(32);
+    data = toEncrypt.msg;
   });
 
   it('should encrypt sucessfully', async () => {
-    const ciphertext = await testAesEncrypt(iv, key, msg);
+    const ciphertext = await testAesEncrypt(iv, key, data);
     expect(ciphertext).toBeTruthy();
   });
 
   it('should decrypt sucessfully', async () => {
-    const ciphertext = await testAesEncrypt(iv, key, msg);
+    const ciphertext = await testAesEncrypt(iv, key, data);
     const result = await testAesDecrypt(iv, key, ciphertext);
     expect(result).toBeTruthy();
   });
 
   it('decrypted should match input', async () => {
-    const ciphertext = await testAesEncrypt(iv, key, msg);
+    const ciphertext = await testAesEncrypt(iv, key, data);
     const result = await testAesDecrypt(iv, key, ciphertext);
-    expect(compare(msg, result)).toBeTruthy();
+    expect(compare(data, result)).toBeTruthy();
   });
 });

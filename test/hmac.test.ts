@@ -1,30 +1,34 @@
 import {
-  getTestMessageToEncrypt,
-  testRandomBytes,
   testHmacSign,
   testHmacVerify,
+  TEST_MESSAGE_STR,
+  compare,
+  TEST_FIXED_KEY,
+  TEST_FIXED_IV,
+  TEST_HMAC_SIG,
 } from './common';
 
 describe('HMAC', () => {
-  let msg: Buffer;
-  let iv: Buffer;
-  let key: Buffer;
-  let macKey: Buffer;
-  let dataToMac: Buffer;
+  const msg: Buffer = Buffer.from(TEST_MESSAGE_STR);
+  const iv: Buffer = Buffer.from(TEST_FIXED_KEY, 'hex');
+  const key: Buffer = Buffer.from(TEST_FIXED_IV, 'hex');
+  const macKey: Buffer = Buffer.concat([iv, key]);
+  const dataToMac: Buffer = Buffer.concat([iv, key, msg]);
+  const expectedLength: number = 32;
+  const expectedOutput: Buffer = Buffer.from(TEST_HMAC_SIG, 'hex');
+
   let mac: Buffer;
 
   beforeEach(async () => {
-    const toEncrypt = await getTestMessageToEncrypt();
-    msg = toEncrypt.msg;
-    iv = testRandomBytes(16);
-    key = testRandomBytes(32);
-    macKey = Buffer.concat([iv, key]);
-    dataToMac = Buffer.concat([iv, key, msg]);
     mac = await testHmacSign(macKey, dataToMac);
   });
 
   it('should sign sucessfully', async () => {
-    expect(mac).toBeTruthy();
+    expect(compare(mac, expectedOutput)).toBeTruthy();
+  });
+
+  it('should output with expected length', async () => {
+    expect(mac.length === expectedLength).toBeTruthy();
   });
 
   it('should verify sucessfully', async () => {

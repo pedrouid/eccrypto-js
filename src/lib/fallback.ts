@@ -8,7 +8,7 @@ import {
 } from '@ethersproject/sha2';
 
 import * as pkcs7 from './pkcs7';
-import { arrayToBuffer } from '../helpers/util';
+import { arrayToBuffer, removeHexPrefix } from '../helpers/util';
 
 export async function fallbackAesEncrypt(
   iv: Buffer,
@@ -38,7 +38,7 @@ export async function fallbackCreateHmac(
   data: Buffer
 ): Promise<Buffer> {
   const result = computeHmac(SupportedAlgorithm.sha256, key, data);
-  return Buffer.from(result);
+  return Buffer.from(removeHexPrefix(result), 'hex');
 }
 
 export async function fallbackSha256(msg: Buffer | string): Promise<Buffer> {
