@@ -3,7 +3,7 @@ export const TEST_FIXED_KEY =
   '3c8a1d8a02cbe81e9622c55ed8cbfa392b9b4a0f93713918f528468dd4c46fcd';
 export const TEST_FIXED_IV = '64391e133b04b98aa2fb0479242fb60a';
 export const TEST_HMAC_SIG =
-  '6a92dbbb647de4204f498af2750ce40ac88faf59aa0369692e2aeff2b281b157';
+  '2438f4a7f5c21739ea6d09f486b5ebede4f1bf663b5ba6977e2c86a1e17e1593';
 export const TEST_SHA256_HASH =
   '3819ff1b5125e14102ae429929e815d6fada758d4a6886a03b1b1c64aca3a53a';
 export const TEST_SHA512_HASH =

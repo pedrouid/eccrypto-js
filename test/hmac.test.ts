@@ -10,8 +10,8 @@ import {
 
 describe('HMAC', () => {
   const msg: Buffer = Buffer.from(TEST_MESSAGE_STR);
-  const iv: Buffer = Buffer.from(TEST_FIXED_KEY, 'hex');
-  const key: Buffer = Buffer.from(TEST_FIXED_IV, 'hex');
+  const iv: Buffer = Buffer.from(TEST_FIXED_IV, 'hex');
+  const key: Buffer = Buffer.from(TEST_FIXED_KEY, 'hex');
   const macKey: Buffer = Buffer.concat([iv, key]);
   const dataToMac: Buffer = Buffer.concat([iv, key, msg]);
   const expectedLength: number = 32;
