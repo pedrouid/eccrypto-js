@@ -7,7 +7,8 @@ import {
   SupportedAlgorithm,
 } from '@ethersproject/sha2';
 
-const pkcs7 = require('pkcs7');
+import * as pkcs7 from './pkcs7';
+import { arrayToBuffer } from '../helpers/util';
 
 export async function fallbackCreateHmac(
   key: Buffer,
@@ -23,7 +24,8 @@ export async function fallbackAesEncrypt(
   data: Buffer
 ): Promise<Buffer> {
   const aesCbc = new aesJs.ModeOfOperation.cbc(key, iv);
-  const encryptedBytes = aesCbc.encrypt(pkcs7.pad(data));
+  const padded = arrayToBuffer(pkcs7.pad(data));
+  const encryptedBytes = aesCbc.encrypt(padded);
   return Buffer.from(encryptedBytes);
 }
 
@@ -34,7 +36,8 @@ export async function fallbackAesDecrypt(
 ): Promise<Buffer> {
   const aesCbc = new aesJs.ModeOfOperation.cbc(key, iv);
   const encryptedBytes = aesCbc.decrypt(data);
-  const result: Buffer = pkcs7.unpad(Buffer.from(encryptedBytes));
+  const padded = Buffer.from(encryptedBytes);
+  const result = arrayToBuffer(pkcs7.unpad(padded));
   return result;
 }
 
