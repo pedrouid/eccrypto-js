@@ -1,7 +1,4 @@
-// @ts-ignore
-import pkcs7 from 'pkcs7';
 import aesJs from 'aes-js';
-
 import { arrayify, isHexString } from '@ethersproject/bytes';
 import {
   sha256,
@@ -9,6 +6,8 @@ import {
   computeHmac,
   SupportedAlgorithm,
 } from '@ethersproject/sha2';
+
+const pkcs7 = require('pkcs7');
 
 export async function fallbackCreateHmac(
   key: Buffer,
