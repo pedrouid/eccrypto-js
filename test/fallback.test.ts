@@ -13,29 +13,29 @@ describe('Fallback', () => {
     data = toEncrypt.msg;
   });
 
-  it('should encrypted successfully', async () => {
-    const encrypted = await eccryptoJS.fallbackAesEncrypt(iv, key, data);
-    expect(encrypted).toBeTruthy();
+  it('should encrypt successfully', async () => {
+    const ciphertext = await eccryptoJS.fallbackAesEncrypt(iv, key, data);
+    expect(ciphertext).toBeTruthy();
   });
 
   it('should decrypt successfully', async () => {
-    const encrypted = await eccryptoJS.fallbackAesEncrypt(iv, key, data);
-    const decrypted = await eccryptoJS.fallbackAesDecrypt(iv, key, encrypted);
-    expect(decrypted).toBeTruthy();
-    expect(compare(data, decrypted)).toBeTruthy();
+    const ciphertext = await eccryptoJS.fallbackAesEncrypt(iv, key, data);
+    const result = await eccryptoJS.fallbackAesDecrypt(iv, key, ciphertext);
+    expect(result).toBeTruthy();
+    expect(compare(data, result)).toBeTruthy();
   });
 
-  it('payload should be decrypted by NodeJS', async () => {
-    const encrypted = await eccryptoJS.fallbackAesEncrypt(iv, key, data);
-    const decrypted = await eccryptoJS.nodeAesDecrypt(iv, key, encrypted);
-    expect(decrypted).toBeTruthy();
-    expect(compare(data, decrypted)).toBeTruthy();
+  it('ciphertext should be decrypted by NodeJS', async () => {
+    const ciphertext = await eccryptoJS.fallbackAesEncrypt(iv, key, data);
+    const result = await eccryptoJS.nodeAesDecrypt(iv, key, ciphertext);
+    expect(result).toBeTruthy();
+    expect(compare(data, result)).toBeTruthy();
   });
 
-  it('should decrypt payload from NodeJS', async () => {
-    const encrypted = await eccryptoJS.nodeAesEncrypt(iv, key, data);
-    const decrypted = await eccryptoJS.fallbackAesDecrypt(iv, key, encrypted);
-    expect(decrypted).toBeTruthy();
-    expect(compare(data, decrypted)).toBeTruthy();
+  it('should decrypt ciphertext from NodeJS', async () => {
+    const ciphertext = await eccryptoJS.nodeAesEncrypt(iv, key, data);
+    const result = await eccryptoJS.fallbackAesDecrypt(iv, key, ciphertext);
+    expect(result).toBeTruthy();
+    expect(compare(data, result)).toBeTruthy();
   });
 });
