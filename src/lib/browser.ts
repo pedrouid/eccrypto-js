@@ -15,14 +15,7 @@ import {
 export function getSubtleCrypto(): SubtleCrypto {
   const browserCrypto =
     // @ts-ignore
-    global?.crypto ||
-    // @ts-ignore
-    global?.msCrypto ||
-    // @ts-ignore
-    window?.crypto ||
-    // @ts-ignore
-    window?.msCrypto ||
-    {};
+    global?.crypto || global?.msCrypto || {};
   return browserCrypto.subtle || browserCrypto.webkitSubtle;
 }
 
