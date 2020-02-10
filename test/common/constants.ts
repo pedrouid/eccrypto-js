@@ -1,6 +1,10 @@
 export const TEST_MESSAGE_STR = 'message to sign';
-export const TEST_FIXED_KEY =
+export const TEST_PRIVATE_KEY =
   '3c8a1d8a02cbe81e9622c55ed8cbfa392b9b4a0f93713918f528468dd4c46fcd';
+export const TEST_PUBLIC_KEY =
+  '0290872d67cc260783e5ca52f96e629031f7d492210dad86cbf68ead2ad1ed0da9';
+export const TEST_SHARED_KEY =
+  '473157b338d07c4c8acfbba15fe31ce4daa4f39e3d66c7da665999dc4e58da71';
 export const TEST_FIXED_IV = '64391e133b04b98aa2fb0479242fb60a';
 export const TEST_HMAC_SIG =
   '2438f4a7f5c21739ea6d09f486b5ebede4f1bf663b5ba6977e2c86a1e17e1593';
@@ -8,3 +12,8 @@ export const TEST_SHA256_HASH =
   '3819ff1b5125e14102ae429929e815d6fada758d4a6886a03b1b1c64aca3a53a';
 export const TEST_SHA512_HASH =
   '1ea15b17a445109c6709d54e8d3e3640ad2d8b87a8b020a2d99e2123d24a42eda8b6d3d71419438a7fe8ac3d8b7f1968113544b7ef4289340a5810f05cb2479f';
+export const TEST_SHA3_HASH =
+  '66c68da92b01108b0e37a2cc80877b0358f27f03de9a8ce95bc499ff70dd4c63';
+
+export const TEST_KECCAK256_HASH =
+  '2339863461be3f2dbbc5f995c5bf6953ee73f6437f37b0b44de4e67088bcd4c2';

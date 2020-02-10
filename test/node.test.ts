@@ -6,7 +6,7 @@ import {
   TEST_MESSAGE_STR,
   TEST_SHA512_HASH,
   TEST_SHA256_HASH,
-  TEST_FIXED_KEY,
+  TEST_PRIVATE_KEY,
   TEST_FIXED_IV,
   TEST_HMAC_SIG,
 } from './common';
@@ -132,13 +132,13 @@ describe('NodeJS', () => {
   });
 
   describe('HMAC', () => {
-    const msg: Buffer = Buffer.from(TEST_MESSAGE_STR);
-    const iv: Buffer = Buffer.from(TEST_FIXED_IV, 'hex');
-    const key: Buffer = Buffer.from(TEST_FIXED_KEY, 'hex');
-    const macKey: Buffer = Buffer.concat([iv, key]);
-    const dataToMac: Buffer = Buffer.concat([iv, key, msg]);
-    const expectedLength: number = 32;
-    const expectedOutput: Buffer = Buffer.from(TEST_HMAC_SIG, 'hex');
+    const msg = Buffer.from(TEST_MESSAGE_STR);
+    const iv = Buffer.from(TEST_FIXED_IV, 'hex');
+    const key = Buffer.from(TEST_PRIVATE_KEY, 'hex');
+    const macKey = Buffer.concat([iv, key]);
+    const dataToMac = Buffer.concat([iv, key, msg]);
+    const expectedLength = 32;
+    const expectedOutput = Buffer.from(TEST_HMAC_SIG, 'hex');
 
     let mac: Buffer;
 

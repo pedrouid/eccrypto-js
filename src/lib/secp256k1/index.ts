@@ -8,33 +8,30 @@ import { ensureLength } from '../../helpers/util';
 
 const secp256k1: ISecp256k1 = _secp256k1 as any;
 
-export function createPrivateKey(): Buffer {
+export function secp256k1GeneratePrivate(): Buffer {
   let privateKey = randomBytes(32);
-  while (!verifyPrivateKey(privateKey)) {
+  while (!secp256k1VerifyPrivateKey(privateKey)) {
     privateKey = randomBytes(32);
   }
   return privateKey;
 }
 
-export function verifyPrivateKey(privateKey: Buffer): boolean {
+export function secp256k1VerifyPrivateKey(privateKey: Buffer): boolean {
   return secp256k1.privateKeyVerify(privateKey);
 }
 
-export function createPublicKey(
-  privateKey: Buffer,
-  compressed?: boolean
-): Buffer {
-  const result = secp256k1.publicKeyCreate(privateKey, compressed);
+export function secp256k1GetPublic(privateKey: Buffer): Buffer {
+  const result = secp256k1.publicKeyCreate(privateKey, true);
   return result;
 }
 
-export function ecdsaSign(msg: Buffer, privateKey: Buffer): Buffer {
+export function secp256k1Sign(msg: Buffer, privateKey: Buffer): Buffer {
   const { signature } = secp256k1.sign(msg, privateKey);
   const result = secp256k1.signatureExport(signature);
   return result;
 }
 
-export function ecdsaVerify(
+export function secp256k1Verify(
   sig: Buffer,
   msg: Buffer,
   publicKey: Buffer
@@ -45,7 +42,7 @@ export function ecdsaVerify(
   return secp256k1.verify(msg, sig, publicKey);
 }
 
-export function ecdhDerive(
+export function secp256k1Derive(
   publicKey: Buffer,
   privateKey: Buffer,
   compressed?: boolean
