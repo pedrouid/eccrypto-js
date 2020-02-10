@@ -14,7 +14,14 @@ import {
 
 const browserCrypto =
   // @ts-ignore
-  global.crypto || global.msCrypto || window.crypto || window.msCrypto || {};
+  global?.crypto ||
+  // @ts-ignore
+  global?.msCrypto ||
+  // @ts-ignore
+  window?.crypto ||
+  // @ts-ignore
+  window?.msCrypto ||
+  {};
 const subtle: SubtleCrypto = browserCrypto.subtle || browserCrypto.webkitSubtle;
 
 export function isBrowser() {
