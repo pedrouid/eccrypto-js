@@ -10,14 +10,6 @@ import {
 import * as pkcs7 from './pkcs7';
 import { arrayToBuffer } from '../helpers/util';
 
-export async function fallbackCreateHmac(
-  key: Buffer,
-  data: Buffer
-): Promise<Buffer> {
-  const result = computeHmac(SupportedAlgorithm.sha256, key, data);
-  return Buffer.from(result);
-}
-
 export async function fallbackAesEncrypt(
   iv: Buffer,
   key: Buffer,
@@ -39,6 +31,14 @@ export async function fallbackAesDecrypt(
   const padded = Buffer.from(encryptedBytes);
   const result = arrayToBuffer(pkcs7.unpad(padded));
   return result;
+}
+
+export async function fallbackCreateHmac(
+  key: Buffer,
+  data: Buffer
+): Promise<Buffer> {
+  const result = computeHmac(SupportedAlgorithm.sha256, key, data);
+  return Buffer.from(result);
 }
 
 export async function fallbackSha256(msg: Buffer | string): Promise<Buffer> {

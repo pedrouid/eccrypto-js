@@ -11,16 +11,6 @@ export function isNode() {
   return !!nodeCrypto;
 }
 
-export async function nodeCreateHmac(
-  key: Buffer,
-  data: Buffer
-): Promise<Buffer> {
-  const hmac = nodeCrypto.createHmac(HMAC_NODE_ALGO, Buffer.from(key));
-  hmac.update(data);
-  const result = hmac.digest();
-  return result;
-}
-
 export async function nodeAesEncrypt(
   iv: Buffer,
   key: Buffer,
@@ -39,6 +29,16 @@ export async function nodeAesDecrypt(
   const decipher = nodeCrypto.createDecipheriv(AES_NODE_ALGO, key, iv);
   decipher.update(data);
   return decipher.final();
+}
+
+export async function nodeCreateHmac(
+  key: Buffer,
+  data: Buffer
+): Promise<Buffer> {
+  const hmac = nodeCrypto.createHmac(HMAC_NODE_ALGO, Buffer.from(key));
+  hmac.update(data);
+  const result = hmac.digest();
+  return result;
 }
 
 export async function nodeSha256(data: Buffer) {
