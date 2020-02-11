@@ -21,7 +21,6 @@
   ],
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
-  "module": "dist/eccrypto-js.esm.js",
   "homepage": "https://github.com/pedrouid/eccrypto-js",
   "repository": {
     "type": "git",
@@ -32,7 +31,7 @@
   },
   "scripts": {
     "start": "tsdx watch",
-    "build": "tsdx build",
+    "build": "tsdx build --format cjs",
     "test": "tsdx test",
     "lint": "tsdx lint src test",
     "prepare": "yarn lint && yarn build && yarn test"
