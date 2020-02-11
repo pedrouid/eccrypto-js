@@ -50,7 +50,7 @@ const dataToMac = eccryptoJS.concatBuffers(iv, key, msg);
 
 const mac = await eccryptoJS.hmacSha256Sign(macKey, dataToMac);
 
-const result = await testHmacVerify(macKey, dataToMac, mac);
+const result = await eccryptoJS.hmacSha256Verify(macKey, dataToMac, mac);
 
 // result will return true if match
 ```
