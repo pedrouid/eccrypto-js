@@ -21,8 +21,7 @@ export async function nodeAesEncrypt(
   data: Buffer
 ): Promise<Buffer> {
   const cipher = nodeCrypto.createCipheriv(AES_NODE_ALGO, key, iv);
-  cipher.update(data);
-  return cipher.final();
+  return Buffer.concat([cipher.update(data), cipher.final()]);
 }
 
 export async function nodeAesDecrypt(
@@ -31,8 +30,7 @@ export async function nodeAesDecrypt(
   data: Buffer
 ): Promise<Buffer> {
   const decipher = nodeCrypto.createDecipheriv(AES_NODE_ALGO, key, iv);
-  decipher.update(data);
-  return decipher.final();
+  return Buffer.concat([decipher.update(data), decipher.final()]);
 }
 
 export async function nodeCreateHmac(
@@ -40,9 +38,7 @@ export async function nodeCreateHmac(
   data: Buffer
 ): Promise<Buffer> {
   const hmac = nodeCrypto.createHmac(HMAC_NODE_ALGO, Buffer.from(key));
-  hmac.update(data);
-  const result = hmac.digest();
-  return result;
+  return hmac.update(data).digest();
 }
 
 export async function nodeSha256(data: Buffer) {
