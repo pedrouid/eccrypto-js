@@ -10,6 +10,70 @@ This library is a port from [eccrypto](https://github.com/bitchan/eccrypto) it m
 
 ## Usage
 
+### AES
+
+```typescript
+import * as eccryptoJS from 'eccrypto-js';
+
+const key = eccryptoJS.randomBytes(32);
+const iv = eccryptoJS.randomBytes(16);
+
+const str = 'message to encrypt';
+const msg = eccryptoJS.utf8ToBuffer(str);
+
+const ciphertext = await eccryptoJS.aesCbcEncrypt(iv, key, msg);
+
+const decrypted = await eccryptoJS.aesCbcDecrypt(iv, key, ciphertext);
+
+// decrypted.toString() === str
+```
+
+### HMAC
+
+```typescript
+import * as eccryptoJS from 'eccrypto-js';
+
+const key = eccryptoJS.randomBytes(32);
+const iv = eccryptoJS.randomBytes(16);
+
+const macKey = Buffer.concat([iv, key]);
+const dataToMac = Buffer.concat([iv, key, msg]);
+
+const mac = await eccryptoJS.hmacSha256Sign(macKey, dataToMac);
+
+const result = await testHmacVerify(macKey, dataToMac, mac);
+
+// result will return true if match
+```
+
+### SHA2
+
+```typescript
+import * as eccryptoJS from 'eccrypto-js';
+
+// SHA256
+const str = 'message to hash';
+const hash = await eccryptoJS.sha256(str);
+
+// SHA512
+const str = 'message to hash';
+const hash = await eccryptoJS.sha512(str);
+```
+
+### SHA3
+
+```typescript
+import * as eccryptoJS from 'eccrypto-js';
+
+// SHA3
+const str = 'message to hash';
+const hash = await eccryptoJS.sha3(str);
+
+// KECCAK256
+const str = 'message to hash';
+const hash = await eccryptoJS.keccak256(str);
+```
+
 ### ECDSA
 
 ```typescript
@@ -55,7 +119,7 @@ import * as eccryptoJS from 'eccrypto-js';
 
 const keyPair = eccryptoJS.generateKeyPair();
 
-const str = 'message to sign';
+const str = 'message to encrypt';
 const msg = eccryptoJS.utf8ToBuffer(str);
 
 const encrypted = await eccryptoJS.encrypt(keyPairB.publicKey, msg);
