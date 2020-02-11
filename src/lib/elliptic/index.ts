@@ -2,28 +2,29 @@ import { ec as EC } from 'elliptic';
 
 import { randomBytes } from '../../random';
 import { isValidPrivateKey } from '../../helpers/validators';
-import { sanitizePublicKey } from '../../helpers/util';
+import { sanitizePublicKey, hexToBuffer } from '../../helpers/util';
+import { HEX_ENC, KEY_LENGTH } from '../../helpers/constants';
 
 const ec = new EC('secp256k1');
 
 export function ellipticCompress(publicKey: Buffer): Buffer {
   publicKey = sanitizePublicKey(publicKey);
   const pubPoint = ec.keyFromPublic(publicKey);
-  const hex = pubPoint.getPublic().encode('hex', true);
-  return Buffer.from(hex, 'hex');
+  const hex = pubPoint.getPublic().encode(HEX_ENC, true);
+  return hexToBuffer(hex);
 }
 
 export function ellipticDecompress(publicKey: Buffer): Buffer {
   publicKey = sanitizePublicKey(publicKey);
   const pubPoint = ec.keyFromPublic(publicKey);
-  const hex = pubPoint.getPublic().encode('hex', false);
-  return Buffer.from(hex, 'hex');
+  const hex = pubPoint.getPublic().encode(HEX_ENC, false);
+  return hexToBuffer(hex);
 }
 
 export function ellipticGeneratePrivate(): Buffer {
-  let privateKey = randomBytes(32);
+  let privateKey = randomBytes(KEY_LENGTH);
   while (!ellipticVerifyPrivateKey(privateKey)) {
-    privateKey = randomBytes(32);
+    privateKey = randomBytes(KEY_LENGTH);
   }
   return privateKey;
 }
@@ -33,17 +34,13 @@ export function ellipticVerifyPrivateKey(privateKey: Buffer): boolean {
 }
 
 export function ellipticGetPublic(privateKey: Buffer): Buffer {
-  return Buffer.from(
-    ec.keyFromPrivate(privateKey).getPublic(false, 'hex'),
-    'hex'
-  );
+  const hex = ec.keyFromPrivate(privateKey).getPublic(false, HEX_ENC);
+  return hexToBuffer(hex);
 }
 
 export function ellipticGetPublicCompressed(privateKey: Buffer): Buffer {
-  return Buffer.from(
-    ec.keyFromPrivate(privateKey).getPublic(true, 'hex'),
-    'hex'
-  );
+  const hex = ec.keyFromPrivate(privateKey).getPublic(true, HEX_ENC);
+  return hexToBuffer(hex);
 }
 
 export function ellipticDerive(publicKeyB: Buffer, privateKeyA: Buffer) {

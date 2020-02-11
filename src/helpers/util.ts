@@ -1,4 +1,12 @@
 import { isHexString } from './validators';
+import {
+  UTF8_ENC,
+  HEX_ENC,
+  KEY_LENGTH,
+  DECOMPRESSED_LENGTH,
+  PREFIXED_KEY_LENGTH,
+  PREFIXED_DECOMPRESSED_LENGTH,
+} from './constants';
 
 export function removeHexPrefix(hex: string): string {
   return hex.replace(/^0x/, '');
@@ -9,11 +17,11 @@ export function addHexPrefix(hex: string): string {
 }
 
 export function utf8ToBuffer(utf8: string): Buffer {
-  return Buffer.from(utf8, 'utf8');
+  return Buffer.from(utf8, UTF8_ENC);
 }
 
 export function hexToBuffer(hex: string): Buffer {
-  return Buffer.from(removeHexPrefix(hex), 'hex');
+  return Buffer.from(removeHexPrefix(hex), HEX_ENC);
 }
 
 export function arrayToBuffer(arr: Uint8Array): Buffer {
@@ -21,11 +29,11 @@ export function arrayToBuffer(arr: Uint8Array): Buffer {
 }
 
 export function bufferToUtf8(buf: Buffer): string {
-  return buf.toString('utf8');
+  return buf.toString(UTF8_ENC);
 }
 
 export function bufferToHex(buf: Buffer): string {
-  return addHexPrefix(buf.toString('hex'));
+  return addHexPrefix(buf.toString(HEX_ENC));
 }
 
 export function bufferToArray(buf: Buffer): Uint8Array {
@@ -50,18 +58,23 @@ export function prepareHash(msg: Buffer | string) {
 }
 
 export function isCompressed(publicKey: Buffer): boolean {
-  return publicKey.length === 32 || publicKey.length === 33;
+  return (
+    publicKey.length === KEY_LENGTH || publicKey.length === PREFIXED_KEY_LENGTH
+  );
 }
 
 export function isDecompressed(publicKey: Buffer): boolean {
-  return publicKey.length === 64 || publicKey.length === 65;
+  return (
+    publicKey.length === DECOMPRESSED_LENGTH ||
+    publicKey.length === PREFIXED_DECOMPRESSED_LENGTH
+  );
 }
 
 export function isPrefixed(publicKey: Buffer) {
   if (isCompressed(publicKey)) {
-    return publicKey.length === 33;
+    return publicKey.length === PREFIXED_KEY_LENGTH;
   }
-  return publicKey.length === 65;
+  return publicKey.length === PREFIXED_DECOMPRESSED_LENGTH;
 }
 
 export function sanitizePublicKey(publicKey: Buffer): Buffer {

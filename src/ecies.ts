@@ -8,20 +8,27 @@ import { sha512 } from './sha2';
 import { Encrypted, PreEncryptOpts } from './helpers/types';
 import { assert, isValidPrivateKey } from './helpers/validators';
 import { isCompressed } from './helpers/util';
+import {
+  ZERO_LENGTH,
+  KEY_LENGTH,
+  IV_LENGTH,
+  MAC_LENGTH,
+  PREFIXED_KEY_LENGTH,
+} from './helpers/constants';
 
 async function getEncryptionKeys(privateKey: Buffer, publicKey: Buffer) {
   publicKey = isCompressed(publicKey) ? decompress(publicKey) : publicKey;
   const sharedKey = await derive(privateKey, publicKey);
   const hash = await sha512(sharedKey);
-  const encryptionKey = Buffer.from(hash.slice(0, 32));
-  const macKey = Buffer.from(hash.slice(32));
+  const encryptionKey = Buffer.from(hash.slice(ZERO_LENGTH, KEY_LENGTH));
+  const macKey = Buffer.from(hash.slice(KEY_LENGTH));
   return { encryptionKey, macKey };
 }
 
 async function getEphemKeyPair(opts?: Partial<PreEncryptOpts>) {
-  let ephemPrivateKey = opts?.ephemPrivateKey || randomBytes(32);
+  let ephemPrivateKey = opts?.ephemPrivateKey || randomBytes(KEY_LENGTH);
   while (!isValidPrivateKey(ephemPrivateKey)) {
-    ephemPrivateKey = opts?.ephemPrivateKey || randomBytes(32);
+    ephemPrivateKey = opts?.ephemPrivateKey || randomBytes(KEY_LENGTH);
   }
   const ephemPublicKey = getPublic(ephemPrivateKey);
   return { ephemPrivateKey, ephemPublicKey };
@@ -37,7 +44,7 @@ export async function encrypt(
     ephemPrivateKey,
     publicKeyTo
   );
-  const iv = opts?.iv || randomBytes(16);
+  const iv = opts?.iv || randomBytes(IV_LENGTH);
   const ciphertext = await aesCbcEncrypt(iv, encryptionKey, msg);
   const dataToMac = Buffer.concat([iv, ephemPublicKey, ciphertext]);
   const mac = await hmacSha256Sign(macKey, dataToMac);
@@ -66,10 +73,15 @@ export function serialize(opts: Encrypted): Buffer {
 }
 
 export function deserialize(buf: Buffer): Encrypted {
+  const slice0 = ZERO_LENGTH;
+  const slice1 = IV_LENGTH;
+  const slice2 = IV_LENGTH + PREFIXED_KEY_LENGTH;
+  const slice3 = IV_LENGTH + PREFIXED_KEY_LENGTH + MAC_LENGTH;
+  const slice4 = buf.length;
   return {
-    ciphertext: buf.slice(81, buf.length),
-    ephemPublicKey: decompress(buf.slice(16, 49)),
-    iv: buf.slice(0, 16),
-    mac: buf.slice(49, 81),
+    iv: buf.slice(slice0, slice1),
+    ephemPublicKey: decompress(buf.slice(slice1, slice2)),
+    mac: buf.slice(slice2, slice3),
+    ciphertext: buf.slice(slice3, slice4),
   };
 }

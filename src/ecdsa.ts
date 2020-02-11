@@ -20,29 +20,39 @@ import {
 
 import { KeyPair } from './helpers/types';
 import { assert, isValidPrivateKey } from './helpers/validators';
+import {
+  KEY_LENGTH,
+  MAX_MSG_LENGTH,
+  PREFIXED_DECOMPRESSED_LENGTH,
+  PREFIXED_KEY_LENGTH,
+} from './helpers/constants';
 
 export function generatePrivate() {
   return isNode() ? secp256k1GeneratePrivate() : ellipticGeneratePrivate();
 }
 
 export function checkPrivateKey(privateKey: Buffer): void {
-  assert(privateKey.length === 32, 'Bad private key');
+  assert(privateKey.length === KEY_LENGTH, 'Bad private key');
   assert(isValidPrivateKey(privateKey), 'Bad private key');
 }
 
 export function checkPublicKey(publicKey: Buffer): void {
-  assert(publicKey.length === 65 || publicKey.length === 33, 'Bad public key');
-  if (publicKey.length === 65) {
+  assert(
+    publicKey.length === PREFIXED_DECOMPRESSED_LENGTH ||
+      publicKey.length === PREFIXED_KEY_LENGTH,
+    'Bad public key'
+  );
+  if (publicKey.length === PREFIXED_DECOMPRESSED_LENGTH) {
     assert(publicKey[0] === 4, 'Bad public key');
   }
-  if (publicKey.length === 33) {
+  if (publicKey.length === PREFIXED_KEY_LENGTH) {
     assert(publicKey[0] === 2 || publicKey[0] === 3, 'Bad public key');
   }
 }
 
 export function checkMessage(msg: Buffer): void {
   assert(msg.length > 0, 'Message should not be empty');
-  assert(msg.length <= 32, 'Message is too long');
+  assert(msg.length <= MAX_MSG_LENGTH, 'Message is too long');
 }
 
 export function compress(publicKey: Buffer): Buffer {

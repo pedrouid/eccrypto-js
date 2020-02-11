@@ -3,12 +3,12 @@ export * from './helpers/types';
 export * from './helpers/util';
 export * from './helpers/validators';
 
-export * from './lib/browser';
-export * from './lib/fallback';
-export * from './lib/node';
 export * from './lib//elliptic';
 export * from './lib/pkcs7';
 export * from './lib/secp256k1';
+export * from './lib/browser';
+export * from './lib/fallback';
+export * from './lib/node';
 
 export * from './aes';
 export * from './ecdh';
