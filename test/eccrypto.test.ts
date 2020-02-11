@@ -31,10 +31,18 @@ describe('eccrypto', () => {
   });
 
   it('should be able to verify with eccrypto-js signature', async () => {
-    const { sig: sig2, msg } = await testSign(keyPair.privateKey);
+    const { sig: sig2, msg: msg2 } = await testSign(keyPair.privateKey);
 
     // @ts-ignore
-    await eccrypto.verify(keyPair.publicKey, msg, sig2);
+    await eccrypto.verify(keyPair.publicKey, msg2, sig2);
+  });
+
+  it('should match public keys from eccrypto-js', async () => {
+    const publicKey1 = await eccryptoJS.getPublic(keyPair.privateKey);
+    const publicKey2 = await eccrypto.getPublic(keyPair.privateKey);
+
+    const isMatch = compare(publicKey1, publicKey2);
+    expect(isMatch).toBeTruthy();
   });
 
   it('should match compressed public keys from eccrypto-js', async () => {
@@ -78,17 +86,32 @@ describe('eccrypto', () => {
     expect(isMatch2).toBeTruthy();
   });
 
+  it('should be decryptable by eccrypto-js and match inputs', async () => {
+    const opts = { ephemPrivateKey: testGenerateKeyPair().privateKey };
+    const { str: str2, encrypted: encrypted2 } = await testEncrypt(
+      keyPair.publicKey,
+      opts,
+      eccrypto as any
+    );
+
+    const decrypted1 = await eccryptoJS.decrypt(keyPair.privateKey, encrypted2);
+    expect(decrypted1).toBeTruthy();
+
+    const isMatch = decrypted1.toString() === str2;
+    expect(isMatch).toBeTruthy();
+  });
+
   it('should decrypt and match input from eccrypto-js', async () => {
     const opts = { ephemPrivateKey: testGenerateKeyPair().privateKey };
-    const { str, encrypted: encrypted1 } = await testEncrypt(
+    const { str: str1, encrypted: encrypted1 } = await testEncrypt(
       keyPair.publicKey,
       opts
     );
 
-    const decrypted = await eccrypto.decrypt(keyPair.privateKey, encrypted1);
-    expect(decrypted).toBeTruthy();
+    const decrypted2 = await eccrypto.decrypt(keyPair.privateKey, encrypted1);
+    expect(decrypted2).toBeTruthy();
 
-    const isMatch = decrypted.toString() === str;
+    const isMatch = decrypted2.toString() === str1;
     expect(isMatch).toBeTruthy();
   });
 
