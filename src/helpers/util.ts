@@ -33,7 +33,7 @@ export function bufferToUtf8(buf: Buffer): string {
 }
 
 export function bufferToHex(buf: Buffer): string {
-  return addHexPrefix(buf.toString(HEX_ENC));
+  return buf.toString(HEX_ENC);
 }
 
 export function bufferToArray(buf: Buffer): Uint8Array {
