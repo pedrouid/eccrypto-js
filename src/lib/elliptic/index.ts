@@ -3,18 +3,21 @@ import { ec as EC } from 'elliptic';
 import { randomBytes } from '../../random';
 import { isValidPrivateKey } from '../../helpers/validators';
 import { sanitizePublicKey } from '../../helpers/util';
-import { secp256k1 } from '../secp256k1';
 
 const ec = new EC('secp256k1');
 
 export function ellipticCompress(publicKey: Buffer): Buffer {
   publicKey = sanitizePublicKey(publicKey);
-  return secp256k1.publicKeyConvert(publicKey, true);
+  const pubPoint = ec.keyFromPublic(publicKey);
+  const hex = pubPoint.getPublic().encode('hex', true);
+  return Buffer.from(hex, 'hex');
 }
 
 export function ellipticDecompress(publicKey: Buffer): Buffer {
   publicKey = sanitizePublicKey(publicKey);
-  return secp256k1.publicKeyConvert(publicKey, false);
+  const pubPoint = ec.keyFromPublic(publicKey);
+  const hex = pubPoint.getPublic().encode('hex', false);
+  return Buffer.from(hex, 'hex');
 }
 
 export function ellipticGeneratePrivate(): Buffer {
