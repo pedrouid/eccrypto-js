@@ -1,5 +1,5 @@
 import * as eccryptoJS from '../src';
-import { testGenerateKeyPair, testEncrypt } from './common';
+import { testGenerateKeyPair, testEncrypt, compare } from './common';
 
 describe('ECIES', () => {
   let keyPair: eccryptoJS.KeyPair;
@@ -28,5 +28,30 @@ describe('ECIES', () => {
 
     const isMatch = decrypted.toString() === str;
     expect(isMatch).toBeTruthy();
+  });
+
+  it('should serialize successfully', async () => {
+    const { encrypted } = await testEncrypt(keyPair.publicKey);
+    const expectedLength =
+      encrypted.ciphertext.length +
+      eccryptoJS.compress(encrypted.ephemPublicKey).length +
+      encrypted.iv.length +
+      encrypted.mac.length;
+    const serialized = eccryptoJS.serialize(encrypted);
+    expect(serialized).toBeTruthy();
+    expect(serialized.length === expectedLength).toBeTruthy();
+  });
+
+  it('should deserialize successfully', async () => {
+    const { encrypted } = await testEncrypt(keyPair.publicKey);
+    const serialized = eccryptoJS.serialize(encrypted);
+    const deserialized = eccryptoJS.deserialize(serialized);
+    expect(deserialized).toBeTruthy();
+    expect(compare(deserialized.ciphertext, encrypted.ciphertext)).toBeTruthy();
+    expect(
+      compare(deserialized.ephemPublicKey, encrypted.ephemPublicKey)
+    ).toBeTruthy();
+    expect(compare(deserialized.iv, encrypted.iv)).toBeTruthy();
+    expect(compare(deserialized.mac, encrypted.mac)).toBeTruthy();
   });
 });
