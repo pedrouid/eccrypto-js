@@ -17,15 +17,36 @@ describe('eccrypto', () => {
   });
 
   it('should be able to sign with eccrypto-js keys', async () => {
-    const { sig } = await testSign(keyPair.privateKey, eccrypto as any);
-    expect(sig).toBeTruthy();
+    const { sig: sig2 } = await testSign(keyPair.privateKey, eccrypto as any);
+    expect(sig2).toBeTruthy();
+  });
+
+  it('should be able to verify signature from eccrypto-js', async () => {
+    const { sig: sig2, msg: msg2 } = await testSign(
+      keyPair.privateKey,
+      eccrypto as any
+    );
+
+    await eccryptoJS.verify(keyPair.publicKey, msg2, sig2);
   });
 
   it('should be able to verify with eccrypto-js signature', async () => {
-    const { sig: sig1, msg } = await testSign(keyPair.privateKey);
+    const { sig: sig2, msg } = await testSign(keyPair.privateKey);
 
     // @ts-ignore
-    await eccrypto.verify(keyPair.publicKey, msg, sig1);
+    await eccrypto.verify(keyPair.publicKey, msg, sig2);
+  });
+
+  it('should match compressed public keys from eccrypto-js', async () => {
+    const publicKeyCompressed1 = await eccryptoJS.getPublicCompressed(
+      keyPair.privateKey
+    );
+    const publicKeyCompressed2 = await eccrypto.getPublicCompressed(
+      keyPair.privateKey
+    );
+
+    const isMatch = compare(publicKeyCompressed1, publicKeyCompressed2);
+    expect(isMatch).toBeTruthy();
   });
 
   it('should match derived sharedKeys from eccrypto-js', async () => {
@@ -41,11 +62,8 @@ describe('eccrypto', () => {
       keyPairB.publicKey
     );
 
-    const isMatch1 = compare(sharedKey1, sharedKey1);
+    const isMatch1 = compare(sharedKey1, sharedKey2);
     expect(isMatch1).toBeTruthy();
-
-    const isMatch2 = compare(sharedKey2, sharedKey2);
-    expect(isMatch2).toBeTruthy();
 
     const sharedKey3 = await eccryptoJS.derive(
       keyPairB.privateKey,
@@ -56,11 +74,8 @@ describe('eccrypto', () => {
       keyPairA.publicKey
     );
 
-    const isMatch3 = compare(sharedKey3, sharedKey3);
-    expect(isMatch3).toBeTruthy();
-
-    const isMatch4 = compare(sharedKey4, sharedKey4);
-    expect(isMatch4).toBeTruthy();
+    const isMatch2 = compare(sharedKey3, sharedKey4);
+    expect(isMatch2).toBeTruthy();
   });
 
   it('should decrypt and match input from eccrypto-js', async () => {
