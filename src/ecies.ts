@@ -7,7 +7,7 @@ import { sha512 } from './sha2';
 
 import { Encrypted, PreEncryptOpts } from './helpers/types';
 import { assert, isValidPrivateKey } from './helpers/validators';
-import { isCompressed } from './helpers/util';
+import { isCompressed, concatBuffers } from './helpers/util';
 import {
   ZERO_LENGTH,
   KEY_LENGTH,
@@ -46,7 +46,7 @@ export async function encrypt(
   );
   const iv = opts?.iv || randomBytes(IV_LENGTH);
   const ciphertext = await aesCbcEncrypt(iv, encryptionKey, msg);
-  const dataToMac = Buffer.concat([iv, ephemPublicKey, ciphertext]);
+  const dataToMac = concatBuffers(iv, ephemPublicKey, ciphertext);
   const mac = await hmacSha256Sign(macKey, dataToMac);
   return { iv, ephemPublicKey, ciphertext, mac: mac };
 }
@@ -60,7 +60,7 @@ export async function decrypt(
     privateKey,
     ephemPublicKey
   );
-  const dataToMac = Buffer.concat([iv, ephemPublicKey, ciphertext]);
+  const dataToMac = concatBuffers(iv, ephemPublicKey, ciphertext);
   const macTest = await hmacSha256Verify(macKey, dataToMac, mac);
   assert(macTest, 'Bad MAC');
   const msg = await aesCbcDecrypt(opts.iv, encryptionKey, opts.ciphertext);
@@ -69,7 +69,7 @@ export async function decrypt(
 
 export function serialize(opts: Encrypted): Buffer {
   const ephemPublicKey = compress(opts.ephemPublicKey);
-  return Buffer.concat([opts.iv, ephemPublicKey, opts.mac, opts.ciphertext]);
+  return concatBuffers(opts.iv, ephemPublicKey, opts.mac, opts.ciphertext);
 }
 
 export function deserialize(buf: Buffer): Encrypted {

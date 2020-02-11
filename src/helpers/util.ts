@@ -39,6 +39,11 @@ export function bufferToArray(buf: Buffer): Uint8Array {
   return new Uint8Array(buf);
 }
 
+export function concatBuffers(...args: Buffer[]): Buffer {
+  const result = Buffer.concat(args);
+  return result;
+}
+
 export function ensureLength(data: Buffer, expectedLength: number) {
   const diff = data.length - expectedLength;
   if (diff > 0) {

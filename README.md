@@ -6,8 +6,6 @@ Elliptic curve cryptography library (NodeJS, Browser and Pure JS)
 
 This library is a port from [eccrypto](https://github.com/bitchan/eccrypto) it makes use of native libraries on NodeJS and Browser enviroments with pure javascript fallbacks.
 
-**NOTE:** This library is still experimental and hasn't been thoroughly tested yet
-
 ## Usage
 
 ### RandomBytes
@@ -47,8 +45,8 @@ import * as eccryptoJS from 'eccrypto-js';
 const key = eccryptoJS.randomBytes(32);
 const iv = eccryptoJS.randomBytes(16);
 
-const macKey = Buffer.concat([iv, key]);
-const dataToMac = Buffer.concat([iv, key, msg]);
+const macKey = eccryptoJS.concatBuffers(iv, key);
+const dataToMac = eccryptoJS.concatBuffers(iv, key, msg);
 
 const mac = await eccryptoJS.hmacSha256Sign(macKey, dataToMac);
 

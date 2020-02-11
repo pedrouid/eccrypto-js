@@ -4,6 +4,7 @@ import {
   SHA512_NODE_ALGO,
   SHA256_NODE_ALGO,
 } from '../helpers/constants';
+import { concatBuffers } from '../helpers/util';
 
 const nodeCrypto = require('crypto');
 
@@ -21,7 +22,7 @@ export async function nodeAesEncrypt(
   data: Buffer
 ): Promise<Buffer> {
   const cipher = nodeCrypto.createCipheriv(AES_NODE_ALGO, key, iv);
-  return Buffer.concat([cipher.update(data), cipher.final()]);
+  return concatBuffers(cipher.update(data), cipher.final());
 }
 
 export async function nodeAesDecrypt(
@@ -30,7 +31,7 @@ export async function nodeAesDecrypt(
   data: Buffer
 ): Promise<Buffer> {
   const decipher = nodeCrypto.createDecipheriv(AES_NODE_ALGO, key, iv);
-  return Buffer.concat([decipher.update(data), decipher.final()]);
+  return concatBuffers(decipher.update(data), decipher.final());
 }
 
 export async function nodeCreateHmac(
