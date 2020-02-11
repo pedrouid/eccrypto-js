@@ -11,6 +11,10 @@ export function isNode() {
   return !!nodeCrypto;
 }
 
+export function nodeRandomBytes(length: number): Buffer {
+  return nodeCrypto.randomBytes(length);
+}
+
 export async function nodeAesEncrypt(
   iv: Buffer,
   key: Buffer,

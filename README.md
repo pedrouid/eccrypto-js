@@ -10,6 +10,17 @@ This library is a port from [eccrypto](https://github.com/bitchan/eccrypto) it m
 
 ## Usage
 
+### RandomBytes
+
+```typescript
+import * as eccryptoJS from 'eccrypto-js';
+
+const length = 32;
+const key = eccryptoJS.randomBytes(length);
+
+// key.length === length
+```
+
 ### AES
 
 ```typescript

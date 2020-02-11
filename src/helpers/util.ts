@@ -1,5 +1,4 @@
-import aesJs from 'aes-js';
-import { isHexString } from '@ethersproject/bytes';
+import { isHexString } from './validators';
 
 export function removeHexPrefix(hex: string): string {
   return hex.replace(/^0x/, '');
@@ -10,11 +9,11 @@ export function addHexPrefix(hex: string): string {
 }
 
 export function utf8ToBuffer(utf8: string): Buffer {
-  return Buffer.from(aesJs.utils.utf8.toBytes(utf8));
+  return Buffer.from(utf8, 'utf8');
 }
 
 export function hexToBuffer(hex: string): Buffer {
-  return Buffer.from(aesJs.utils.hex.toBytes(hex));
+  return Buffer.from(removeHexPrefix(hex), 'hex');
 }
 
 export function arrayToBuffer(arr: Uint8Array): Buffer {
@@ -22,11 +21,11 @@ export function arrayToBuffer(arr: Uint8Array): Buffer {
 }
 
 export function bufferToUtf8(buf: Buffer): string {
-  return aesJs.utils.utf8.fromBytes(buf);
+  return buf.toString('utf8');
 }
 
 export function bufferToHex(buf: Buffer): string {
-  return aesJs.utils.hex.fromBytes(buf);
+  return addHexPrefix(buf.toString('hex'));
 }
 
 export function bufferToArray(buf: Buffer): Uint8Array {
@@ -42,8 +41,11 @@ export function ensureLength(data: Buffer, expectedLength: number) {
 }
 
 export function prepareHash(msg: Buffer | string) {
-  const enc = isHexString(msg) ? 'hex' : undefined;
-  const buf = typeof msg === 'string' ? Buffer.from(msg, enc) : msg;
+  const buf = Buffer.isBuffer(msg)
+    ? msg
+    : isHexString(msg)
+    ? hexToBuffer(msg)
+    : utf8ToBuffer(msg);
   return buf;
 }
 

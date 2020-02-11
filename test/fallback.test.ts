@@ -22,6 +22,25 @@ declare global {
 window.msCrypto = new Crypto();
 
 describe('Fallback', () => {
+  describe('RandomBytes', () => {
+    let length: number;
+    let key: Buffer;
+
+    beforeEach(async () => {
+      length = 32;
+      key = eccryptoJS.nodeRandomBytes(length);
+    });
+
+    it('should generate random bytes sucessfully', async () => {
+      expect(key).toBeTruthy();
+    });
+
+    it('should match request byte length', async () => {
+      const isMatch = key.length === length;
+      expect(isMatch).toBeTruthy();
+    });
+  });
+
   describe('AES', () => {
     let keyLength: number;
     let key: Buffer;

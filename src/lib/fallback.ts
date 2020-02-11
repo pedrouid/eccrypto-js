@@ -1,14 +1,15 @@
 import aesJs from 'aes-js';
-import { arrayify, isHexString } from '@ethersproject/bytes';
-import {
-  sha256,
-  sha512,
-  computeHmac,
-  SupportedAlgorithm,
-} from '@ethersproject/sha2';
+import randomBytes from 'randombytes';
+import * as hash from 'hash.js';
 
 import * as pkcs7 from './pkcs7';
-import { arrayToBuffer, removeHexPrefix } from '../helpers/util';
+
+import { arrayToBuffer, hexToBuffer, prepareHash } from '../helpers/util';
+import { SHA256_NODE_ALGO } from '../helpers/constants';
+
+export function fallbackRandomBytes(length: number): Buffer {
+  return randomBytes(length);
+}
 
 export async function fallbackAesEncrypt(
   iv: Buffer,
@@ -37,20 +38,27 @@ export async function fallbackCreateHmac(
   key: Buffer,
   data: Buffer
 ): Promise<Buffer> {
-  const result = computeHmac(SupportedAlgorithm.sha256, key, data);
-  return Buffer.from(removeHexPrefix(result), 'hex');
+  const result = hash
+    .hmac((hash as any)[SHA256_NODE_ALGO], key)
+    .update(data)
+    .digest('hex');
+  return hexToBuffer(result);
 }
 
 export async function fallbackSha256(msg: Buffer | string): Promise<Buffer> {
-  const enc = isHexString(msg) ? 'hex' : undefined;
-  const buf = typeof msg === 'string' ? Buffer.from(msg, enc) : msg;
-  const hash = sha256(buf);
-  return Buffer.from(arrayify(hash));
+  const data = prepareHash(msg);
+  const result = hash
+    .sha256()
+    .update(data)
+    .digest('hex');
+  return hexToBuffer(result);
 }
 
 export async function fallbackSha512(msg: Buffer | string): Promise<Buffer> {
-  const enc = isHexString(msg) ? 'hex' : undefined;
-  const buf = typeof msg === 'string' ? Buffer.from(msg, enc) : msg;
-  const hash = sha512(buf);
-  return Buffer.from(arrayify(hash));
+  const data = prepareHash(msg);
+  const result = hash
+    .sha512()
+    .update(data)
+    .digest('hex');
+  return hexToBuffer(result);
 }

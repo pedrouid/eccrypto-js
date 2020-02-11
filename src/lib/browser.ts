@@ -11,16 +11,30 @@ import {
   SHA256_BROWSER_ALGO,
   SHA512_BROWSER_ALGO,
 } from '../helpers/constants';
+import { arrayToBuffer } from '../helpers/util';
+import { fallbackRandomBytes } from './fallback';
+
+export function getBrowerCrypto(): Crypto {
+  // @ts-ignore
+  return global?.crypto || global?.msCrypto || {};
+}
 
 export function getSubtleCrypto(): SubtleCrypto {
-  const browserCrypto =
-    // @ts-ignore
-    global?.crypto || global?.msCrypto || {};
+  const browserCrypto = getBrowerCrypto();
+  // @ts-ignore
   return browserCrypto.subtle || browserCrypto.webkitSubtle;
 }
 
 export function isBrowser(): boolean {
-  return !!getSubtleCrypto();
+  return !!getBrowerCrypto() && !!getSubtleCrypto();
+}
+
+export function browserRandomBytes(length: number): Buffer {
+  const browserCrypto = getBrowerCrypto();
+  if (typeof browserCrypto.getRandomValues !== 'undefined') {
+    return arrayToBuffer(browserCrypto.getRandomValues(new Uint8Array(length)));
+  }
+  return fallbackRandomBytes(length);
 }
 
 export async function browserImportKey(

@@ -38,11 +38,10 @@
     "prepare": "yarn lint && yarn build && yarn test"
   },
   "dependencies": {
-    "@ethersproject/bytes": "5.0.0-beta.136",
-    "@ethersproject/random": "5.0.0-beta.133",
-    "@ethersproject/sha2": "5.0.0-beta.134",
     "aes-js": "3.1.2",
+    "hash.js": "^1.1.7",
     "js-sha3": "0.8.0",
+    "randombytes": "2.1.0",
     "secp256k1": "3.8.0"
   },
   "devDependencies": {
@@ -52,6 +51,7 @@
     "@types/elliptic": "6.4.12",
     "@types/jest": "25.1.1",
     "@types/node": "13.7.0",
+    "@types/randombytes": "^2.0.0",
     "eccrypto": "1.1.3",
     "husky": "4.2.1",
     "tsdx": "0.12.3",
