@@ -46,3 +46,24 @@ export function prepareHash(msg: Buffer | string) {
   const buf = typeof msg === 'string' ? Buffer.from(msg, enc) : msg;
   return buf;
 }
+
+export function isCompressed(publicKey: Buffer): boolean {
+  return publicKey.length === 32 || publicKey.length === 33;
+}
+
+export function isDecompressed(publicKey: Buffer): boolean {
+  return publicKey.length === 64 || publicKey.length === 65;
+}
+
+export function isPrefixed(publicKey: Buffer) {
+  if (isCompressed(publicKey)) {
+    return publicKey.length === 33;
+  }
+  return publicKey.length === 65;
+}
+
+export function sanitizePublicKey(publicKey: Buffer): Buffer {
+  return isPrefixed(publicKey)
+    ? publicKey
+    : Buffer.from(`04${publicKey.toString('hex')}`, 'hex');
+}

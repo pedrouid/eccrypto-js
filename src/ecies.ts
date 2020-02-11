@@ -1,14 +1,16 @@
 import { aesCbcEncrypt, aesCbcDecrypt } from './aes';
 import { derive } from './ecdh';
-import { getPublic } from './ecdsa';
+import { getPublic, decompress } from './ecdsa';
 import { hmacSha256Sign, hmacSha256Verify } from './hmac';
 import { randomBytes } from './random';
 import { sha512 } from './sha2';
 
 import { Encrypted, PreEncryptOpts } from './helpers/types';
 import { assert, isValidPrivateKey } from './helpers/validators';
+import { isCompressed } from './helpers/util';
 
 async function getEncryptionKeys(privateKey: Buffer, publicKey: Buffer) {
+  publicKey = isCompressed(publicKey) ? decompress(publicKey) : publicKey;
   const sharedKey = await derive(privateKey, publicKey);
   const hash = await sha512(sharedKey);
   const encryptionKey = Buffer.from(hash.slice(0, 32));

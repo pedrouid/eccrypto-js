@@ -42,7 +42,6 @@
     "@ethersproject/random": "5.0.0-beta.133",
     "@ethersproject/sha2": "5.0.0-beta.134",
     "aes-js": "3.1.2",
-    "elliptic": "6.4.1",
     "js-sha3": "0.8.0",
     "secp256k1": "3.8.0"
   },

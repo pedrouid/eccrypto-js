@@ -4,9 +4,19 @@ import * as _secp256k1 from 'secp256k1';
 import { ISecp256k1 } from './typings';
 
 import { randomBytes } from '../../random';
-import { ensureLength } from '../../helpers/util';
+import { ensureLength, sanitizePublicKey } from '../../helpers/util';
 
-const secp256k1: ISecp256k1 = _secp256k1 as any;
+export const secp256k1: ISecp256k1 = _secp256k1 as any;
+
+export function secp256k1Compress(publicKey: Buffer): Buffer {
+  publicKey = sanitizePublicKey(publicKey);
+  return secp256k1.publicKeyConvert(publicKey, true);
+}
+
+export function secp256k1Decompress(publicKey: Buffer): Buffer {
+  publicKey = sanitizePublicKey(publicKey);
+  return secp256k1.publicKeyConvert(publicKey, false);
+}
 
 export function secp256k1GeneratePrivate(): Buffer {
   let privateKey = randomBytes(32);
@@ -21,6 +31,11 @@ export function secp256k1VerifyPrivateKey(privateKey: Buffer): boolean {
 }
 
 export function secp256k1GetPublic(privateKey: Buffer): Buffer {
+  const result = secp256k1.publicKeyCreate(privateKey, false);
+  return result;
+}
+
+export function secp256k1GetPublicCompressed(privateKey: Buffer): Buffer {
   const result = secp256k1.publicKeyCreate(privateKey, true);
   return result;
 }

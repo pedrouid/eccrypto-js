@@ -4,12 +4,18 @@ import {
   secp256k1GetPublic,
   secp256k1Sign,
   secp256k1Verify,
+  secp256k1GetPublicCompressed,
+  secp256k1Compress,
+  secp256k1Decompress,
 } from './lib/secp256k1';
 import {
   ellipticGeneratePrivate,
   ellipticGetPublic,
   ellipticSign,
   ellipticVerify,
+  ellipticGetPublicCompressed,
+  ellipticDecompress,
+  ellipticCompress,
 } from './lib/elliptic';
 
 import { KeyPair } from './helpers/types';
@@ -19,12 +25,12 @@ export function generatePrivate() {
   return isNode() ? secp256k1GeneratePrivate() : ellipticGeneratePrivate();
 }
 
-export function checkPrivateKey(privateKey: Buffer) {
+export function checkPrivateKey(privateKey: Buffer): void {
   assert(privateKey.length === 32, 'Bad private key');
   assert(isValidPrivateKey(privateKey), 'Bad private key');
 }
 
-export function checkPublicKey(publicKey: Buffer) {
+export function checkPublicKey(publicKey: Buffer): void {
   assert(publicKey.length === 65 || publicKey.length === 33, 'Bad public key');
   if (publicKey.length === 65) {
     assert(publicKey[0] === 4, 'Bad public key');
@@ -34,9 +40,19 @@ export function checkPublicKey(publicKey: Buffer) {
   }
 }
 
-export function checkMessage(msg: Buffer) {
+export function checkMessage(msg: Buffer): void {
   assert(msg.length > 0, 'Message should not be empty');
   assert(msg.length <= 32, 'Message is too long');
+}
+
+export function compress(publicKey: Buffer): Buffer {
+  return isNode() ? secp256k1Compress(publicKey) : ellipticCompress(publicKey);
+}
+
+export function decompress(publicKey: Buffer): Buffer {
+  return isNode()
+    ? secp256k1Decompress(publicKey)
+    : ellipticDecompress(publicKey);
 }
 
 export function getPublic(privateKey: Buffer) {
@@ -44,6 +60,13 @@ export function getPublic(privateKey: Buffer) {
   return isNode()
     ? secp256k1GetPublic(privateKey)
     : ellipticGetPublic(privateKey);
+}
+
+export function getPublicCompressed(privateKey: Buffer) {
+  checkPrivateKey(privateKey);
+  return isNode()
+    ? secp256k1GetPublicCompressed(privateKey)
+    : ellipticGetPublicCompressed(privateKey);
 }
 
 export function generateKeyPair(): KeyPair {

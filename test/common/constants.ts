@@ -2,6 +2,8 @@ export const TEST_MESSAGE_STR = 'message to sign';
 export const TEST_PRIVATE_KEY =
   '3c8a1d8a02cbe81e9622c55ed8cbfa392b9b4a0f93713918f528468dd4c46fcd';
 export const TEST_PUBLIC_KEY =
+  '0490872d67cc260783e5ca52f96e629031f7d492210dad86cbf68ead2ad1ed0da9a23239ed3210b5edc25fd37335646b2e50194aa6cbd8c576dc543dddf446a76e';
+export const TEST_PUBLIC_KEY_COMPRESSED =
   '0290872d67cc260783e5ca52f96e629031f7d492210dad86cbf68ead2ad1ed0da9';
 export const TEST_SHARED_KEY =
   '473157b338d07c4c8acfbba15fe31ce4daa4f39e3d66c7da665999dc4e58da71';

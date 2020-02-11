@@ -18,6 +18,9 @@ export const HMAC_NODE_ALGO = `sha${HMAC_LENGTH}`;
 export const SHA256_NODE_ALGO = 'sha256';
 export const SHA512_NODE_ALGO = 'sha512';
 
+export const KEY_LENGTH = 32;
+export const IV_LENGTH = 16;
+
 export const EMPTY_BUFFER = Buffer.from(new Uint8Array(0));
 export const EC_GROUP_ORDER = Buffer.from(
   'fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141',
