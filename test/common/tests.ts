@@ -10,7 +10,7 @@ export function testGenerateKeyPair(lib: eccryptoJS.IEccrypto = eccryptoJS) {
 }
 
 export async function testSha2(
-  msg: string,
+  msg: Buffer,
   algo: string,
   lib: eccryptoJS.IEccrypto = eccryptoJS
 ) {
@@ -87,7 +87,8 @@ export async function getTestMessageToSign(
   str = TEST_MESSAGE_STR,
   lib: eccryptoJS.IEccrypto = eccryptoJS
 ) {
-  const msg = await testSha2(str, eccryptoJS.SHA256_NODE_ALGO, lib);
+  const data = Buffer.from(str);
+  const msg = await testSha2(data, eccryptoJS.SHA256_NODE_ALGO, lib);
   return { str, msg };
 }
 
@@ -138,7 +139,7 @@ export async function testEcies(
   const ephemPublicKey = eccryptoJS.getPublic(ephemPrivateKey);
 
   const sharedKey = await lib.derive(ephemPrivateKey, publicKeyTo);
-  const hash = await testSha2(str, eccryptoJS.SHA512_NODE_ALGO, lib);
+  const hash = await testSha2(msg, eccryptoJS.SHA512_NODE_ALGO, lib);
   const encryptionKey = Buffer.from(hash.slice(0, 32));
   const macKey = Buffer.from(hash.slice(32));
   const iv = opts?.iv || testRandomBytes(16, lib);

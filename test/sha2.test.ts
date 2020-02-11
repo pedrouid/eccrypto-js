@@ -21,18 +21,6 @@ describe('SHA256', () => {
     expect(compare(output, expectedOutput)).toBeTruthy();
   });
 
-  it('should hash hex string sucessfully', async () => {
-    const input = Buffer.from(TEST_MESSAGE_STR).toString();
-    const output = await eccryptoJS.sha256(input);
-    expect(compare(output, expectedOutput)).toBeTruthy();
-  });
-
-  it('should hash utf8 string sucessfully', async () => {
-    const input = TEST_MESSAGE_STR;
-    const output = await eccryptoJS.sha256(input);
-    expect(compare(output, expectedOutput)).toBeTruthy();
-  });
-
   it('should output with expected length', async () => {
     const input = Buffer.from(TEST_MESSAGE_STR);
     const output = await eccryptoJS.sha256(input);
@@ -51,18 +39,6 @@ describe('SHA512', () => {
 
   it('should hash buffer sucessfully', async () => {
     const input = Buffer.from(TEST_MESSAGE_STR);
-    const output = await eccryptoJS.sha512(input);
-    expect(compare(output, expectedOutput)).toBeTruthy();
-  });
-
-  it('should hash hex string sucessfully', async () => {
-    const input = Buffer.from(TEST_MESSAGE_STR).toString();
-    const output = await eccryptoJS.sha512(input);
-    expect(compare(output, expectedOutput)).toBeTruthy();
-  });
-
-  it('should hash utf8 string sucessfully', async () => {
-    const input = TEST_MESSAGE_STR;
     const output = await eccryptoJS.sha512(input);
     expect(compare(output, expectedOutput)).toBeTruthy();
   });

@@ -64,10 +64,12 @@ import * as eccryptoJS from 'eccrypto-js';
 
 // SHA256
 const str = 'message to hash';
+const msg = eccryptoJS.utf8ToBuffer(str);
 const hash = await eccryptoJS.sha256(str);
 
 // SHA512
 const str = 'message to hash';
+const msg = eccryptoJS.utf8ToBuffer(str);
 const hash = await eccryptoJS.sha512(str);
 ```
 
@@ -78,10 +80,12 @@ import * as eccryptoJS from 'eccrypto-js';
 
 // SHA3
 const str = 'message to hash';
+const msg = eccryptoJS.utf8ToBuffer(str);
 const hash = await eccryptoJS.sha3(str);
 
 // KECCAK256
 const str = 'message to hash';
+const msg = eccryptoJS.utf8ToBuffer(str);
 const hash = await eccryptoJS.keccak256(str);
 ```
 
@@ -92,10 +96,11 @@ import * as eccryptoJS from 'eccrypto-js';
 
 const keyPair = eccryptoJS.generateKeyPair();
 
-const str = 'message to sign';
-const msg = await eccryptoJS.sha256(str);
+const str = 'message to hash';
+const msg = eccryptoJS.utf8ToBuffer(str);
+const hash = await eccryptoJS.sha256(str);
 
-const sig = await eccryptoJS.sign(keyPair.privateKey, msg);
+const sig = await eccryptoJS.sign(keyPair.privateKey, hash);
 
 await eccryptoJS.verify(keyPair.publicKey, msg, sig);
 

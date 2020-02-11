@@ -1,4 +1,3 @@
-import { isHexString } from './validators';
 import {
   UTF8_ENC,
   HEX_ENC,
@@ -46,15 +45,6 @@ export function ensureLength(data: Buffer, expectedLength: number) {
     data = data.slice(diff);
   }
   return data;
-}
-
-export function prepareHash(msg: Buffer | string) {
-  const buf = Buffer.isBuffer(msg)
-    ? msg
-    : isHexString(msg)
-    ? hexToBuffer(msg)
-    : utf8ToBuffer(msg);
-  return buf;
 }
 
 export function isCompressed(publicKey: Buffer): boolean {

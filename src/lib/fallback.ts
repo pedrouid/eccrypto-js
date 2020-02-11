@@ -4,7 +4,7 @@ import * as hash from 'hash.js';
 
 import * as pkcs7 from './pkcs7';
 
-import { arrayToBuffer, hexToBuffer, prepareHash } from '../helpers/util';
+import { arrayToBuffer, hexToBuffer } from '../helpers/util';
 import { SHA256_NODE_ALGO, HEX_ENC } from '../helpers/constants';
 
 export function fallbackRandomBytes(length: number): Buffer {
@@ -45,20 +45,18 @@ export async function fallbackCreateHmac(
   return hexToBuffer(result);
 }
 
-export async function fallbackSha256(msg: Buffer | string): Promise<Buffer> {
-  const data = prepareHash(msg);
+export async function fallbackSha256(msg: Buffer): Promise<Buffer> {
   const result = hash
     .sha256()
-    .update(data)
+    .update(msg)
     .digest(HEX_ENC);
   return hexToBuffer(result);
 }
 
-export async function fallbackSha512(msg: Buffer | string): Promise<Buffer> {
-  const data = prepareHash(msg);
+export async function fallbackSha512(msg: Buffer): Promise<Buffer> {
   const result = hash
     .sha512()
-    .update(data)
+    .update(msg)
     .digest(HEX_ENC);
   return hexToBuffer(result);
 }
