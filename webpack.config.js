@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = {
   mode: 'production',
   entry: {
-    index: path.resolve(__dirname, 'dist', 'esm', 'index.js'),
+    index: path.resolve(__dirname, 'dist', 'es6', 'index.js'),
   },
   output: {
     path: path.resolve(__dirname, 'dist', 'umd'),
@@ -12,11 +12,5 @@ module.exports = {
     library: 'eccryptoJS',
     umdNamedDefine: true,
     globalObject: 'this',
-  },
-  resolve: {
-    extensions: ['.js'],
-  },
-  optimization: {
-    minimize: true,
   },
 };
