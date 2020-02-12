@@ -1,5 +1,8 @@
 {
+  "include": ["./src/**/*"],
   "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
     "allowJs": false,
     "allowSyntheticDefaultImports": true,
     "declaration": true,
