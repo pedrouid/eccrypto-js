@@ -3,10 +3,10 @@ const path = require('path');
 module.exports = {
   mode: 'production',
   entry: {
-    index: './dist/index.js',
+    index: path.resolve(__dirname, 'dist', 'esm', 'index.js'),
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'dist', 'umd'),
     filename: '[name].min.js',
     libraryTarget: 'umd',
     library: 'eccryptoJS',
@@ -16,7 +16,6 @@ module.exports = {
   resolve: {
     extensions: ['.js'],
   },
-  devtool: 'source-map',
   optimization: {
     minimize: true,
   },
