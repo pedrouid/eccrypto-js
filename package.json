@@ -31,7 +31,8 @@
   },
   "scripts": {
     "start": "tsdx watch",
-    "build": "tsdx build --format cjs",
+    "postbuild": "bash ./ops/postbuild.sh",
+    "build": "tsdx build --format umd --name index && yarn postbuild",
     "test": "tsdx test",
     "lint": "tsdx lint src test",
     "prepare": "yarn lint && yarn build && yarn test"
