@@ -3,7 +3,11 @@
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src",
+    "target": "es5",
+    "module": "esnext",
+    "lib": ["dom", "esnext"],
     "allowJs": false,
+    "alwaysStrict": true,
     "allowSyntheticDefaultImports": true,
     "declaration": true,
     "declarationMap": true,
@@ -11,11 +15,11 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
-    "lib": ["es2017", "dom", "esnext.asynciterable"],
-    "module": "esnext",
+    "importHelpers": true,
     "moduleResolution": "node",
     "noImplicitAny": false,
     "noImplicitReturns": true,
+    "noImplicitThis": true,
     "noLib": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
@@ -24,6 +28,9 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
-    "target": "es2017"
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
+    "noFallthroughCasesInSwitch": true
   }
 }
