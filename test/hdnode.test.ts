@@ -4,7 +4,7 @@ describe('HDNode', () => {
   let hdNode: eccryptoJS.HDNode;
 
   beforeEach(async () => {
-    hdNode = new eccryptoJS.HDNode();
+    hdNode = await eccryptoJS.HDNode.createRandom();
   });
 
   it('should instantiate an HDNode succesfully', async () => {

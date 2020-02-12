@@ -15,7 +15,7 @@ import {
 } from './utils';
 
 export async function entropyToMnemonic(
-  entropy: Buffer | string,
+  entropy: Buffer,
   wordlist?: string[]
 ): Promise<string> {
   if (!Buffer.isBuffer(entropy)) entropy = Buffer.from(entropy, 'hex');
