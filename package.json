@@ -20,6 +20,7 @@
     "dist"
   ],
   "main": "dist/index.js",
+  "unpkg": "dist/index.min.js",
   "typings": "dist/index.d.ts",
   "homepage": "https://github.com/pedrouid/eccrypto-js",
   "repository": {
@@ -33,7 +34,8 @@
     "start": "tsdx watch",
     "clean": "rm -rf dist",
     "compile": "./node_modules/.bin/tsc -p tsconfig.json",
-    "build": "yarn clean && yarn compile",
+    "bundle": "webpack",
+    "build": "yarn clean && yarn compile && yarn bundle",
     "test": "tsdx test",
     "lint": "tsdx lint src test",
     "prepare": "yarn lint && yarn build && yarn test"
@@ -43,7 +45,9 @@
     "hash.js": "1.1.7",
     "js-sha3": "0.8.0",
     "randombytes": "2.1.0",
-    "secp256k1": "3.8.0"
+    "secp256k1": "3.8.0",
+    "webpack": "4.41.6",
+    "webpack-cli": "3.3.11"
   },
   "devDependencies": {
     "@peculiar/webcrypto": "1.0.22",
