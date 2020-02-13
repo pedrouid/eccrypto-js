@@ -38,7 +38,7 @@
     "build:es6": "./node_modules/.bin/tsc -p tsconfig.es6.json",
     "build:umd": "webpack",
     "build": "yarn clean && yarn build:cjs && yarn build:es6 && yarn build:umd",
-    "test": "tsdx test",
+    "test": "tsdx test ./test",
     "lint": "tsdx lint src test",
     "prepare": "yarn lint && yarn build && yarn test"
   },
@@ -47,9 +47,7 @@
     "hash.js": "1.1.7",
     "js-sha3": "0.8.0",
     "randombytes": "2.1.0",
-    "secp256k1": "3.8.0",
-    "webpack": "4.41.6",
-    "webpack-cli": "3.3.11"
+    "secp256k1": "3.8.0"
   },
   "devDependencies": {
     "@peculiar/webcrypto": "1.0.22",
@@ -63,7 +61,9 @@
     "husky": "4.2.1",
     "tsdx": "0.12.3",
     "tslib": "1.10.0",
-    "typescript": "3.7.5"
+    "typescript": "3.7.5",
+    "webpack": "4.41.6",
+    "webpack-cli": "3.3.11"
   },
   "husky": {
     "hooks": {
