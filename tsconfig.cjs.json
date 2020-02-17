@@ -4,6 +4,9 @@
     "outDir": "./dist/cjs",
     "rootDir": "./src",
     "target": "es6",
-    "module": "commonjs"
+    "module": "commonjs",
+    "incremental": true,
+    "noUnusedLocals": false,
+    "strict": false
   }
 }

@@ -1,25 +1,22 @@
 {
   "include": ["./src/**/*"],
   "compilerOptions": {
-    "outDir": "./dist/cjs",
-    "rootDir": "./src",
-    "target": "es5",
-    "module": "esnext",
-    "lib": ["dom", "esnext"],
     "allowJs": false,
-    "alwaysStrict": true,
     "allowSyntheticDefaultImports": true,
+    "alwaysStrict": true,
     "declaration": true,
     "declarationMap": true,
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
-    "importHelpers": true,
+    "lib": ["es2017", "dom", "esnext.asynciterable"],
+    "module": "esnext",
     "moduleResolution": "node",
     "noImplicitAny": false,
     "noImplicitReturns": true,
     "noImplicitThis": true,
+    "noFallthroughCasesInSwitch": true,
     "noLib": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
@@ -31,6 +28,6 @@
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "strictPropertyInitialization": true,
-    "noFallthroughCasesInSwitch": true
+    "target": "es2017"
   }
 }
