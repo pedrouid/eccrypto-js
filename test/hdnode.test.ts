@@ -1,13 +1,17 @@
 import * as eccryptoJS from '../src';
 
-describe('HDNode', () => {
-  let hdNode: eccryptoJS.HDNode;
+const TEST_XPUB =
+  'xpub661MyMwAqRbcF1NXmnu4rokqZZ6MJPSVdUbzf7eGrbLs6yXsG6ZBmHhSKFhiJkGjaeU1xB1vdEekfZYvtkMDzgya6QrqoPySGeouYYRjCpP';
 
-  beforeEach(async () => {
-    hdNode = await eccryptoJS.HDNode.createRandom();
+describe('HDNode', () => {
+  it('should create from random an HDNode succesfully', async () => {
+    const hdNode = await eccryptoJS.HDNode.createRandom();
+    console.log('hdNode.xpub', hdNode.xpub);
+    expect(hdNode).toBeTruthy();
   });
 
-  it('should instantiate an HDNode succesfully', async () => {
+  it('should create from random an HDNode succesfully', async () => {
+    const hdNode = await eccryptoJS.HDNode.createRandom();
     expect(hdNode).toBeTruthy();
   });
 });
