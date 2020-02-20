@@ -20,6 +20,14 @@ export class HDNode {
 
   constructor(private readonly hdKey?: any) {}
 
+  get xpub() {
+    return this.publicExtendedKey();
+  }
+
+  get xpriv() {
+    return this.privateExtendedKey();
+  }
+
   public privateExtendedKey(): Buffer {
     if (!this.hdKey.privateExtendedKey) {
       throw new Error('This is a public key only wallet');
