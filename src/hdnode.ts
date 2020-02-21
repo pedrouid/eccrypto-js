@@ -4,17 +4,17 @@ import { randomBytes } from './random';
 import { KEY_LENGTH } from './helpers/constants';
 
 export class HDNode {
-  public static async createRandom(): Promise<HDNode> {
-    const entropy = await entropyToMnemonic(randomBytes(KEY_LENGTH));
-    return new HDNode(HDKey.fromMasterSeed(entropy));
+  public static createRandom(): HDNode {
+    const entropy = entropyToMnemonic(randomBytes(KEY_LENGTH));
+    return new HDNode(new HDKey().fromMasterSeed(entropy));
   }
 
-  public static async fromMasterSeed(seedPhrase: Buffer): Promise<HDNode> {
-    return new HDNode(HDKey.fromMasterSeed(seedPhrase));
+  public static fromMasterSeed(seedPhrase: Buffer): HDNode {
+    return new HDNode(new HDKey().fromMasterSeed(seedPhrase));
   }
 
-  public static async fromExtendedKey(base58Key: string): Promise<HDNode> {
-    return new HDNode(HDKey.fromExtendedKey(base58Key));
+  public static fromExtendedKey(base58Key: string): HDNode {
+    return new HDNode(new HDKey().fromExtendedKey(base58Key));
   }
 
   constructor(private readonly hdKey?: HDKey) {}

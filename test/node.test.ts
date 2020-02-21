@@ -162,10 +162,12 @@ describe('NodeJS', () => {
     let mac: Buffer;
 
     beforeEach(async () => {
-      mac = await eccryptoJS.nodeCreateHmac(macKey, dataToMac);
+      mac = await eccryptoJS.nodeHmacSha256Sign(macKey, dataToMac);
     });
 
     it('should sign sucessfully', async () => {
+      console.log('mac', mac.toString('hex'));
+      console.log('exp', expectedOutput.toString('hex'));
       expect(compare(mac, expectedOutput)).toBeTruthy();
     });
 

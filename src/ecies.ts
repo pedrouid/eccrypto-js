@@ -9,7 +9,7 @@ import { Encrypted, PreEncryptOpts } from './helpers/types';
 import { assert, isValidPrivateKey } from './helpers/validators';
 import { isCompressed, concatBuffers } from './helpers/util';
 import {
-  ZERO_LENGTH,
+  LENGTH_0,
   KEY_LENGTH,
   IV_LENGTH,
   MAC_LENGTH,
@@ -20,7 +20,7 @@ async function getEncryptionKeys(privateKey: Buffer, publicKey: Buffer) {
   publicKey = isCompressed(publicKey) ? decompress(publicKey) : publicKey;
   const sharedKey = await derive(privateKey, publicKey);
   const hash = await sha512(sharedKey);
-  const encryptionKey = Buffer.from(hash.slice(ZERO_LENGTH, KEY_LENGTH));
+  const encryptionKey = Buffer.from(hash.slice(LENGTH_0, KEY_LENGTH));
   const macKey = Buffer.from(hash.slice(KEY_LENGTH));
   return { encryptionKey, macKey };
 }
@@ -73,7 +73,7 @@ export function serialize(opts: Encrypted): Buffer {
 }
 
 export function deserialize(buf: Buffer): Encrypted {
-  const slice0 = ZERO_LENGTH;
+  const slice0 = LENGTH_0;
   const slice1 = IV_LENGTH;
   const slice2 = IV_LENGTH + PREFIXED_KEY_LENGTH;
   const slice3 = IV_LENGTH + PREFIXED_KEY_LENGTH + MAC_LENGTH;

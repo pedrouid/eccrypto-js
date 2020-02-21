@@ -11,9 +11,9 @@ export async function aesCbcEncrypt(
   if (isBrowser()) {
     result = await browserAesEncrypt(iv, key, data);
   } else if (isNode()) {
-    result = await nodeAesEncrypt(iv, key, data);
+    result = nodeAesEncrypt(iv, key, data);
   } else {
-    result = await fallbackAesEncrypt(iv, key, data);
+    result = fallbackAesEncrypt(iv, key, data);
   }
   return result;
 }
@@ -27,9 +27,9 @@ export async function aesCbcDecrypt(
   if (isBrowser()) {
     result = await browserAesDecrypt(iv, key, data);
   } else if (isNode()) {
-    result = await nodeAesDecrypt(iv, key, data);
+    result = nodeAesDecrypt(iv, key, data);
   } else {
-    result = await fallbackAesDecrypt(iv, key, data);
+    result = fallbackAesDecrypt(iv, key, data);
   }
   return result;
 }

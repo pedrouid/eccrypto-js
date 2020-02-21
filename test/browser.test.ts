@@ -167,7 +167,7 @@ describe('Browser', () => {
     let mac: Buffer;
 
     beforeEach(async () => {
-      mac = await eccryptoJS.browserCreateHmac(macKey, dataToMac);
+      mac = await eccryptoJS.browserHmacSha256Sign(macKey, dataToMac);
     });
 
     it('should sign sucessfully', async () => {

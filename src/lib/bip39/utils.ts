@@ -1,4 +1,12 @@
-import { sha256 } from '../../sha2';
+import { isNode, nodeSha256 } from '../node';
+import { fallbackSha256 } from '../fallback';
+
+function sha256Sync(buf) {
+  if (isNode()) {
+    return nodeSha256(buf);
+  }
+  return fallbackSha256(buf);
+}
 
 export function normalize(str?: string): string {
   return (str || '').normalize('NFKD');
@@ -17,12 +25,10 @@ export function bytesToBinary(bytes: number[]): string {
   return bytes.map(x => lpad(x.toString(2), '0', 8)).join('');
 }
 
-export async function deriveChecksumBits(
-  entropyBuffer: Buffer
-): Promise<string> {
+export function deriveChecksumBits(entropyBuffer: Buffer): string {
   const ENT = entropyBuffer.length * 8;
   const CS = ENT / 32;
-  const hash = await sha256(entropyBuffer);
+  const hash = sha256Sync(entropyBuffer);
 
   return bytesToBinary(Array.from(hash)).slice(0, CS);
 }

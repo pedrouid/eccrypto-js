@@ -14,10 +14,10 @@ import {
   deriveChecksumBits,
 } from './utils';
 
-export async function entropyToMnemonic(
+export function entropyToMnemonic(
   entropy: Buffer,
   wordlist?: string[]
-): Promise<string> {
+): string {
   if (!Buffer.isBuffer(entropy)) entropy = Buffer.from(entropy, 'hex');
   wordlist = wordlist || DEFAULT_WORDLIST;
   if (!wordlist) {
@@ -30,7 +30,7 @@ export async function entropyToMnemonic(
   if (entropy.length % 4 !== 0) throw new TypeError(INVALID_ENTROPY);
 
   const entropyBits = bytesToBinary(Array.from(entropy));
-  const checksumBits = await deriveChecksumBits(entropy);
+  const checksumBits = deriveChecksumBits(entropy);
 
   const bits = entropyBits + checksumBits;
   const chunks = bits.match(/(.{1,11})/g)!;
@@ -44,10 +44,10 @@ export async function entropyToMnemonic(
     : words.join(' ');
 }
 
-export async function mnemonicToEntropy(
+export function mnemonicToEntropy(
   mnemonic: string,
   wordlist?: string[]
-): Promise<string> {
+): string {
   wordlist = wordlist || DEFAULT_WORDLIST;
   if (!wordlist) {
     throw new Error(WORDLIST_REQUIRED);
@@ -78,7 +78,7 @@ export async function mnemonicToEntropy(
   if (entropyBytes.length % 4 !== 0) throw new Error(INVALID_ENTROPY);
 
   const entropy = Buffer.from(entropyBytes);
-  const newChecksum = await deriveChecksumBits(entropy);
+  const newChecksum = deriveChecksumBits(entropy);
   if (newChecksum !== checksumBits) throw new Error(INVALID_CHECKSUM);
 
   return entropy.toString('hex');

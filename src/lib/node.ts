@@ -1,53 +1,52 @@
+import crypto from 'crypto';
 import {
   HMAC_NODE_ALGO,
   AES_NODE_ALGO,
   SHA512_NODE_ALGO,
   SHA256_NODE_ALGO,
+  RIPEMD160_NODE_ALGO,
 } from '../helpers/constants';
 import { concatBuffers } from '../helpers/util';
 
-const nodeCrypto = require('crypto');
-
 export function isNode() {
-  return !!nodeCrypto;
+  return !!crypto;
 }
 
 export function nodeRandomBytes(length: number): Buffer {
-  return nodeCrypto.randomBytes(length);
+  return crypto.randomBytes(length);
 }
 
-export async function nodeAesEncrypt(
-  iv: Buffer,
-  key: Buffer,
-  data: Buffer
-): Promise<Buffer> {
-  const cipher = nodeCrypto.createCipheriv(AES_NODE_ALGO, key, iv);
+export function nodeAesEncrypt(iv: Buffer, key: Buffer, data: Buffer): Buffer {
+  const cipher = crypto.createCipheriv(AES_NODE_ALGO, key, iv);
   return concatBuffers(cipher.update(data), cipher.final());
 }
 
-export async function nodeAesDecrypt(
-  iv: Buffer,
-  key: Buffer,
-  data: Buffer
-): Promise<Buffer> {
-  const decipher = nodeCrypto.createDecipheriv(AES_NODE_ALGO, key, iv);
+export function nodeAesDecrypt(iv: Buffer, key: Buffer, data: Buffer): Buffer {
+  const decipher = crypto.createDecipheriv(AES_NODE_ALGO, key, iv);
   return concatBuffers(decipher.update(data), decipher.final());
 }
 
-export async function nodeCreateHmac(
-  key: Buffer,
-  data: Buffer
-): Promise<Buffer> {
-  const hmac = nodeCrypto.createHmac(HMAC_NODE_ALGO, Buffer.from(key));
+export function nodeHmacSha256Sign(key: Buffer, data: Buffer): Buffer {
+  const hmac = crypto.createHmac(HMAC_NODE_ALGO, Buffer.from(key));
   return hmac.update(data).digest();
 }
 
-export async function nodeSha256(data: Buffer) {
-  const hash = nodeCrypto.createHash(SHA256_NODE_ALGO);
+export function nodeHmacSha512Sign(key: Buffer, data: Buffer): Buffer {
+  const hmac = crypto.createHmac(SHA512_NODE_ALGO, Buffer.from(key));
+  return hmac.update(data).digest();
+}
+
+export function nodeSha256(data: Buffer): Buffer {
+  const hash = crypto.createHash(SHA256_NODE_ALGO);
   return hash.update(data).digest();
 }
 
-export async function nodeSha512(data: Buffer) {
-  const hash = nodeCrypto.createHash(SHA512_NODE_ALGO);
+export function nodeSha512(data: Buffer): Buffer {
+  const hash = crypto.createHash(SHA512_NODE_ALGO);
+  return hash.update(data).digest();
+}
+
+export function nodeRipemd160(data: Buffer): Buffer {
+  const hash = crypto.createHash(RIPEMD160_NODE_ALGO);
   return hash.update(data).digest();
 }

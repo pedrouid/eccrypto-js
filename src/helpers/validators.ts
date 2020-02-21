@@ -1,9 +1,4 @@
-import {
-  ZERO32,
-  EC_GROUP_ORDER,
-  ZERO_LENGTH,
-  MAX_KEY_LENGTH,
-} from './constants';
+import { ZERO32, EC_GROUP_ORDER, LENGTH_0, MAX_KEY_LENGTH } from './constants';
 
 export function assert(condition: boolean, message: string): void {
   if (!condition) {
@@ -48,7 +43,7 @@ export function isHexString(value: any, length?: number): boolean {
 
 export function isValidKeyLength(length: number) {
   return !(
-    length <= ZERO_LENGTH ||
+    length <= LENGTH_0 ||
     length > MAX_KEY_LENGTH ||
     parseInt(String(length)) !== length
   );

@@ -58,14 +58,14 @@ export function testAesDecrypt(
     : eccryptoJS.nodeAesDecrypt(iv, key, data);
 }
 
-export function testHmacSign(
+export async function testHmacSign(
   key: Buffer,
   data: Buffer,
   lib: eccryptoJS.IEccrypto = eccryptoJS
 ) {
   return lib.hmacSha256Sign
     ? lib.hmacSha256Sign(key, data)
-    : eccryptoJS.nodeCreateHmac(key, data);
+    : eccryptoJS.nodeHmacSha256Sign(key, data);
 }
 
 export function testHmacVerify(
@@ -75,7 +75,7 @@ export function testHmacVerify(
   lib: eccryptoJS.IEccrypto = eccryptoJS
 ) {
   async function nodeHmacVerify(key: Buffer, data: Buffer, sig: Buffer) {
-    const expectedSig = await eccryptoJS.nodeCreateHmac(key, data);
+    const expectedSig = await eccryptoJS.nodeHmacSha256Sign(key, data);
     return eccryptoJS.equalConstTime(expectedSig, sig);
   }
   return lib.hmacSha256Verify

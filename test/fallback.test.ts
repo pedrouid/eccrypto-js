@@ -155,7 +155,7 @@ describe('Fallback', () => {
     let mac: Buffer;
 
     beforeEach(async () => {
-      mac = await eccryptoJS.fallbackCreateHmac(macKey, dataToMac);
+      mac = await eccryptoJS.fallbackHmacSha256Sign(macKey, dataToMac);
     });
 
     it('should sign sucessfully', async () => {
