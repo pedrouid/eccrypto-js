@@ -20,3 +20,9 @@ export const TEST_SHA3_HASH =
   '2f99556601553042e4a99b6e4625f8d372be53f950b8f213eeb0d17222439164';
 export const TEST_KECCAK256_HASH =
   '7070e731867758fd4bc0f5b5a02f9770bdbba33c89f3ef8d0cd48cc1979dee55';
+
+export const TEST_ENTROPY = '33e3a8313469bb38ef5fc5ffa62ac463';
+export const TEST_XPUB =
+  'xpub661MyMwAqRbcGq6nJHMeUDV2Ak4AKiGxru81iNVagEovWXBJAP1XXVRBZ5bXccnfnLHjc7gnob1HmfdqEJFszmGAFmkC9WTX47uBM3zy4Qy';
+export const TEST_MNEMONIC =
+  'crop bubble arrange hand option organ runway weather zero course rain shove';

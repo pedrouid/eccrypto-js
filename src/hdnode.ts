@@ -1,15 +1,15 @@
 import HDKey from './lib/hdkey';
 import { entropyToMnemonic } from './lib/bip39';
 import { randomBytes } from './random';
-import { KEY_LENGTH } from './helpers/constants';
+import { LENGTH_16 } from './helpers/constants';
 
 export class HDNode {
   public static createRandom(): HDNode {
-    const entropy = entropyToMnemonic(randomBytes(KEY_LENGTH));
+    const entropy = entropyToMnemonic(randomBytes(LENGTH_16));
     return new HDNode(new HDKey().fromMasterSeed(entropy));
   }
 
-  public static fromMasterSeed(seedPhrase: Buffer): HDNode {
+  public static fromMasterSeed(seedPhrase: string): HDNode {
     return new HDNode(new HDKey().fromMasterSeed(seedPhrase));
   }
 
@@ -19,22 +19,22 @@ export class HDNode {
 
   constructor(private readonly hdKey?: HDKey) {}
 
-  get xpub() {
+  get xpub(): string {
     return this.publicExtendedKey();
   }
 
-  get xpriv() {
+  get xpriv(): string {
     return this.privateExtendedKey();
   }
 
-  public privateExtendedKey(): Buffer {
+  public privateExtendedKey(): string {
     if (!this.hdKey?.privateExtendedKey) {
       throw new Error('This is a public key only wallet');
     }
     return this.hdKey?.privateExtendedKey;
   }
 
-  public publicExtendedKey(): Buffer {
+  public publicExtendedKey(): string {
     return this.hdKey?.publicExtendedKey;
   }
 
