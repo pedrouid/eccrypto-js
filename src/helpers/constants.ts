@@ -15,7 +15,7 @@ export const LENGTH_512 = 512;
 export const LENGTH_1024 = 1024;
 
 export const AES_LENGTH = LENGTH_256;
-export const HMAC_LENGTH = LENGTH_512;
+export const HMAC_LENGTH = LENGTH_256;
 
 export const AES_BROWSER_ALGO = 'AES-CBC';
 export const HMAC_BROWSER_ALGO = `SHA-${AES_LENGTH}`;
