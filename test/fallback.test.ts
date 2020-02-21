@@ -159,6 +159,9 @@ describe('Fallback', () => {
     });
 
     it('should sign sucessfully', async () => {
+      console.log('mac', mac.toString('hex'));
+      console.log('exp', expectedOutput.toString('hex'));
+
       expect(compare(mac, expectedOutput)).toBeTruthy();
     });
 
