@@ -2,7 +2,11 @@ import { ec as EC } from 'elliptic';
 
 import { randomBytes } from '../../random';
 import { isValidPrivateKey } from '../../helpers/validators';
-import { sanitizePublicKey, hexToBuffer } from '../../helpers/util';
+import {
+  sanitizePublicKey,
+  hexToBuffer,
+  concatBuffers,
+} from '../../helpers/util';
 import { HEX_ENC, KEY_LENGTH } from '../../helpers/constants';
 
 const ec = new EC('secp256k1');
@@ -50,8 +54,26 @@ export function ellipticDerive(publicKeyB: Buffer, privateKeyA: Buffer) {
   return Buffer.from(Px.toArray());
 }
 
-export function ellipticSign(msg: Buffer, privateKey: Buffer): Buffer {
-  return Buffer.from(ec.sign(msg, privateKey, { canonical: true }).toDER());
+export function ellipticSignatureExport(sig: Buffer): Buffer {
+  return new EC.Signature({
+    r: sig.slice(0, 32),
+    s: sig.slice(32, 64),
+  }).toDER();
+}
+
+export function ellipticSign(
+  msg: Buffer,
+  privateKey: Buffer,
+  nonDER = false
+): Buffer {
+  const signature = ec.sign(msg, privateKey, { canonical: true });
+
+  return nonDER
+    ? concatBuffers(
+        hexToBuffer(signature.r.toString(16)),
+        hexToBuffer(signature.s.toString(16))
+      )
+    : Buffer.from(signature.toDER());
 }
 
 export function ellipticVerify(
@@ -59,5 +81,8 @@ export function ellipticVerify(
   msg: Buffer,
   publicKey: Buffer
 ): boolean {
+  if (sig.length === 64) {
+    sig = ellipticSignatureExport(sig);
+  }
   return ec.verify(msg, sig, publicKey);
 }

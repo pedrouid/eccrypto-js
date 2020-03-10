@@ -19,16 +19,16 @@ const expectedPublicKeyCompressedLength = 33;
 const expectedSharedKey = Buffer.from(TEST_SHARED_KEY, 'hex');
 const expectedSharedKeyLength = 32;
 
-describe('SECP256K1', () => {
+describe('Elliptic', () => {
   it('should get public key successfully', () => {
-    const publicKey = eccryptoJS.secp256k1GetPublic(privateKey);
+    const publicKey = eccryptoJS.ellipticGetPublic(privateKey);
     expect(publicKey).toBeTruthy();
     expect(compare(publicKey, expectedPublicKey)).toBeTruthy();
     expect(publicKey.length === expectedPublicKeyLength).toBeTruthy();
   });
 
   it('should get public key compressed successfully', () => {
-    const publicKeyCompressed = eccryptoJS.secp256k1GetPublicCompressed(
+    const publicKeyCompressed = eccryptoJS.ellipticGetPublicCompressed(
       privateKey
     );
     expect(publicKeyCompressed).toBeTruthy();
@@ -41,24 +41,24 @@ describe('SECP256K1', () => {
   });
 
   it('should compress public key successfully', () => {
-    const publicKey = eccryptoJS.secp256k1GetPublic(privateKey);
-    const publicKeyCompressed = eccryptoJS.secp256k1Compress(publicKey);
+    const publicKey = eccryptoJS.ellipticGetPublic(privateKey);
+    const publicKeyCompressed = eccryptoJS.ellipticCompress(publicKey);
     expect(
       compare(publicKeyCompressed, expectedPublicKeyCompressed)
     ).toBeTruthy();
   });
 
   it('should decompress public key successfully', () => {
-    const publicKeyCompressed = eccryptoJS.secp256k1GetPublicCompressed(
+    const publicKeyCompressed = eccryptoJS.ellipticGetPublicCompressed(
       privateKey
     );
-    const publicKey = eccryptoJS.secp256k1Decompress(publicKeyCompressed);
+    const publicKey = eccryptoJS.ellipticDecompress(publicKeyCompressed);
     expect(compare(publicKey, expectedPublicKey)).toBeTruthy();
   });
 
   it('should derive shared key successfully', () => {
-    const sharedKey = eccryptoJS.secp256k1Derive(
-      eccryptoJS.secp256k1GetPublic(privateKey),
+    const sharedKey = eccryptoJS.ellipticDerive(
+      eccryptoJS.ellipticGetPublic(privateKey),
       privateKey
     );
     expect(sharedKey).toBeTruthy();
@@ -68,27 +68,27 @@ describe('SECP256K1', () => {
 
   it('should sign successfully with DER signatures', async () => {
     const { msg } = await getTestMessageToSign();
-    const sig = eccryptoJS.secp256k1Sign(msg, privateKey);
+    const sig = eccryptoJS.ellipticSign(msg, privateKey);
     expect(sig).toBeTruthy();
   });
 
   it('should verify DER signatures successfully', async () => {
     const { msg } = await getTestMessageToSign();
-    const sig = eccryptoJS.secp256k1Sign(msg, privateKey);
-    const publicKey = eccryptoJS.secp256k1GetPublic(privateKey);
-    await eccryptoJS.secp256k1Verify(sig, msg, publicKey);
+    const sig = eccryptoJS.ellipticSign(msg, privateKey);
+    const publicKey = eccryptoJS.ellipticGetPublic(privateKey);
+    await eccryptoJS.ellipticVerify(sig, msg, publicKey);
   });
 
   it('should sign successfully with non-DER signatures', async () => {
     const { msg } = await getTestMessageToSign();
-    const sig = eccryptoJS.secp256k1Sign(msg, privateKey, true);
+    const sig = eccryptoJS.ellipticSign(msg, privateKey, true);
     expect(sig).toBeTruthy();
   });
 
   it('should verify non-DER signatures successfully', async () => {
     const { msg } = await getTestMessageToSign();
-    const sig = eccryptoJS.secp256k1Sign(msg, privateKey);
-    const publicKey = eccryptoJS.secp256k1GetPublic(privateKey);
-    await eccryptoJS.secp256k1Verify(sig, msg, publicKey);
+    const sig = eccryptoJS.ellipticSign(msg, privateKey);
+    const publicKey = eccryptoJS.ellipticGetPublic(privateKey);
+    await eccryptoJS.ellipticVerify(sig, msg, publicKey);
   });
 });
