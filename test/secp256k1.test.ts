@@ -69,7 +69,6 @@ describe('SECP256K1', () => {
   it('should sign successfully with DER signatures', async () => {
     const { msg } = await getTestMessageToSign();
     const sig = eccryptoJS.secp256k1Sign(msg, privateKey);
-    console.log('secp256k1', 'DER', sig.toString('hex'));
     expect(sig).toBeTruthy();
   });
 
@@ -77,13 +76,12 @@ describe('SECP256K1', () => {
     const { msg } = await getTestMessageToSign();
     const sig = eccryptoJS.secp256k1Sign(msg, privateKey);
     const publicKey = eccryptoJS.secp256k1GetPublic(privateKey);
-    await eccryptoJS.secp256k1Verify(publicKey, msg, sig);
+    await eccryptoJS.secp256k1Verify(sig, msg, publicKey);
   });
 
   it('should sign successfully with non-DER signatures', async () => {
     const { msg } = await getTestMessageToSign();
     const sig = eccryptoJS.secp256k1Sign(msg, privateKey, true);
-    console.log('secp256k1', 'RSV', sig.toString('hex'));
     expect(sig).toBeTruthy();
   });
 
@@ -91,6 +89,6 @@ describe('SECP256K1', () => {
     const { msg } = await getTestMessageToSign();
     const sig = eccryptoJS.secp256k1Sign(msg, privateKey);
     const publicKey = eccryptoJS.secp256k1GetPublic(privateKey);
-    await eccryptoJS.secp256k1Verify(publicKey, msg, sig);
+    await eccryptoJS.secp256k1Verify(sig, msg, publicKey);
   });
 });

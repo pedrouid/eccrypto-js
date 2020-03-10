@@ -69,7 +69,6 @@ describe('Elliptic', () => {
   it('should sign successfully with DER signatures', async () => {
     const { msg } = await getTestMessageToSign();
     const sig = eccryptoJS.ellipticSign(msg, privateKey);
-    console.log('elliptic', 'DER', sig.toString('hex'));
     expect(sig).toBeTruthy();
   });
 
@@ -77,13 +76,12 @@ describe('Elliptic', () => {
     const { msg } = await getTestMessageToSign();
     const sig = eccryptoJS.ellipticSign(msg, privateKey);
     const publicKey = eccryptoJS.ellipticGetPublic(privateKey);
-    await eccryptoJS.ellipticVerify(publicKey, msg, sig);
+    await eccryptoJS.ellipticVerify(sig, msg, publicKey);
   });
 
   it('should sign successfully with non-DER signatures', async () => {
     const { msg } = await getTestMessageToSign();
     const sig = eccryptoJS.ellipticSign(msg, privateKey, true);
-    console.log('elliptic', 'RSV', sig.toString('hex'));
     expect(sig).toBeTruthy();
   });
 
@@ -91,6 +89,6 @@ describe('Elliptic', () => {
     const { msg } = await getTestMessageToSign();
     const sig = eccryptoJS.ellipticSign(msg, privateKey);
     const publicKey = eccryptoJS.ellipticGetPublic(privateKey);
-    await eccryptoJS.ellipticVerify(publicKey, msg, sig);
+    await eccryptoJS.ellipticVerify(sig, msg, publicKey);
   });
 });

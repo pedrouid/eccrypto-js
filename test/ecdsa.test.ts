@@ -14,7 +14,6 @@ describe('ECDSA', () => {
 
   it('should sign successfully with DER signatures', async () => {
     const { sig } = await testSign(keyPair.privateKey);
-    console.log('ecdsa', 'DER', sig.toString('hex'));
     expect(sig).toBeTruthy();
   });
 
@@ -25,7 +24,6 @@ describe('ECDSA', () => {
 
   it('should sign successfully with non-DER signatures', async () => {
     const { sig } = await testSign(keyPair.privateKey, true);
-    console.log('ecdsa', 'RSV', sig.toString('hex'));
     expect(sig).toBeTruthy();
   });
 

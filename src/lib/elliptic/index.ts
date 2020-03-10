@@ -54,6 +54,13 @@ export function ellipticDerive(publicKeyB: Buffer, privateKeyA: Buffer) {
   return Buffer.from(Px.toArray());
 }
 
+export function ellipticSignatureExport(sig: Buffer): Buffer {
+  return new EC.Signature({
+    r: sig.slice(0, 32),
+    s: sig.slice(32, 64),
+  }).toDER();
+}
+
 export function ellipticSign(
   msg: Buffer,
   privateKey: Buffer,
@@ -75,10 +82,7 @@ export function ellipticVerify(
   publicKey: Buffer
 ): boolean {
   if (sig.length === 64) {
-    sig = new EC.Signature({
-      r: sig.slice(0, 32),
-      s: sig.slice(32, 64),
-    }).toDER();
+    sig = ellipticSignatureExport(sig);
   }
   return ec.verify(msg, sig, publicKey);
 }

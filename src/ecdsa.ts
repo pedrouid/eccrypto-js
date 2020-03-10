@@ -7,6 +7,7 @@ import {
   secp256k1GetPublicCompressed,
   secp256k1Compress,
   secp256k1Decompress,
+  secp256k1SignatureExport,
 } from './lib/secp256k1';
 import {
   ellipticGeneratePrivate,
@@ -16,6 +17,7 @@ import {
   ellipticGetPublicCompressed,
   ellipticDecompress,
   ellipticCompress,
+  ellipticSignatureExport,
 } from './lib/elliptic';
 
 import { KeyPair } from './helpers/types';
@@ -83,6 +85,12 @@ export function generateKeyPair(): KeyPair {
   const privateKey = generatePrivate();
   const publicKey = getPublic(privateKey);
   return { privateKey, publicKey };
+}
+
+export function signatureExport(sig: Buffer): Buffer {
+  return isNode()
+    ? secp256k1SignatureExport(sig)
+    : ellipticSignatureExport(sig);
 }
 
 export async function sign(
