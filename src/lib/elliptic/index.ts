@@ -2,7 +2,11 @@ import { ec as EC } from 'elliptic';
 
 import { randomBytes } from '../../random';
 import { isValidPrivateKey } from '../../helpers/validators';
-import { sanitizePublicKey, hexToBuffer } from '../../helpers/util';
+import {
+  sanitizePublicKey,
+  hexToBuffer,
+  concatBuffers,
+} from '../../helpers/util';
 import { HEX_ENC, KEY_LENGTH } from '../../helpers/constants';
 
 const ec = new EC('secp256k1');
@@ -50,8 +54,19 @@ export function ellipticDerive(publicKeyB: Buffer, privateKeyA: Buffer) {
   return Buffer.from(Px.toArray());
 }
 
-export function ellipticSign(msg: Buffer, privateKey: Buffer): Buffer {
-  return Buffer.from(ec.sign(msg, privateKey, { canonical: true }).toDER());
+export function ellipticSign(
+  msg: Buffer,
+  privateKey: Buffer,
+  noDER = false
+): Buffer {
+  const signature = ec.sign(msg, privateKey, { canonical: true });
+
+  return noDER
+    ? concatBuffers(
+        hexToBuffer(signature.r.toString(16)),
+        hexToBuffer(signature.s.toString(16))
+      )
+    : Buffer.from(signature.toDER());
 }
 
 export function ellipticVerify(
