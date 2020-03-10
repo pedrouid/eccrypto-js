@@ -85,12 +85,16 @@ export function generateKeyPair(): KeyPair {
   return { privateKey, publicKey };
 }
 
-export async function sign(privateKey: Buffer, msg: Buffer): Promise<Buffer> {
+export async function sign(
+  privateKey: Buffer,
+  msg: Buffer,
+  noDER?: boolean
+): Promise<Buffer> {
   checkPrivateKey(privateKey);
   checkMessage(msg);
   return isNode()
-    ? secp256k1Sign(msg, privateKey)
-    : ellipticSign(msg, privateKey);
+    ? secp256k1Sign(msg, privateKey, noDER)
+    : ellipticSign(msg, privateKey, noDER);
 }
 
 export async function verify(
