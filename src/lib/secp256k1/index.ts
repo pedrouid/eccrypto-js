@@ -44,10 +44,10 @@ export function secp256k1GetPublicCompressed(privateKey: Buffer): Buffer {
 export function secp256k1Sign(
   msg: Buffer,
   privateKey: Buffer,
-  noDER = false
+  nonDER = false
 ): Buffer {
   const { signature } = secp256k1.sign(msg, privateKey);
-  return noDER ? signature : secp256k1.signatureExport(signature);
+  return nonDER ? signature : secp256k1.signatureExport(signature);
 }
 
 export function secp256k1Verify(

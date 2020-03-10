@@ -88,13 +88,13 @@ export function generateKeyPair(): KeyPair {
 export async function sign(
   privateKey: Buffer,
   msg: Buffer,
-  noDER?: boolean
+  nonDER?: boolean
 ): Promise<Buffer> {
   checkPrivateKey(privateKey);
   checkMessage(msg);
   return isNode()
-    ? secp256k1Sign(msg, privateKey, noDER)
-    : ellipticSign(msg, privateKey, noDER);
+    ? secp256k1Sign(msg, privateKey, nonDER)
+    : ellipticSign(msg, privateKey, nonDER);
 }
 
 export async function verify(

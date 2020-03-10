@@ -57,11 +57,11 @@ export function ellipticDerive(publicKeyB: Buffer, privateKeyA: Buffer) {
 export function ellipticSign(
   msg: Buffer,
   privateKey: Buffer,
-  noDER = false
+  nonDER = false
 ): Buffer {
   const signature = ec.sign(msg, privateKey, { canonical: true });
 
-  return noDER
+  return nonDER
     ? concatBuffers(
         hexToBuffer(signature.r.toString(16)),
         hexToBuffer(signature.s.toString(16))
@@ -74,5 +74,11 @@ export function ellipticVerify(
   msg: Buffer,
   publicKey: Buffer
 ): boolean {
+  if (sig.length === 64) {
+    sig = new EC.Signature({
+      r: sig.slice(0, 32),
+      s: sig.slice(32, 64),
+    }).toDER();
+  }
   return ec.verify(msg, sig, publicKey);
 }
