@@ -88,7 +88,7 @@ export function generateKeyPair(): KeyPair {
 export async function sign(
   privateKey: Buffer,
   msg: Buffer,
-  nonDER?: boolean
+  nonDER = false
 ): Promise<Buffer> {
   checkPrivateKey(privateKey);
   checkMessage(msg);
