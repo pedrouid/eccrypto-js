@@ -74,9 +74,9 @@ export function serialize(opts: Encrypted): Buffer {
 
 export function deserialize(buf: Buffer): Encrypted {
   const slice0 = LENGTH_0;
-  const slice1 = IV_LENGTH;
-  const slice2 = IV_LENGTH + PREFIXED_KEY_LENGTH;
-  const slice3 = IV_LENGTH + PREFIXED_KEY_LENGTH + MAC_LENGTH;
+  const slice1 = slice0 + IV_LENGTH;
+  const slice2 = slice1 + PREFIXED_KEY_LENGTH;
+  const slice3 = slice2 + MAC_LENGTH;
   const slice4 = buf.length;
   return {
     iv: buf.slice(slice0, slice1),
