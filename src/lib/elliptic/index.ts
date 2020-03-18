@@ -1,4 +1,5 @@
 import { ec as EC } from 'elliptic';
+import { Signature } from 'elliptic/lib/elliptic/ec/signature';
 
 import { randomBytes } from '../../random';
 import { isValidPrivateKey } from '../../helpers/validators';
@@ -6,6 +7,10 @@ import {
   sanitizePublicKey,
   hexToBuffer,
   concatBuffers,
+  exportRecoveryParam,
+  importRecoveryParam,
+  splitSignature,
+  isValidDERSignature,
 } from '../../helpers/util';
 import { HEX_ENC, KEY_LENGTH } from '../../helpers/constants';
 
@@ -55,25 +60,36 @@ export function ellipticDerive(publicKeyB: Buffer, privateKeyA: Buffer) {
 }
 
 export function ellipticSignatureExport(sig: Buffer): Buffer {
-  return new EC.Signature({
+  return Signature({
     r: sig.slice(0, 32),
     s: sig.slice(32, 64),
+    recoveryParam: importRecoveryParam(sig.slice(64, 65)),
   }).toDER();
 }
 
 export function ellipticSign(
   msg: Buffer,
   privateKey: Buffer,
-  nonDER = false
+  rsvSig = false
 ): Buffer {
   const signature = ec.sign(msg, privateKey, { canonical: true });
 
-  return nonDER
+  return rsvSig
     ? concatBuffers(
         hexToBuffer(signature.r.toString(16)),
-        hexToBuffer(signature.s.toString(16))
+        hexToBuffer(signature.s.toString(16)),
+        exportRecoveryParam(signature.recoveryParam || 0)
       )
     : Buffer.from(signature.toDER());
+}
+
+export function ellipticRecover(sig: Buffer, msg: Buffer) {
+  const signature = splitSignature(sig);
+  return ec.recoverPubKey(
+    msg,
+    { r: signature.r, s: signature.s },
+    importRecoveryParam(signature.v)
+  );
 }
 
 export function ellipticVerify(
@@ -81,7 +97,7 @@ export function ellipticVerify(
   msg: Buffer,
   publicKey: Buffer
 ): boolean {
-  if (sig.length === 64) {
+  if (!isValidDERSignature) {
     sig = ellipticSignatureExport(sig);
   }
   return ec.verify(msg, sig, publicKey);

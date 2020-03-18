@@ -79,13 +79,13 @@ describe('Elliptic', () => {
     await eccryptoJS.ellipticVerify(sig, msg, publicKey);
   });
 
-  it('should sign successfully with non-DER signatures', async () => {
+  it('should sign successfully with RSV signatures', async () => {
     const { msg } = await getTestMessageToSign();
     const sig = eccryptoJS.ellipticSign(msg, privateKey, true);
     expect(sig).toBeTruthy();
   });
 
-  it('should verify non-DER signatures successfully', async () => {
+  it('should verify RSV signatures successfully', async () => {
     const { msg } = await getTestMessageToSign();
     const sig = eccryptoJS.ellipticSign(msg, privateKey);
     const publicKey = eccryptoJS.ellipticGetPublic(privateKey);

@@ -22,12 +22,12 @@ describe('ECDSA', () => {
     await eccryptoJS.verify(keyPair.publicKey, msg, sig);
   });
 
-  it('should sign successfully with non-DER signatures', async () => {
+  it('should sign successfully with RSV signatures', async () => {
     const { sig } = await testSign(keyPair.privateKey, true);
     expect(sig).toBeTruthy();
   });
 
-  it('should verify non-DER signatures successfully', async () => {
+  it('should verify RSV signatures successfully', async () => {
     const { sig, msg } = await testSign(keyPair.privateKey, true);
     await eccryptoJS.verify(keyPair.publicKey, msg, sig);
   });

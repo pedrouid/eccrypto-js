@@ -96,13 +96,13 @@ export function signatureExport(sig: Buffer): Buffer {
 export async function sign(
   privateKey: Buffer,
   msg: Buffer,
-  nonDER = false
+  rsvSig = false
 ): Promise<Buffer> {
   checkPrivateKey(privateKey);
   checkMessage(msg);
   return isNode()
-    ? secp256k1Sign(msg, privateKey, nonDER)
-    : ellipticSign(msg, privateKey, nonDER);
+    ? secp256k1Sign(msg, privateKey, rsvSig)
+    : ellipticSign(msg, privateKey, rsvSig);
 }
 
 export async function verify(

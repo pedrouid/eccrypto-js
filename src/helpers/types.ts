@@ -17,3 +17,9 @@ export interface KeyPair {
   privateKey: Buffer;
   publicKey: Buffer;
 }
+
+export interface Signature {
+  r: Buffer;
+  s: Buffer;
+  v: Buffer;
+}
