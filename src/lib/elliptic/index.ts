@@ -59,6 +59,7 @@ export function ellipticDerive(publicKeyB: Buffer, privateKeyA: Buffer) {
   return Buffer.from(Px.toArray());
 }
 
+// converts signature from RSV to DER format
 export function ellipticSignatureExport(sig: Buffer): Buffer {
   return Signature({
     r: sig.slice(0, 32),
@@ -84,6 +85,9 @@ export function ellipticSign(
 }
 
 export function ellipticRecover(sig: Buffer, msg: Buffer) {
+  if (isValidDERSignature(sig)) {
+    throw new Error('Cannot recover from DER signatures');
+  }
   const signature = splitSignature(sig);
   return ec.recoverPubKey(
     msg,
