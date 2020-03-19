@@ -6,7 +6,6 @@ import { randomBytes } from '../../random';
 import {
   ensureLength,
   sanitizePublicKey,
-  importRecoveryParam,
   concatBuffers,
   exportRecoveryParam,
   isValidDERSignature,
