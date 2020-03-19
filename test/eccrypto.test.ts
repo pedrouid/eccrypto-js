@@ -34,11 +34,11 @@ describe('eccrypto', () => {
     await eccryptoJS.verify(keyPair.publicKey, msg2, sig2);
   });
 
-  // it('should be able to verify with eccrypto-js signature', async () => {
-  //   const { sig: sig2, msg: msg2 } = await testSign(keyPair.privateKey, false);
-  //   // @ts-ignore
-  //   await eccrypto.verify(keyPair.publicKey, msg2, sig2);
-  // });
+  it('should be able to verify with eccrypto-js signature', async () => {
+    const { sig: sig2, msg: msg2 } = await testSign(keyPair.privateKey, false);
+    // @ts-ignore
+    await eccrypto.verify(keyPair.publicKey, msg2, sig2);
+  });
 
   it('should match public keys from eccrypto-js', async () => {
     const publicKey1 = await eccryptoJS.getPublic(keyPair.privateKey);
