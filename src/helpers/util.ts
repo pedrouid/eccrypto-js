@@ -7,6 +7,7 @@ import {
   PREFIXED_DECOMPRESSED_LENGTH,
 } from './constants';
 import { Signature } from './types';
+import { SignResult } from '../lib/secp256k1/typings';
 
 export function removeHexPrefix(hex: string): string {
   return hex.replace(/^0x/, '');
@@ -127,4 +128,11 @@ export function joinSignature(sig: Signature): Buffer {
 
 export function isValidDERSignature(sig: Buffer): boolean {
   return bufferToHex(sig).startsWith('30') && sig.length > 65;
+}
+
+export function sanitizeRSVSignature(sig: Buffer): SignResult {
+  return {
+    signature: sig.slice(0, 64),
+    recovery: importRecoveryParam(sig.slice(64, 65)),
+  };
 }

@@ -10,6 +10,7 @@ import {
   concatBuffers,
   exportRecoveryParam,
   isValidDERSignature,
+  sanitizeRSVSignature,
 } from '../../helpers/util';
 import { KEY_LENGTH } from '../../helpers/constants';
 
@@ -47,12 +48,10 @@ export function secp256k1GetPublicCompressed(privateKey: Buffer): Buffer {
   return result;
 }
 
-// converts signature from RSV to DER format
 export function secp256k1SignatureExport(sig: Buffer) {
   return secp256k1.signatureExport(sig);
 }
 
-// converts signature from DER to RSV format
 export function secp256k1SignatureImport(sig: Buffer) {
   return secp256k1.signatureImport(sig);
 }
@@ -68,13 +67,12 @@ export function secp256k1Sign(
     : secp256k1SignatureExport(signature);
 }
 
-export function secp256k1Recover(sig: Buffer, msg: Buffer) {
+export function secp256k1Recover(sig: Buffer, msg: Buffer, compressed = false) {
   if (isValidDERSignature(sig)) {
     throw new Error('Cannot recover from DER signatures');
   }
-  const signature = sig.slice(64);
-  const recovery = importRecoveryParam(sig.slice(64, 65));
-  return secp256k1.recover(msg, signature, recovery);
+  const { signature, recovery } = sanitizeRSVSignature(sig);
+  return secp256k1.recover(msg, signature, recovery, compressed);
 }
 
 export function secp256k1Verify(
@@ -85,9 +83,7 @@ export function secp256k1Verify(
   if (isValidDERSignature(sig)) {
     sig = secp256k1SignatureImport(sig);
   }
-  if (sig.length === 65) {
-    sig = sig.slice(0, 64);
-  }
+  sig = sanitizeRSVSignature(sig).signature;
   return secp256k1.verify(msg, sig, publicKey);
 }
 
