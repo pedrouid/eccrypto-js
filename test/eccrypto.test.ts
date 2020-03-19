@@ -17,22 +17,25 @@ describe('eccrypto', () => {
   });
 
   it('should be able to sign with eccrypto-js keys', async () => {
-    const { sig: sig2 } = await testSign(keyPair.privateKey, eccrypto as any);
+    const { sig: sig2 } = await testSign(
+      keyPair.privateKey,
+      false,
+      eccrypto as any
+    );
     expect(sig2).toBeTruthy();
   });
 
   it('should be able to verify signature from eccrypto-js', async () => {
     const { sig: sig2, msg: msg2 } = await testSign(
       keyPair.privateKey,
+      false,
       eccrypto as any
     );
-
     await eccryptoJS.verify(keyPair.publicKey, msg2, sig2);
   });
 
   it('should be able to verify with eccrypto-js signature', async () => {
-    const { sig: sig2, msg: msg2 } = await testSign(keyPair.privateKey);
-
+    const { sig: sig2, msg: msg2 } = await testSign(keyPair.privateKey, false);
     // @ts-ignore
     await eccrypto.verify(keyPair.publicKey, msg2, sig2);
   });

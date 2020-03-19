@@ -8,6 +8,7 @@ import {
   secp256k1Compress,
   secp256k1Decompress,
   secp256k1SignatureExport,
+  secp256k1Recover,
 } from './lib/secp256k1';
 import {
   ellipticGeneratePrivate,
@@ -18,6 +19,7 @@ import {
   ellipticDecompress,
   ellipticCompress,
   ellipticSignatureExport,
+  ellipticRecover,
 } from './lib/elliptic';
 
 import { KeyPair } from './helpers/types';
@@ -96,13 +98,24 @@ export function signatureExport(sig: Buffer): Buffer {
 export async function sign(
   privateKey: Buffer,
   msg: Buffer,
-  nonDER = false
+  rsvSig = false
 ): Promise<Buffer> {
   checkPrivateKey(privateKey);
   checkMessage(msg);
   return isNode()
-    ? secp256k1Sign(msg, privateKey, nonDER)
-    : ellipticSign(msg, privateKey, nonDER);
+    ? secp256k1Sign(msg, privateKey, rsvSig)
+    : ellipticSign(msg, privateKey, rsvSig);
+}
+
+export async function recover(
+  msg: Buffer,
+  sig: Buffer,
+  compressed = false
+): Promise<Buffer> {
+  checkMessage(msg);
+  return isNode()
+    ? secp256k1Recover(sig, msg, compressed)
+    : ellipticRecover(sig, msg, compressed);
 }
 
 export async function verify(

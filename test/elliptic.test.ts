@@ -79,16 +79,33 @@ describe('Elliptic', () => {
     await eccryptoJS.ellipticVerify(sig, msg, publicKey);
   });
 
-  it('should sign successfully with non-DER signatures', async () => {
+  it('should throw when recovering from DER signatures', async () => {
+    const { msg } = await getTestMessageToSign();
+    const sig = eccryptoJS.ellipticSign(msg, privateKey);
+    // const publicKey = eccryptoJS.ellipticGetPublic(privateKey);
+    expect(() => eccryptoJS.ellipticRecover(sig, msg)).toThrow(
+      'Cannot recover from DER signatures'
+    );
+  });
+
+  it('should sign successfully with RSV signatures', async () => {
     const { msg } = await getTestMessageToSign();
     const sig = eccryptoJS.ellipticSign(msg, privateKey, true);
     expect(sig).toBeTruthy();
   });
 
-  it('should verify non-DER signatures successfully', async () => {
+  it('should verify RSV signatures successfully', async () => {
     const { msg } = await getTestMessageToSign();
     const sig = eccryptoJS.ellipticSign(msg, privateKey);
     const publicKey = eccryptoJS.ellipticGetPublic(privateKey);
     await eccryptoJS.ellipticVerify(sig, msg, publicKey);
+  });
+
+  it('should recover RSV signatures successfully', async () => {
+    const { msg } = await getTestMessageToSign();
+    const sig = eccryptoJS.ellipticSign(msg, privateKey, true);
+    const publicKey = eccryptoJS.ellipticGetPublic(privateKey);
+    const recovered = eccryptoJS.ellipticRecover(sig, msg);
+    expect(compare(publicKey, recovered)).toBeTruthy();
   });
 });

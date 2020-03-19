@@ -79,16 +79,33 @@ describe('SECP256K1', () => {
     await eccryptoJS.secp256k1Verify(sig, msg, publicKey);
   });
 
-  it('should sign successfully with non-DER signatures', async () => {
+  it('should throw when recovering from DER signatures', async () => {
+    const { msg } = await getTestMessageToSign();
+    const sig = eccryptoJS.secp256k1Sign(msg, privateKey);
+    // const publicKey = eccryptoJS.secp256k1GetPublic(privateKey);
+    expect(() => eccryptoJS.secp256k1Recover(sig, msg)).toThrow(
+      'Cannot recover from DER signatures'
+    );
+  });
+
+  it('should sign successfully with RSV signatures', async () => {
     const { msg } = await getTestMessageToSign();
     const sig = eccryptoJS.secp256k1Sign(msg, privateKey, true);
     expect(sig).toBeTruthy();
   });
 
-  it('should verify non-DER signatures successfully', async () => {
+  it('should verify RSV signatures successfully', async () => {
     const { msg } = await getTestMessageToSign();
-    const sig = eccryptoJS.secp256k1Sign(msg, privateKey);
+    const sig = eccryptoJS.secp256k1Sign(msg, privateKey, true);
     const publicKey = eccryptoJS.secp256k1GetPublic(privateKey);
     await eccryptoJS.secp256k1Verify(sig, msg, publicKey);
+  });
+
+  it('should recover RSV signatures successfully', async () => {
+    const { msg } = await getTestMessageToSign();
+    const sig = eccryptoJS.secp256k1Sign(msg, privateKey, true);
+    const publicKey = eccryptoJS.secp256k1GetPublic(privateKey);
+    const recovered = eccryptoJS.secp256k1Recover(sig, msg);
+    expect(compare(publicKey, recovered)).toBeTruthy();
   });
 });

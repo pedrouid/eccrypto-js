@@ -94,11 +94,11 @@ export async function getTestMessageToSign(
 
 export async function testSign(
   privateKey: Buffer,
-  nonDER = false,
+  rsvSig = false,
   lib: eccryptoJS.IEccrypto = eccryptoJS
 ) {
   const { str, msg } = await getTestMessageToSign(undefined, lib);
-  const sig = await lib.sign(privateKey, msg);
+  const sig = await lib.sign(privateKey, msg, rsvSig);
   return { str, msg, sig };
 }
 

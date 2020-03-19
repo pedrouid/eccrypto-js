@@ -1,10 +1,16 @@
-// @ts-ignore
 import * as _secp256k1 from 'secp256k1';
 
 import { ISecp256k1 } from './typings';
 
 import { randomBytes } from '../../random';
-import { ensureLength, sanitizePublicKey } from '../../helpers/util';
+import {
+  ensureLength,
+  sanitizePublicKey,
+  concatBuffers,
+  exportRecoveryParam,
+  isValidDERSignature,
+  sanitizeRSVSignature,
+} from '../../helpers/util';
 import { KEY_LENGTH } from '../../helpers/constants';
 
 export const secp256k1: ISecp256k1 = _secp256k1 as any;
@@ -41,17 +47,31 @@ export function secp256k1GetPublicCompressed(privateKey: Buffer): Buffer {
   return result;
 }
 
-export function secp256k1SignatureExport(sig: Buffer): Buffer {
+export function secp256k1SignatureExport(sig: Buffer) {
   return secp256k1.signatureExport(sig);
+}
+
+export function secp256k1SignatureImport(sig: Buffer) {
+  return secp256k1.signatureImport(sig);
 }
 
 export function secp256k1Sign(
   msg: Buffer,
   privateKey: Buffer,
-  nonDER = false
+  rsvSig = false
 ): Buffer {
-  const { signature } = secp256k1.sign(msg, privateKey);
-  return nonDER ? signature : secp256k1SignatureExport(signature);
+  const { signature, recovery } = secp256k1.sign(msg, privateKey);
+  return rsvSig
+    ? concatBuffers(signature, exportRecoveryParam(recovery))
+    : secp256k1SignatureExport(signature);
+}
+
+export function secp256k1Recover(sig: Buffer, msg: Buffer, compressed = false) {
+  if (isValidDERSignature(sig)) {
+    throw new Error('Cannot recover from DER signatures');
+  }
+  const { signature, recovery } = sanitizeRSVSignature(sig);
+  return secp256k1.recover(msg, signature, recovery, compressed);
 }
 
 export function secp256k1Verify(
@@ -59,9 +79,10 @@ export function secp256k1Verify(
   msg: Buffer,
   publicKey: Buffer
 ): boolean {
-  if (sig.length > 64) {
-    sig = secp256k1.signatureImport(sig);
+  if (isValidDERSignature(sig)) {
+    sig = secp256k1SignatureImport(sig);
   }
+  sig = sanitizeRSVSignature(sig).signature;
   return secp256k1.verify(msg, sig, publicKey);
 }
 
