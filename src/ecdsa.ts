@@ -59,6 +59,10 @@ export function checkMessage(msg: Buffer): void {
   assert(msg.length <= MAX_MSG_LENGTH, 'Message is too long');
 }
 
+export function truncateMsg(msg: Buffer): Buffer {
+  return msg.slice(0, MAX_MSG_LENGTH);
+}
+
 export function compress(publicKey: Buffer): Buffer {
   return isNode() ? secp256k1Compress(publicKey) : ellipticCompress(publicKey);
 }
@@ -101,6 +105,7 @@ export async function sign(
   rsvSig = false
 ): Promise<Buffer> {
   checkPrivateKey(privateKey);
+  msg = truncateMsg(msg);
   checkMessage(msg);
   return isNode()
     ? secp256k1Sign(msg, privateKey, rsvSig)
@@ -112,6 +117,7 @@ export async function recover(
   sig: Buffer,
   compressed = false
 ): Promise<Buffer> {
+  msg = truncateMsg(msg);
   checkMessage(msg);
   return isNode()
     ? secp256k1Recover(sig, msg, compressed)
@@ -124,6 +130,7 @@ export async function verify(
   sig: Buffer
 ): Promise<null> {
   checkPublicKey(publicKey);
+  msg = truncateMsg(msg);
   checkMessage(msg);
   const sigGood = isNode()
     ? secp256k1Verify(sig, msg, publicKey)
