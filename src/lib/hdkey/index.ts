@@ -8,6 +8,23 @@ import {
   fallbackSha256,
   fallbackHmacSha512Sign,
 } from '../fallback';
+import {
+  KEY_LENGTH,
+  PREFIXED_KEY_LENGTH,
+  PREFIXED_DECOMPRESSED_LENGTH,
+} from '../../helpers/constants';
+import {
+  ERROR_PRIVATE_KEY_SIZE,
+  ERROR_INVALID_PRIVATE_KEY,
+  ERROR_INVALID_PUBLIC_KEY,
+  ERROR_PUBLIC_KEY_SIZE,
+  ERROR_DERIVATION_PATH,
+  ERROR_INVALID_INDEX,
+  ERROR_HARDENED_CHILD_KEY,
+  ERROR_VERSION_MISMATCH_PRIVATE,
+  ERROR_VERSION_MISMATCH_PRIVATE_AND_PUBLIC,
+  ERROR_VERSION_MISMATCH_PUBLIC,
+} from '../../helpers/errors';
 
 const MASTER_SECRET = Buffer.from('Bitcoin seed', 'utf8');
 const HARDENED_OFFSET = 0x80000000;
@@ -67,8 +84,11 @@ class HDKey {
   }
 
   set privateKey(value: any) {
-    assert.equal(value.length, 32, 'Private key must be 32 bytes.');
-    assert(secp256k1.privateKeyVerify(value) === true, 'Invalid private key');
+    assert.equal(value.length, KEY_LENGTH, ERROR_PRIVATE_KEY_SIZE);
+    assert(
+      secp256k1.privateKeyVerify(value) === true,
+      ERROR_INVALID_PRIVATE_KEY
+    );
 
     this._privateKey = value;
     this._publicKey = secp256k1.publicKeyCreate(value, true);
@@ -82,10 +102,11 @@ class HDKey {
 
   set publicKey(value: any) {
     assert(
-      value.length === 33 || value.length === 65,
-      'Public key must be 33 or 65 bytes.'
+      value.length === PREFIXED_KEY_LENGTH ||
+        value.length === PREFIXED_DECOMPRESSED_LENGTH,
+      ERROR_PUBLIC_KEY_SIZE
     );
-    assert(secp256k1.publicKeyVerify(value) === true, 'Invalid public key');
+    assert(secp256k1.publicKeyVerify(value) === true, ERROR_INVALID_PUBLIC_KEY);
 
     this._publicKey = secp256k1.publicKeyConvert(value, true); // force compressed point
     this._identifier = hash160(this.publicKey);
@@ -128,13 +149,13 @@ class HDKey {
     let hdkey = this;
     entries.forEach(function(c, i) {
       if (i === 0) {
-        assert(/^[mM]{1}/.test(c), 'Path must start with "m" or "M"');
+        assert(/^[mM]{1}/.test(c), ERROR_DERIVATION_PATH);
         return;
       }
 
       let hardened = isHardened || (c.length > 1 && c[c.length - 1] === "'");
       let childIndex = parseInt(c, 10); // & (HARDENED_OFFSET - 1)
-      assert(childIndex < HARDENED_OFFSET, 'Invalid index');
+      assert(childIndex < HARDENED_OFFSET, ERROR_INVALID_INDEX);
       if (hardened) childIndex += HARDENED_OFFSET;
 
       hdkey = (hdkey as any).deriveChild(childIndex);
@@ -152,7 +173,7 @@ class HDKey {
 
     if (isHardened) {
       // Hardened child
-      assert(this.privateKey, 'Could not derive hardened child key');
+      assert(this.privateKey, ERROR_HARDENED_CHILD_KEY);
 
       let pk = this.privateKey;
       let zb = Buffer.alloc(1, 0);
@@ -226,7 +247,7 @@ class HDKey {
     let version = keyBuffer.readUInt32BE(0);
     assert(
       version === versions.private || version === versions.public,
-      'Version mismatch: does not match private or public'
+      ERROR_VERSION_MISMATCH_PRIVATE_AND_PUBLIC
     );
 
     hdkey.depth = keyBuffer.readUInt8(4);
@@ -237,16 +258,10 @@ class HDKey {
     let key = keyBuffer.slice(45);
     if (key.readUInt8(0) === 0) {
       // private
-      assert(
-        version === versions.private,
-        'Version mismatch: version does not match private'
-      );
+      assert(version === versions.private, ERROR_VERSION_MISMATCH_PRIVATE);
       hdkey.privateKey = key.slice(1); // cut off first 0x0 byte
     } else {
-      assert(
-        version === versions.public,
-        'Version mismatch: version does not match public'
-      );
+      assert(version === versions.public, ERROR_VERSION_MISMATCH_PUBLIC);
       hdkey.publicKey = key;
     }
 

@@ -72,12 +72,16 @@ export function concatBuffers(...args: Buffer[]): Buffer {
   return result;
 }
 
-export function ensureLength(data: Buffer, expectedLength: number) {
-  const diff = data.length - expectedLength;
+export function trimLeft(data: Buffer, length: number) {
+  const diff = data.length - length;
   if (diff > 0) {
     data = data.slice(diff);
   }
   return data;
+}
+
+export function trimRight(data: Buffer, length: number) {
+  return data.slice(0, length);
 }
 
 export function isCompressed(publicKey: Buffer): boolean {

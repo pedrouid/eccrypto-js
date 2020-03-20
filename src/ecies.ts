@@ -15,6 +15,7 @@ import {
   MAC_LENGTH,
   PREFIXED_KEY_LENGTH,
 } from './helpers/constants';
+import { ERROR_BAD_MAC } from './helpers/errors';
 
 async function getEncryptionKeys(privateKey: Buffer, publicKey: Buffer) {
   publicKey = isCompressed(publicKey) ? decompress(publicKey) : publicKey;
@@ -62,7 +63,7 @@ export async function decrypt(
   );
   const dataToMac = concatBuffers(iv, ephemPublicKey, ciphertext);
   const macTest = await hmacSha256Verify(macKey, dataToMac, mac);
-  assert(macTest, 'Bad MAC');
+  assert(macTest, ERROR_BAD_MAC);
   const msg = await aesCbcDecrypt(opts.iv, encryptionKey, opts.ciphertext);
   return msg;
 }
