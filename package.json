@@ -1,7 +1,7 @@
 {
   "name": "eccrypto-js",
   "description": "Elliptic curve cryptography library (NodeJS, Browser and Pure JS)",
-  "version": "4.5.1",
+  "version": "4.5.2",
   "author": "Pedro Gomes <github.com/pedrouid>",
   "license": "MIT",
   "keywords": [
