@@ -30,7 +30,6 @@ import {
   PREFIXED_DECOMPRESSED_LENGTH,
   PREFIXED_KEY_LENGTH,
 } from './helpers/constants';
-import { trimRight } from './helpers/util';
 import {
   ERROR_BAD_PRIVATE_KEY,
   ERROR_BAD_PUBLIC_KEY,
