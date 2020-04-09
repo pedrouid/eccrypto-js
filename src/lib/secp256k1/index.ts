@@ -4,7 +4,7 @@ import { ISecp256k1 } from './typings';
 
 import { randomBytes } from '../../random';
 import {
-  ensureLength,
+  trimLeft,
   sanitizePublicKey,
   concatBuffers,
   exportRecoveryParam,
@@ -92,5 +92,5 @@ export function secp256k1Derive(
   compressed?: boolean
 ) {
   let result = secp256k1.ecdhUnsafe(publicKey, privateKey, compressed);
-  return ensureLength(result, KEY_LENGTH);
+  return trimLeft(result, KEY_LENGTH);
 }
