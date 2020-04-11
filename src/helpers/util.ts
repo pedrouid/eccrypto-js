@@ -84,6 +84,29 @@ export function trimRight(data: Buffer, length: number) {
   return data.slice(0, length);
 }
 
+export function padString(
+  str: string,
+  length: number,
+  left: boolean,
+  padding = '0'
+) {
+  const diff = length - str.length;
+  let result = str;
+  if (diff > 0) {
+    const pad = padding.repeat(diff);
+    result = left ? pad + str : str + pad;
+  }
+  return result;
+}
+
+export function padLeft(str: string, length: number, padding = '0') {
+  return padString(str, length, true, padding);
+}
+
+export function padRight(str: string, length: number, padding = '0') {
+  return padString(str, length, false, padding);
+}
+
 export function isCompressed(publicKey: Buffer): boolean {
   return (
     publicKey.length === KEY_LENGTH || publicKey.length === PREFIXED_KEY_LENGTH
