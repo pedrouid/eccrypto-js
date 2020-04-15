@@ -6,14 +6,30 @@ import {
 } from '../helpers/constants';
 import { concatBuffers } from '../helpers/util';
 
-const nodeCrypto = require('crypto');
+export function requireNodeCrypto() {
+  let nodeCrypto;
+  try {
+    nodeCrypto = require('crypto');
+  } catch (e) {
+    // do nothing
+  }
+  return nodeCrypto;
+}
+
+export function getNodeCrypto() {
+  const nodeCrypto = requireNodeCrypto();
+  if (!nodeCrypto) {
+    throw new Error('NodeJS Crypto module not available');
+  }
+  return nodeCrypto;
+}
 
 export function isNode() {
-  return !!nodeCrypto;
+  return !!requireNodeCrypto();
 }
 
 export function nodeRandomBytes(length: number): Buffer {
-  return nodeCrypto.randomBytes(length);
+  return getNodeCrypto().randomBytes(length);
 }
 
 export async function nodeAesEncrypt(
@@ -21,7 +37,7 @@ export async function nodeAesEncrypt(
   key: Buffer,
   data: Buffer
 ): Promise<Buffer> {
-  const cipher = nodeCrypto.createCipheriv(AES_NODE_ALGO, key, iv);
+  const cipher = getNodeCrypto().createCipheriv(AES_NODE_ALGO, key, iv);
   return concatBuffers(cipher.update(data), cipher.final());
 }
 
@@ -30,7 +46,7 @@ export async function nodeAesDecrypt(
   key: Buffer,
   data: Buffer
 ): Promise<Buffer> {
-  const decipher = nodeCrypto.createDecipheriv(AES_NODE_ALGO, key, iv);
+  const decipher = getNodeCrypto().createDecipheriv(AES_NODE_ALGO, key, iv);
   return concatBuffers(decipher.update(data), decipher.final());
 }
 
@@ -38,16 +54,16 @@ export async function nodeCreateHmac(
   key: Buffer,
   data: Buffer
 ): Promise<Buffer> {
-  const hmac = nodeCrypto.createHmac(HMAC_NODE_ALGO, Buffer.from(key));
+  const hmac = getNodeCrypto().createHmac(HMAC_NODE_ALGO, Buffer.from(key));
   return hmac.update(data).digest();
 }
 
 export async function nodeSha256(data: Buffer) {
-  const hash = nodeCrypto.createHash(SHA256_NODE_ALGO);
+  const hash = getNodeCrypto().createHash(SHA256_NODE_ALGO);
   return hash.update(data).digest();
 }
 
 export async function nodeSha512(data: Buffer) {
-  const hash = nodeCrypto.createHash(SHA512_NODE_ALGO);
+  const hash = getNodeCrypto().createHash(SHA512_NODE_ALGO);
   return hash.update(data).digest();
 }
