@@ -6,12 +6,8 @@ import {
 } from './constants';
 import { Signature } from './types';
 import { SignResult } from '../lib/secp256k1/typings';
-import {
-  numberToBuffer,
-  bufferToNumber,
-  concatBuffers,
-  bufferToHex,
-} from './encoding';
+import { concatBuffers, bufferToHex } from './encoding';
+import { hexToBuffer } from 'enc-utils';
 
 export function isCompressed(publicKey: Buffer): boolean {
   return (
@@ -40,11 +36,11 @@ export function sanitizePublicKey(publicKey: Buffer): Buffer {
 }
 
 export function exportRecoveryParam(recoveryParam: number): Buffer {
-  return numberToBuffer(recoveryParam + 27);
+  return hexToBuffer((recoveryParam + 27).toString(16));
 }
 
 export function importRecoveryParam(v: Buffer): number {
-  return bufferToNumber(v) - 27;
+  return parseInt(bufferToHex(v), 16) - 27;
 }
 
 export function splitSignature(sig: Buffer): Signature {
