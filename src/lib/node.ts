@@ -6,7 +6,13 @@ import {
 } from '../helpers/constants';
 import { concatBuffers } from '../helpers/util';
 
-const nodeCrypto = require('crypto');
+let nodeCrypto;
+
+try {
+  nodeCrypto = require('crypto');
+} catch (error) {
+  nodeCrypto = false;
+}
 
 export function isNode() {
   return !!nodeCrypto;
