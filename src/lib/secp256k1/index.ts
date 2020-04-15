@@ -4,14 +4,14 @@ import { ISecp256k1 } from './typings';
 
 import { randomBytes } from '../../random';
 import {
+  KEY_LENGTH,
   trimLeft,
   sanitizePublicKey,
   concatBuffers,
   exportRecoveryParam,
   isValidDERSignature,
   sanitizeRSVSignature,
-} from '../../helpers/util';
-import { KEY_LENGTH } from '../../helpers/constants';
+} from '../../helpers';
 
 export const secp256k1: ISecp256k1 = _secp256k1 as any;
 

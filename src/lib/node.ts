@@ -3,8 +3,8 @@ import {
   AES_NODE_ALGO,
   SHA512_NODE_ALGO,
   SHA256_NODE_ALGO,
-} from '../helpers/constants';
-import { concatBuffers } from '../helpers/util';
+  concatBuffers,
+} from '../helpers';
 
 const nodeCrypto = require('crypto');
 

@@ -2,7 +2,7 @@ import { isBrowser, browserCreateHmac } from './lib/browser';
 import { fallbackCreateHmac } from './lib/fallback';
 import { isNode, nodeCreateHmac } from './lib/node';
 
-import { equalConstTime } from './helpers/validators';
+import { equalConstTime } from './helpers';
 
 export async function hmacSha256Sign(
   key: Buffer,

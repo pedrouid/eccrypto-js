@@ -10,8 +10,8 @@ import {
   HMAC_LENGTH,
   SHA256_BROWSER_ALGO,
   SHA512_BROWSER_ALGO,
-} from '../helpers/constants';
-import { arrayToBuffer } from '../helpers/util';
+  arrayToBuffer,
+} from '../helpers';
 import { fallbackRandomBytes } from './fallback';
 
 export function getBrowerCrypto(): Crypto {

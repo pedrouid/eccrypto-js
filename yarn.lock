@@ -2774,6 +2774,11 @@ emojis-list@^2.0.0:
   resolved "https://registry.yarnpkg.com/emojis-list/-/emojis-list-2.1.0.tgz#4daa4d9db00f9819880c79fa457ae5b09a1fd389"
   integrity sha1-TapNnbAPmBmIDHn6RXrlsJof04k=
 
+enc-utils@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/enc-utils/-/enc-utils-1.0.0.tgz#9120a4ceba4eeb3dfc26079eb55d173fb4e86acf"
+  integrity sha512-qCMS/uaAs3CEu6XVXadLogd8K+INVT8yxjxnUOEJek1m5blIX6FZcPjiNohfDIIRMIrCLZZgzWhvwWv65i33jA==
+
 end-of-stream@^1.0.0, end-of-stream@^1.1.0:
   version "1.4.4"
   resolved "https://registry.yarnpkg.com/end-of-stream/-/end-of-stream-1.4.4.tgz#5ae64a5f45057baf3626ec14da0ca5e4b2431eb0"
