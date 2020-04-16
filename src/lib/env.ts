@@ -5,14 +5,9 @@ export function isBrowser(): boolean {
 }
 
 export function isNode(): boolean {
-  let result = false;
-  try {
-    const crypto = require('crypto');
-    if (crypto) {
-      result = true;
-    }
-  } catch (e) {
-    // do nothing
-  }
-  return result;
+  return (
+    typeof process !== 'undefined' &&
+    typeof process.versions !== 'undefined' &&
+    typeof process.versions.node !== 'undefined'
+  );
 }
