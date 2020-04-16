@@ -20,7 +20,7 @@ describe('ECDSA', () => {
 
   it('should verify DER signatures successfully', async () => {
     const { sig, msg } = await testSign(keyPair.privateKey);
-    await eccryptoJS.verify(keyPair.publicKey, msg, sig);
+    eccryptoJS.verify(keyPair.publicKey, msg, sig);
   });
 
   it('should throw when recovering from DER signatures', async () => {
@@ -37,7 +37,7 @@ describe('ECDSA', () => {
 
   it('should verify RSV signatures successfully', async () => {
     const { sig, msg } = await testSign(keyPair.privateKey, true);
-    await eccryptoJS.verify(keyPair.publicKey, msg, sig);
+    eccryptoJS.verify(keyPair.publicKey, msg, sig);
   });
 
   it('should recover RSV signatures successfully', async () => {

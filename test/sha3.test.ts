@@ -16,13 +16,13 @@ describe('SHA3', () => {
   });
   it('should hash buffer sucessfully', async () => {
     const input = Buffer.from(TEST_MESSAGE_STR);
-    const output = await eccryptoJS.sha3(input);
+    const output = eccryptoJS.sha3(input);
     expect(compare(output, expectedOutput)).toBeTruthy();
   });
 
   it('should output with expected length', async () => {
     const input = Buffer.from(TEST_MESSAGE_STR);
-    const output = await eccryptoJS.sha3(input);
+    const output = eccryptoJS.sha3(input);
     expect(output.length === expectedLength).toBeTruthy();
   });
 });
@@ -38,13 +38,13 @@ describe('KECCAK256', () => {
 
   it('should hash buffer sucessfully', async () => {
     const input = Buffer.from(TEST_MESSAGE_STR);
-    const output = await eccryptoJS.keccak256(input);
+    const output = eccryptoJS.keccak256(input);
     expect(compare(output, expectedOutput)).toBeTruthy();
   });
 
   it('should output with expected length', async () => {
     const input = Buffer.from(TEST_MESSAGE_STR);
-    const output = await eccryptoJS.keccak256(input);
+    const output = eccryptoJS.keccak256(input);
     expect(output.length === expectedLength).toBeTruthy();
   });
 });

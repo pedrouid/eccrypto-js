@@ -76,7 +76,7 @@ describe('SECP256K1', () => {
     const { msg } = await getTestMessageToSign();
     const sig = secp256k1Lib.secp256k1Sign(msg, privateKey);
     const publicKey = secp256k1Lib.secp256k1GetPublic(privateKey);
-    await secp256k1Lib.secp256k1Verify(sig, msg, publicKey);
+    secp256k1Lib.secp256k1Verify(sig, msg, publicKey);
   });
 
   it('should throw when recovering from DER signatures', async () => {
@@ -98,7 +98,7 @@ describe('SECP256K1', () => {
     const { msg } = await getTestMessageToSign();
     const sig = secp256k1Lib.secp256k1Sign(msg, privateKey, true);
     const publicKey = secp256k1Lib.secp256k1GetPublic(privateKey);
-    await secp256k1Lib.secp256k1Verify(sig, msg, publicKey);
+    secp256k1Lib.secp256k1Verify(sig, msg, publicKey);
   });
 
   it('should recover RSV signatures successfully', async () => {

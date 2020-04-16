@@ -76,7 +76,7 @@ export function testHmacVerify(
   lib: eccryptoJS.IEccrypto = eccryptoJS
 ) {
   async function nodeHmacVerify(key: Buffer, data: Buffer, sig: Buffer) {
-    const expectedSig = await nodeLib.nodeHmacSha256Sign(key, data);
+    const expectedSig = nodeLib.nodeHmacSha256Sign(key, data);
     return eccryptoJS.equalConstTime(expectedSig, sig);
   }
   return lib.hmacSha256Verify

@@ -31,7 +31,7 @@ describe('eccrypto', () => {
       false,
       eccrypto as any
     );
-    await eccryptoJS.verify(keyPair.publicKey, msg2, sig2);
+    eccryptoJS.verify(keyPair.publicKey, msg2, sig2);
   });
 
   it('should be able to verify with eccrypto-js signature', async () => {
@@ -41,18 +41,18 @@ describe('eccrypto', () => {
   });
 
   it('should match public keys from eccrypto-js', async () => {
-    const publicKey1 = await eccryptoJS.getPublic(keyPair.privateKey);
-    const publicKey2 = await eccrypto.getPublic(keyPair.privateKey);
+    const publicKey1 = eccryptoJS.getPublic(keyPair.privateKey);
+    const publicKey2 = eccrypto.getPublic(keyPair.privateKey);
 
     const isMatch = compare(publicKey1, publicKey2);
     expect(isMatch).toBeTruthy();
   });
 
   it('should match compressed public keys from eccrypto-js', async () => {
-    const publicKeyCompressed1 = await eccryptoJS.getPublicCompressed(
+    const publicKeyCompressed1 = eccryptoJS.getPublicCompressed(
       keyPair.privateKey
     );
-    const publicKeyCompressed2 = await eccrypto.getPublicCompressed(
+    const publicKeyCompressed2 = eccrypto.getPublicCompressed(
       keyPair.privateKey
     );
 
@@ -64,7 +64,7 @@ describe('eccrypto', () => {
     const keyPairA = testGenerateKeyPair();
     const keyPairB = testGenerateKeyPair();
 
-    const sharedKey1 = await eccryptoJS.derive(
+    const sharedKey1 = eccryptoJS.derive(
       keyPairA.privateKey,
       keyPairB.publicKey
     );
@@ -76,7 +76,7 @@ describe('eccrypto', () => {
     const isMatch1 = compare(sharedKey1, sharedKey2);
     expect(isMatch1).toBeTruthy();
 
-    const sharedKey3 = await eccryptoJS.derive(
+    const sharedKey3 = eccryptoJS.derive(
       keyPairB.privateKey,
       keyPairA.publicKey
     );

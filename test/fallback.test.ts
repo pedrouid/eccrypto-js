@@ -60,33 +60,33 @@ describe('Fallback', () => {
     });
 
     it('should encrypt successfully', async () => {
-      const ciphertext = await fallbackLib.fallbackAesEncrypt(iv, key, data);
+      const ciphertext = fallbackLib.fallbackAesEncrypt(iv, key, data);
       expect(ciphertext).toBeTruthy();
     });
 
     it('should decrypt successfully', async () => {
-      const ciphertext = await fallbackLib.fallbackAesEncrypt(iv, key, data);
-      const result = await fallbackLib.fallbackAesDecrypt(iv, key, ciphertext);
+      const ciphertext = fallbackLib.fallbackAesEncrypt(iv, key, data);
+      const result = fallbackLib.fallbackAesDecrypt(iv, key, ciphertext);
       expect(result).toBeTruthy();
       expect(compare(data, result)).toBeTruthy();
     });
 
     it('ciphertext should be decrypted by NodeJS', async () => {
-      const ciphertext = await fallbackLib.fallbackAesEncrypt(iv, key, data);
-      const result = await nodeLib.nodeAesDecrypt(iv, key, ciphertext);
+      const ciphertext = fallbackLib.fallbackAesEncrypt(iv, key, data);
+      const result = nodeLib.nodeAesDecrypt(iv, key, ciphertext);
       expect(result).toBeTruthy();
       expect(compare(data, result)).toBeTruthy();
     });
 
     it('should decrypt ciphertext from NodeJS', async () => {
-      const ciphertext = await nodeLib.nodeAesEncrypt(iv, key, data);
-      const result = await fallbackLib.fallbackAesDecrypt(iv, key, ciphertext);
+      const ciphertext = nodeLib.nodeAesEncrypt(iv, key, data);
+      const result = fallbackLib.fallbackAesDecrypt(iv, key, ciphertext);
       expect(result).toBeTruthy();
       expect(compare(data, result)).toBeTruthy();
     });
 
     it('ciphertext should be decrypted by Browser', async () => {
-      const ciphertext = await fallbackLib.fallbackAesEncrypt(iv, key, data);
+      const ciphertext = fallbackLib.fallbackAesEncrypt(iv, key, data);
       const result = await browserLib.browserAesDecrypt(iv, key, ciphertext);
       expect(result).toBeTruthy();
       expect(compare(data, result)).toBeTruthy();
@@ -94,7 +94,7 @@ describe('Fallback', () => {
 
     it('should decrypt ciphertext from Browser', async () => {
       const ciphertext = await browserLib.browserAesEncrypt(iv, key, data);
-      const result = await fallbackLib.fallbackAesDecrypt(iv, key, ciphertext);
+      const result = fallbackLib.fallbackAesDecrypt(iv, key, ciphertext);
       expect(result).toBeTruthy();
       expect(compare(data, result)).toBeTruthy();
     });
@@ -111,13 +111,13 @@ describe('Fallback', () => {
       });
       it('should hash buffer sucessfully', async () => {
         const input = Buffer.from(TEST_MESSAGE_STR);
-        const output = await fallbackLib.fallbackSha256(input);
+        const output = fallbackLib.fallbackSha256(input);
         expect(compare(output, expectedOutput)).toBeTruthy();
       });
 
       it('should output with expected length', async () => {
         const input = Buffer.from(TEST_MESSAGE_STR);
-        const output = await fallbackLib.fallbackSha256(input);
+        const output = fallbackLib.fallbackSha256(input);
         expect(output.length === expectedLength).toBeTruthy();
       });
     });
@@ -133,13 +133,13 @@ describe('Fallback', () => {
 
       it('should hash buffer sucessfully', async () => {
         const input = Buffer.from(TEST_MESSAGE_STR);
-        const output = await fallbackLib.fallbackSha512(input);
+        const output = fallbackLib.fallbackSha512(input);
         expect(compare(output, expectedOutput)).toBeTruthy();
       });
 
       it('should output with expected length', async () => {
         const input = Buffer.from(TEST_MESSAGE_STR);
-        const output = await fallbackLib.fallbackSha512(input);
+        const output = fallbackLib.fallbackSha512(input);
         expect(output.length === expectedLength).toBeTruthy();
       });
     });
@@ -157,7 +157,7 @@ describe('Fallback', () => {
     let mac: Buffer;
 
     beforeEach(async () => {
-      mac = await fallbackLib.fallbackHmacSha256Sign(macKey, dataToMac);
+      mac = fallbackLib.fallbackHmacSha256Sign(macKey, dataToMac);
     });
 
     it('should sign sucessfully', async () => {
