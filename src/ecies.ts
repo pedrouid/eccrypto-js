@@ -5,17 +5,20 @@ import { hmacSha256Sign, hmacSha256Verify } from './hmac';
 import { randomBytes } from './random';
 import { sha512 } from './sha2';
 
-import { Encrypted, PreEncryptOpts } from './helpers/types';
-import { assert, isValidPrivateKey } from './helpers/validators';
-import { isCompressed, concatBuffers } from './helpers/util';
 import {
   LENGTH_0,
   KEY_LENGTH,
   IV_LENGTH,
   MAC_LENGTH,
   PREFIXED_KEY_LENGTH,
-} from './helpers/constants';
-import { ERROR_BAD_MAC } from './helpers/errors';
+  ERROR_BAD_MAC,
+  isCompressed,
+  PreEncryptOpts,
+  isValidPrivateKey,
+  Encrypted,
+  assert,
+} from './helpers';
+import { concatBuffers } from 'enc-utils';
 
 async function getEncryptionKeys(privateKey: Buffer, publicKey: Buffer) {
   publicKey = isCompressed(publicKey) ? decompress(publicKey) : publicKey;

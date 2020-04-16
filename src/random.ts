@@ -1,4 +1,4 @@
-import { isValidKeyLength } from './helpers/validators';
+import { isValidKeyLength } from './helpers';
 import { isBrowser, browserRandomBytes } from './lib/browser';
 import { isNode, nodeRandomBytes } from './lib/node';
 import { fallbackRandomBytes } from './lib/fallback';

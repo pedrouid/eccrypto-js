@@ -1,3 +1,6 @@
+export const HEX_ENC = 'hex';
+export const UTF8_ENC = 'utf8';
+
 export const ENCRYPT_OP = 'encrypt';
 export const DECRYPT_OP = 'decrypt';
 
@@ -30,9 +33,6 @@ export const HMAC_NODE_ALGO = `sha${HMAC_LENGTH}`;
 export const SHA256_NODE_ALGO = 'sha256';
 export const SHA512_NODE_ALGO = 'sha512';
 export const RIPEMD160_NODE_ALGO = 'ripemd160';
-
-export const HEX_ENC = 'hex';
-export const UTF8_ENC = 'utf8';
 
 export const PREFIX_LENGTH = LENGTH_1;
 export const KEY_LENGTH = LENGTH_32;

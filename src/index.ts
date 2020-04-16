@@ -1,9 +1,6 @@
-export * from './helpers/constants';
-export * from './helpers/types';
-export * from './helpers/util';
-export * from './helpers/validators';
+export * from './helpers';
 
-export * from './lib//elliptic';
+export * from './lib/elliptic';
 export * from './lib/pkcs7';
 export * from './lib/secp256k1';
 export * from './lib/browser';

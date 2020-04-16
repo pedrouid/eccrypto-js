@@ -22,20 +22,19 @@ import {
   ellipticRecover,
 } from './lib/elliptic';
 
-import { KeyPair } from './helpers/types';
-import { assert, isValidPrivateKey } from './helpers/validators';
 import {
+  KeyPair,
+  assert,
+  isValidPrivateKey,
   KEY_LENGTH,
   MAX_MSG_LENGTH,
   PREFIXED_DECOMPRESSED_LENGTH,
   PREFIXED_KEY_LENGTH,
-} from './helpers/constants';
-import {
   ERROR_BAD_PRIVATE_KEY,
   ERROR_BAD_PUBLIC_KEY,
   ERROR_EMPTY_MESSAGE,
   ERROR_MESSAGE_TOO_LONG,
-} from './helpers/errors';
+} from './helpers';
 
 export function generatePrivate() {
   return isNode() ? secp256k1GeneratePrivate() : ellipticGeneratePrivate();

@@ -5,7 +5,7 @@ import {
   fallbackSha512,
   fallbackRipemd160,
 } from './lib/fallback';
-import { EMPTY_BUFFER } from './helpers/constants';
+import { EMPTY_BUFFER } from './helpers';
 
 export async function sha256(msg: Buffer): Promise<Buffer> {
   let result = EMPTY_BUFFER;

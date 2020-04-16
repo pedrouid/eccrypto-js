@@ -6,7 +6,7 @@ import {
 import { fallbackHmacSha256Sign, fallbackHmacSha512Sign } from './lib/fallback';
 import { isNode, nodeHmacSha256Sign, nodeHmacSha512Sign } from './lib/node';
 
-import { equalConstTime } from './helpers/validators';
+import { equalConstTime } from './helpers';
 
 export async function hmacSha256Sign(
   key: Buffer,

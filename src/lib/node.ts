@@ -5,8 +5,8 @@ import {
   SHA512_NODE_ALGO,
   SHA256_NODE_ALGO,
   RIPEMD160_NODE_ALGO,
-} from '../helpers/constants';
-import { concatBuffers } from '../helpers/util';
+  concatBuffers,
+} from '../helpers';
 
 export function isNode() {
   return !!crypto;
