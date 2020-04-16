@@ -42,3 +42,33 @@ export async function ripemd160(msg: Buffer): Promise<Buffer> {
   }
   return result;
 }
+
+export function sha256Sync(msg: Buffer): Buffer {
+  let result = EMPTY_BUFFER;
+  if (isNode()) {
+    result = nodeSha256(msg);
+  } else {
+    result = fallbackSha256(msg);
+  }
+  return result;
+}
+
+export function sha512Sync(msg: Buffer): Buffer {
+  let result = EMPTY_BUFFER;
+  if (isNode()) {
+    result = nodeSha512(msg);
+  } else {
+    result = fallbackSha512(msg);
+  }
+  return result;
+}
+
+export function ripemd160Sync(msg: Buffer): Buffer {
+  let result = EMPTY_BUFFER;
+  if (isNode()) {
+    result = nodeRipemd160(msg);
+  } else {
+    result = fallbackRipemd160(msg);
+  }
+  return result;
+}

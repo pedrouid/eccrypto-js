@@ -97,11 +97,7 @@ export function signatureExport(sig: Buffer): Buffer {
     : ellipticSignatureExport(sig);
 }
 
-export async function sign(
-  privateKey: Buffer,
-  msg: Buffer,
-  rsvSig = false
-): Promise<Buffer> {
+export function sign(privateKey: Buffer, msg: Buffer, rsvSig = false): Buffer {
   checkPrivateKey(privateKey);
   checkMessage(msg);
   return isNode()
@@ -109,22 +105,14 @@ export async function sign(
     : ellipticSign(msg, privateKey, rsvSig);
 }
 
-export async function recover(
-  msg: Buffer,
-  sig: Buffer,
-  compressed = false
-): Promise<Buffer> {
+export function recover(msg: Buffer, sig: Buffer, compressed = false): Buffer {
   checkMessage(msg);
   return isNode()
     ? secp256k1Recover(sig, msg, compressed)
     : ellipticRecover(sig, msg, compressed);
 }
 
-export async function verify(
-  publicKey: Buffer,
-  msg: Buffer,
-  sig: Buffer
-): Promise<null> {
+export function verify(publicKey: Buffer, msg: Buffer, sig: Buffer): null {
   checkPublicKey(publicKey);
   checkMessage(msg);
   const sigGood = isNode()

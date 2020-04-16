@@ -1,9 +1,19 @@
-import { aesCbcEncrypt, aesCbcDecrypt } from './aes';
+import {
+  aesCbcEncrypt,
+  aesCbcDecrypt,
+  aesCbcEncryptSync,
+  aesCbcDecryptSync,
+} from './aes';
 import { derive } from './ecdh';
 import { getPublic, decompress, compress } from './ecdsa';
-import { hmacSha256Sign, hmacSha256Verify } from './hmac';
+import {
+  hmacSha256Sign,
+  hmacSha256Verify,
+  hmacSha256SignSync,
+  hmacSha256VerifySync,
+} from './hmac';
 import { randomBytes } from './random';
-import { sha512 } from './sha2';
+import { sha512, sha512Sync } from './sha2';
 
 import {
   LENGTH_0,
@@ -22,16 +32,32 @@ import {
   concatBuffers,
 } from './helpers';
 
-async function getEncryptionKeys(privateKey: Buffer, publicKey: Buffer) {
+function getSharedKey(privateKey: Buffer, publicKey: Buffer) {
   publicKey = isCompressed(publicKey) ? decompress(publicKey) : publicKey;
-  const sharedKey = await derive(privateKey, publicKey);
-  const hash = await sha512(sharedKey);
-  const encryptionKey = Buffer.from(hash.slice(LENGTH_0, KEY_LENGTH));
-  const macKey = Buffer.from(hash.slice(KEY_LENGTH));
-  return { encryptionKey, macKey };
+  return derive(privateKey, publicKey);
 }
 
-async function getEphemKeyPair(opts?: Partial<PreEncryptOpts>) {
+function getEncryptionKey(hash: Buffer) {
+  return Buffer.from(hash.slice(LENGTH_0, KEY_LENGTH));
+}
+
+function getMacKey(hash: Buffer) {
+  return Buffer.from(hash.slice(KEY_LENGTH));
+}
+
+async function getEciesKeys(privateKey: Buffer, publicKey: Buffer) {
+  const sharedKey = getSharedKey(privateKey, publicKey);
+  const hash = await sha512(sharedKey);
+  return { encryptionKey: getEncryptionKey(hash), macKey: getMacKey(hash) };
+}
+
+function getEciesKeysSync(privateKey: Buffer, publicKey: Buffer) {
+  const sharedKey = getSharedKey(privateKey, publicKey);
+  const hash = sha512Sync(sharedKey);
+  return { encryptionKey: getEncryptionKey(hash), macKey: getMacKey(hash) };
+}
+
+function getEphemKeyPair(opts?: Partial<PreEncryptOpts>) {
   let ephemPrivateKey = opts?.ephemPrivateKey || randomBytes(KEY_LENGTH);
   while (!isValidPrivateKey(ephemPrivateKey)) {
     ephemPrivateKey = opts?.ephemPrivateKey || randomBytes(KEY_LENGTH);
@@ -45,8 +71,8 @@ export async function encrypt(
   msg: Buffer,
   opts?: Partial<PreEncryptOpts>
 ): Promise<Encrypted> {
-  const { ephemPrivateKey, ephemPublicKey } = await getEphemKeyPair(opts);
-  const { encryptionKey, macKey } = await getEncryptionKeys(
+  const { ephemPrivateKey, ephemPublicKey } = getEphemKeyPair(opts);
+  const { encryptionKey, macKey } = await getEciesKeys(
     ephemPrivateKey,
     publicKeyTo
   );
@@ -62,7 +88,7 @@ export async function decrypt(
   opts: Encrypted
 ): Promise<Buffer> {
   const { ephemPublicKey, iv, mac, ciphertext } = opts;
-  const { encryptionKey, macKey } = await getEncryptionKeys(
+  const { encryptionKey, macKey } = await getEciesKeys(
     privateKey,
     ephemPublicKey
   );
@@ -70,6 +96,39 @@ export async function decrypt(
   const macTest = await hmacSha256Verify(macKey, dataToMac, mac);
   assert(macTest, ERROR_BAD_MAC);
   const msg = await aesCbcDecrypt(opts.iv, encryptionKey, opts.ciphertext);
+  return msg;
+}
+
+export function encryptSync(
+  publicKeyTo: Buffer,
+  msg: Buffer,
+  opts?: Partial<PreEncryptOpts>
+): Encrypted {
+  const { ephemPrivateKey, ephemPublicKey } = getEphemKeyPair(opts);
+  const { encryptionKey, macKey } = getEciesKeysSync(
+    ephemPrivateKey,
+    publicKeyTo
+  );
+  const iv = opts?.iv || randomBytes(IV_LENGTH);
+  const ciphertext = aesCbcEncryptSync(iv, encryptionKey, msg);
+  const dataToMac = concatBuffers(iv, ephemPublicKey, ciphertext);
+  const mac = hmacSha256SignSync(macKey, dataToMac);
+  return { iv, ephemPublicKey, ciphertext, mac: mac };
+}
+
+export async function decryptSync(
+  privateKey: Buffer,
+  opts: Encrypted
+): Promise<Buffer> {
+  const { ephemPublicKey, iv, mac, ciphertext } = opts;
+  const { encryptionKey, macKey } = getEciesKeysSync(
+    privateKey,
+    ephemPublicKey
+  );
+  const dataToMac = concatBuffers(iv, ephemPublicKey, ciphertext);
+  const macTest = hmacSha256VerifySync(macKey, dataToMac, mac);
+  assert(macTest, ERROR_BAD_MAC);
+  const msg = aesCbcDecryptSync(opts.iv, encryptionKey, opts.ciphertext);
   return msg;
 }
 

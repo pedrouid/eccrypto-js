@@ -34,3 +34,31 @@ export async function aesCbcDecrypt(
   }
   return result;
 }
+
+export function aesCbcEncryptSync(
+  iv: Buffer,
+  key: Buffer,
+  data: Buffer
+): Buffer {
+  let result;
+  if (isNode()) {
+    result = nodeAesEncrypt(iv, key, data);
+  } else {
+    result = fallbackAesEncrypt(iv, key, data);
+  }
+  return result;
+}
+
+export function aesCbcDecryptSync(
+  iv: Buffer,
+  key: Buffer,
+  data: Buffer
+): Buffer {
+  let result;
+  if (isNode()) {
+    result = nodeAesDecrypt(iv, key, data);
+  } else {
+    result = fallbackAesDecrypt(iv, key, data);
+  }
+  return result;
+}

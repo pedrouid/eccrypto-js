@@ -60,10 +60,59 @@ export async function hmacSha512Verify(
   sig: Buffer
 ): Promise<boolean> {
   let result;
-  if (isBrowser()) {
-    const expectedSig = await browserHmacSha512Sign(key, msg);
+  if (isNode()) {
+    const expectedSig = nodeHmacSha512Sign(key, msg);
     result = equalConstTime(expectedSig, sig);
-  } else if (isNode()) {
+  } else {
+    const expectedSig = fallbackHmacSha512Sign(key, msg);
+    result = equalConstTime(expectedSig, sig);
+  }
+  return result;
+}
+
+export function hmacSha256SignSync(key: Buffer, msg: Buffer): Buffer {
+  let result;
+  if (isNode()) {
+    result = nodeHmacSha256Sign(key, msg);
+  } else {
+    result = fallbackHmacSha256Sign(key, msg);
+  }
+  return result;
+}
+
+export function hmacSha256VerifySync(
+  key: Buffer,
+  msg: Buffer,
+  sig: Buffer
+): boolean {
+  let result;
+  if (isNode()) {
+    const expectedSig = nodeHmacSha256Sign(key, msg);
+    result = equalConstTime(expectedSig, sig);
+  } else {
+    const expectedSig = fallbackHmacSha256Sign(key, msg);
+    result = equalConstTime(expectedSig, sig);
+  }
+  return result;
+}
+
+export function hmacSha512SignSync(key: Buffer, msg: Buffer): Buffer {
+  let result;
+  if (isNode()) {
+    result = nodeHmacSha512Sign(key, msg);
+  } else {
+    result = fallbackHmacSha512Sign(key, msg);
+  }
+  return result;
+}
+
+export function hmacSha512VerifySync(
+  key: Buffer,
+  msg: Buffer,
+  sig: Buffer
+): boolean {
+  let result;
+  if (isNode()) {
     const expectedSig = nodeHmacSha512Sign(key, msg);
     result = equalConstTime(expectedSig, sig);
   } else {
