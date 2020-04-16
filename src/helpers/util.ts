@@ -3,11 +3,10 @@ import {
   DECOMPRESSED_LENGTH,
   PREFIXED_KEY_LENGTH,
   PREFIXED_DECOMPRESSED_LENGTH,
-} from './constants';
+} from '../constants';
 import { Signature } from './types';
 import { SignResult } from '../lib/secp256k1/typings';
-import { concatBuffers, bufferToHex } from './encoding';
-import { hexToBuffer } from 'enc-utils';
+import { concatBuffers, bufferToHex, hexToBuffer } from './encoding';
 
 export function isCompressed(publicKey: Buffer): boolean {
   return (

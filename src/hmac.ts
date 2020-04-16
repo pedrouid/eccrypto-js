@@ -1,10 +1,7 @@
-import {
-  isBrowser,
-  browserHmacSha256Sign,
-  browserHmacSha512Sign,
-} from './lib/browser';
+import { isBrowser, isNode } from './lib/env';
+import { browserHmacSha256Sign, browserHmacSha512Sign } from './lib/browser';
 import { fallbackHmacSha256Sign, fallbackHmacSha512Sign } from './lib/fallback';
-import { isNode, nodeHmacSha256Sign, nodeHmacSha512Sign } from './lib/node';
+import { nodeHmacSha256Sign, nodeHmacSha512Sign } from './lib/node';
 
 import { equalConstTime } from './helpers';
 

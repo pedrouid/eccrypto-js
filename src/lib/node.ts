@@ -5,12 +5,8 @@ import {
   SHA512_NODE_ALGO,
   SHA256_NODE_ALGO,
   RIPEMD160_NODE_ALGO,
-  concatBuffers,
-} from '../helpers';
-
-export function isNode() {
-  return !!crypto;
-}
+} from '../constants';
+import { concatBuffers } from '../helpers';
 
 export function nodeRandomBytes(length: number): Buffer {
   return crypto.randomBytes(length);

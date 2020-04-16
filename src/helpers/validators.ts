@@ -1,4 +1,4 @@
-import { ZERO32, EC_GROUP_ORDER, LENGTH_0, MAX_KEY_LENGTH } from './constants';
+import { ZERO32, EC_GROUP_ORDER, LENGTH_0, MAX_KEY_LENGTH } from '../constants';
 
 export function assert(condition: boolean, message: string): void {
   if (!condition) {

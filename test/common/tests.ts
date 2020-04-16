@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import * as eccryptoJS from '../../src';
+import * as nodeLib from '../../src/lib/node';
 import { TEST_MESSAGE_STR } from './constants';
 
 export function testGenerateKeyPair(lib: eccryptoJS.IEccrypto = eccryptoJS) {
@@ -44,7 +45,7 @@ export function testAesEncrypt(
 ) {
   return lib.aesCbcEncrypt
     ? lib.aesCbcEncrypt(iv, key, data)
-    : eccryptoJS.nodeAesEncrypt(iv, key, data);
+    : nodeLib.nodeAesEncrypt(iv, key, data);
 }
 
 export function testAesDecrypt(
@@ -55,7 +56,7 @@ export function testAesDecrypt(
 ) {
   return lib.aesCbcDecrypt
     ? lib.aesCbcDecrypt(iv, key, data)
-    : eccryptoJS.nodeAesDecrypt(iv, key, data);
+    : nodeLib.nodeAesDecrypt(iv, key, data);
 }
 
 export async function testHmacSign(
@@ -65,7 +66,7 @@ export async function testHmacSign(
 ) {
   return lib.hmacSha256Sign
     ? lib.hmacSha256Sign(key, data)
-    : eccryptoJS.nodeHmacSha256Sign(key, data);
+    : nodeLib.nodeHmacSha256Sign(key, data);
 }
 
 export function testHmacVerify(
@@ -75,7 +76,7 @@ export function testHmacVerify(
   lib: eccryptoJS.IEccrypto = eccryptoJS
 ) {
   async function nodeHmacVerify(key: Buffer, data: Buffer, sig: Buffer) {
-    const expectedSig = await eccryptoJS.nodeHmacSha256Sign(key, data);
+    const expectedSig = await nodeLib.nodeHmacSha256Sign(key, data);
     return eccryptoJS.equalConstTime(expectedSig, sig);
   }
   return lib.hmacSha256Verify

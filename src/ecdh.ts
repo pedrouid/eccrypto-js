@@ -1,4 +1,4 @@
-import { isNode } from './lib/node';
+import { isNode } from './lib/env';
 import { secp256k1Derive } from './lib/secp256k1';
 import { ellipticDerive } from './lib/elliptic';
 

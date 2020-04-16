@@ -1,4 +1,7 @@
-import * as eccryptoJS from '../src';
+import * as envLib from '../src/lib/env';
+import * as nodeLib from '../src/lib/node';
+import * as browserLib from '../src/lib/browser';
+import * as fallbackLib from '../src/lib/fallback';
 import {
   testRandomBytes,
   getTestMessageToEncrypt,
@@ -24,7 +27,7 @@ window.msCrypto = new Crypto();
 describe('Browser', () => {
   describe('isBrowser', () => {
     it('should return true', () => {
-      const result = eccryptoJS.isBrowser();
+      const result = envLib.isBrowser();
       expect(result).toBeTruthy();
     });
   });
@@ -35,7 +38,7 @@ describe('Browser', () => {
 
     beforeEach(async () => {
       length = 32;
-      key = eccryptoJS.browserRandomBytes(length);
+      key = browserLib.browserRandomBytes(length);
     });
 
     it('should generate random bytes sucessfully', async () => {
@@ -65,46 +68,46 @@ describe('Browser', () => {
     });
 
     it('should import key from buffer successfully', async () => {
-      const result = await eccryptoJS.browserImportKey(key);
+      const result = await browserLib.browserImportKey(key);
       expect(result).toBeTruthy();
     });
 
     it('should encrypt successfully', async () => {
-      const ciphertext = await eccryptoJS.browserAesEncrypt(iv, key, data);
+      const ciphertext = await browserLib.browserAesEncrypt(iv, key, data);
       expect(ciphertext).toBeTruthy();
     });
 
     it('should decrypt successfully', async () => {
-      const ciphertext = await eccryptoJS.browserAesEncrypt(iv, key, data);
-      const result = await eccryptoJS.browserAesDecrypt(iv, key, ciphertext);
+      const ciphertext = await browserLib.browserAesEncrypt(iv, key, data);
+      const result = await browserLib.browserAesDecrypt(iv, key, ciphertext);
       expect(result).toBeTruthy();
       expect(compare(data, result)).toBeTruthy();
     });
 
     it('ciphertext should be decrypted by NodeJS', async () => {
-      const ciphertext = await eccryptoJS.browserAesEncrypt(iv, key, data);
-      const result = await eccryptoJS.nodeAesDecrypt(iv, key, ciphertext);
+      const ciphertext = await browserLib.browserAesEncrypt(iv, key, data);
+      const result = nodeLib.nodeAesDecrypt(iv, key, ciphertext);
       expect(result).toBeTruthy();
       expect(compare(data, result)).toBeTruthy();
     });
 
     it('should decrypt ciphertext from NodeJS', async () => {
-      const ciphertext = await eccryptoJS.nodeAesEncrypt(iv, key, data);
-      const result = await eccryptoJS.browserAesDecrypt(iv, key, ciphertext);
+      const ciphertext = nodeLib.nodeAesEncrypt(iv, key, data);
+      const result = await browserLib.browserAesDecrypt(iv, key, ciphertext);
       expect(result).toBeTruthy();
       expect(compare(data, result)).toBeTruthy();
     });
 
     it('ciphertext should be decrypted by Fallback', async () => {
-      const ciphertext = await eccryptoJS.browserAesEncrypt(iv, key, data);
-      const result = await eccryptoJS.fallbackAesDecrypt(iv, key, ciphertext);
+      const ciphertext = await browserLib.browserAesEncrypt(iv, key, data);
+      const result = fallbackLib.fallbackAesDecrypt(iv, key, ciphertext);
       expect(result).toBeTruthy();
       expect(compare(data, result)).toBeTruthy();
     });
 
     it('should decrypt ciphertext from Fallback', async () => {
-      const ciphertext = await eccryptoJS.fallbackAesEncrypt(iv, key, data);
-      const result = await eccryptoJS.browserAesDecrypt(iv, key, ciphertext);
+      const ciphertext = fallbackLib.fallbackAesEncrypt(iv, key, data);
+      const result = await browserLib.browserAesDecrypt(iv, key, ciphertext);
       expect(result).toBeTruthy();
       expect(compare(data, result)).toBeTruthy();
     });
@@ -121,13 +124,13 @@ describe('Browser', () => {
       });
       it('should hash buffer sucessfully', async () => {
         const input = Buffer.from(TEST_MESSAGE_STR);
-        const output = await eccryptoJS.browserSha256(input);
+        const output = await browserLib.browserSha256(input);
         expect(compare(output, expectedOutput)).toBeTruthy();
       });
 
       it('should output with expected length', async () => {
         const input = Buffer.from(TEST_MESSAGE_STR);
-        const output = await eccryptoJS.browserSha256(input);
+        const output = await browserLib.browserSha256(input);
         expect(output.length === expectedLength).toBeTruthy();
       });
     });
@@ -143,13 +146,13 @@ describe('Browser', () => {
 
       it('should hash buffer sucessfully', async () => {
         const input = Buffer.from(TEST_MESSAGE_STR);
-        const output = await eccryptoJS.browserSha512(input);
+        const output = await browserLib.browserSha512(input);
         expect(compare(output, expectedOutput)).toBeTruthy();
       });
 
       it('should output with expected length', async () => {
         const input = Buffer.from(TEST_MESSAGE_STR);
-        const output = await eccryptoJS.browserSha512(input);
+        const output = await browserLib.browserSha512(input);
         expect(output.length === expectedLength).toBeTruthy();
       });
     });
@@ -167,7 +170,7 @@ describe('Browser', () => {
     let mac: Buffer;
 
     beforeEach(async () => {
-      mac = await eccryptoJS.browserHmacSha256Sign(macKey, dataToMac);
+      mac = await browserLib.browserHmacSha256Sign(macKey, dataToMac);
     });
 
     it('should sign sucessfully', async () => {

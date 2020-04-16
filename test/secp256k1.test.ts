@@ -1,4 +1,4 @@
-import * as eccryptoJS from '../src';
+import * as secp256k1Lib from '../src/lib/secp256k1';
 import {
   TEST_PRIVATE_KEY,
   TEST_PUBLIC_KEY,
@@ -21,14 +21,14 @@ const expectedSharedKeyLength = 32;
 
 describe('SECP256K1', () => {
   it('should get public key successfully', () => {
-    const publicKey = eccryptoJS.secp256k1GetPublic(privateKey);
+    const publicKey = secp256k1Lib.secp256k1GetPublic(privateKey);
     expect(publicKey).toBeTruthy();
     expect(compare(publicKey, expectedPublicKey)).toBeTruthy();
     expect(publicKey.length === expectedPublicKeyLength).toBeTruthy();
   });
 
   it('should get public key compressed successfully', () => {
-    const publicKeyCompressed = eccryptoJS.secp256k1GetPublicCompressed(
+    const publicKeyCompressed = secp256k1Lib.secp256k1GetPublicCompressed(
       privateKey
     );
     expect(publicKeyCompressed).toBeTruthy();
@@ -41,24 +41,24 @@ describe('SECP256K1', () => {
   });
 
   it('should compress public key successfully', () => {
-    const publicKey = eccryptoJS.secp256k1GetPublic(privateKey);
-    const publicKeyCompressed = eccryptoJS.secp256k1Compress(publicKey);
+    const publicKey = secp256k1Lib.secp256k1GetPublic(privateKey);
+    const publicKeyCompressed = secp256k1Lib.secp256k1Compress(publicKey);
     expect(
       compare(publicKeyCompressed, expectedPublicKeyCompressed)
     ).toBeTruthy();
   });
 
   it('should decompress public key successfully', () => {
-    const publicKeyCompressed = eccryptoJS.secp256k1GetPublicCompressed(
+    const publicKeyCompressed = secp256k1Lib.secp256k1GetPublicCompressed(
       privateKey
     );
-    const publicKey = eccryptoJS.secp256k1Decompress(publicKeyCompressed);
+    const publicKey = secp256k1Lib.secp256k1Decompress(publicKeyCompressed);
     expect(compare(publicKey, expectedPublicKey)).toBeTruthy();
   });
 
   it('should derive shared key successfully', () => {
-    const sharedKey = eccryptoJS.secp256k1Derive(
-      eccryptoJS.secp256k1GetPublic(privateKey),
+    const sharedKey = secp256k1Lib.secp256k1Derive(
+      secp256k1Lib.secp256k1GetPublic(privateKey),
       privateKey
     );
     expect(sharedKey).toBeTruthy();
@@ -68,44 +68,44 @@ describe('SECP256K1', () => {
 
   it('should sign successfully with DER signatures', async () => {
     const { msg } = await getTestMessageToSign();
-    const sig = eccryptoJS.secp256k1Sign(msg, privateKey);
+    const sig = secp256k1Lib.secp256k1Sign(msg, privateKey);
     expect(sig).toBeTruthy();
   });
 
   it('should verify DER signatures successfully', async () => {
     const { msg } = await getTestMessageToSign();
-    const sig = eccryptoJS.secp256k1Sign(msg, privateKey);
-    const publicKey = eccryptoJS.secp256k1GetPublic(privateKey);
-    await eccryptoJS.secp256k1Verify(sig, msg, publicKey);
+    const sig = secp256k1Lib.secp256k1Sign(msg, privateKey);
+    const publicKey = secp256k1Lib.secp256k1GetPublic(privateKey);
+    await secp256k1Lib.secp256k1Verify(sig, msg, publicKey);
   });
 
   it('should throw when recovering from DER signatures', async () => {
     const { msg } = await getTestMessageToSign();
-    const sig = eccryptoJS.secp256k1Sign(msg, privateKey);
-    // const publicKey = eccryptoJS.secp256k1GetPublic(privateKey);
-    expect(() => eccryptoJS.secp256k1Recover(sig, msg)).toThrow(
+    const sig = secp256k1Lib.secp256k1Sign(msg, privateKey);
+    // const publicKey = secp256k1Lib.secp256k1GetPublic(privateKey);
+    expect(() => secp256k1Lib.secp256k1Recover(sig, msg)).toThrow(
       'Cannot recover from DER signatures'
     );
   });
 
   it('should sign successfully with RSV signatures', async () => {
     const { msg } = await getTestMessageToSign();
-    const sig = eccryptoJS.secp256k1Sign(msg, privateKey, true);
+    const sig = secp256k1Lib.secp256k1Sign(msg, privateKey, true);
     expect(sig).toBeTruthy();
   });
 
   it('should verify RSV signatures successfully', async () => {
     const { msg } = await getTestMessageToSign();
-    const sig = eccryptoJS.secp256k1Sign(msg, privateKey, true);
-    const publicKey = eccryptoJS.secp256k1GetPublic(privateKey);
-    await eccryptoJS.secp256k1Verify(sig, msg, publicKey);
+    const sig = secp256k1Lib.secp256k1Sign(msg, privateKey, true);
+    const publicKey = secp256k1Lib.secp256k1GetPublic(privateKey);
+    await secp256k1Lib.secp256k1Verify(sig, msg, publicKey);
   });
 
   it('should recover RSV signatures successfully', async () => {
     const { msg } = await getTestMessageToSign();
-    const sig = eccryptoJS.secp256k1Sign(msg, privateKey, true);
-    const publicKey = eccryptoJS.secp256k1GetPublic(privateKey);
-    const recovered = eccryptoJS.secp256k1Recover(sig, msg);
+    const sig = secp256k1Lib.secp256k1Sign(msg, privateKey, true);
+    const publicKey = secp256k1Lib.secp256k1GetPublic(privateKey);
+    const recovered = secp256k1Lib.secp256k1Recover(sig, msg);
     expect(compare(publicKey, recovered)).toBeTruthy();
   });
 });

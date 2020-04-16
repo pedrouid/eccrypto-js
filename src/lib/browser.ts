@@ -11,8 +11,8 @@ import {
   SHA256_BROWSER_ALGO,
   SHA512_BROWSER_ALGO,
   LENGTH_512,
-  arrayToBuffer,
-} from '../helpers';
+} from '../constants';
+import { arrayToBuffer } from '../helpers';
 import { fallbackRandomBytes } from './fallback';
 
 export function getBrowerCrypto(): Crypto {
@@ -24,10 +24,6 @@ export function getSubtleCrypto(): SubtleCrypto {
   const browserCrypto = getBrowerCrypto();
   // @ts-ignore
   return browserCrypto.subtle || browserCrypto.webkitSubtle;
-}
-
-export function isBrowser(): boolean {
-  return !!getBrowerCrypto() && !!getSubtleCrypto();
 }
 
 export function browserRandomBytes(length: number): Buffer {

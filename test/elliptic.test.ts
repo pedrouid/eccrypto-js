@@ -1,4 +1,4 @@
-import * as eccryptoJS from '../src';
+import * as ellipticLib from '../src/lib/elliptic';
 import {
   TEST_PRIVATE_KEY,
   TEST_PUBLIC_KEY,
@@ -21,14 +21,14 @@ const expectedSharedKeyLength = 32;
 
 describe('Elliptic', () => {
   it('should get public key successfully', () => {
-    const publicKey = eccryptoJS.ellipticGetPublic(privateKey);
+    const publicKey = ellipticLib.ellipticGetPublic(privateKey);
     expect(publicKey).toBeTruthy();
     expect(compare(publicKey, expectedPublicKey)).toBeTruthy();
     expect(publicKey.length === expectedPublicKeyLength).toBeTruthy();
   });
 
   it('should get public key compressed successfully', () => {
-    const publicKeyCompressed = eccryptoJS.ellipticGetPublicCompressed(
+    const publicKeyCompressed = ellipticLib.ellipticGetPublicCompressed(
       privateKey
     );
     expect(publicKeyCompressed).toBeTruthy();
@@ -41,24 +41,24 @@ describe('Elliptic', () => {
   });
 
   it('should compress public key successfully', () => {
-    const publicKey = eccryptoJS.ellipticGetPublic(privateKey);
-    const publicKeyCompressed = eccryptoJS.ellipticCompress(publicKey);
+    const publicKey = ellipticLib.ellipticGetPublic(privateKey);
+    const publicKeyCompressed = ellipticLib.ellipticCompress(publicKey);
     expect(
       compare(publicKeyCompressed, expectedPublicKeyCompressed)
     ).toBeTruthy();
   });
 
   it('should decompress public key successfully', () => {
-    const publicKeyCompressed = eccryptoJS.ellipticGetPublicCompressed(
+    const publicKeyCompressed = ellipticLib.ellipticGetPublicCompressed(
       privateKey
     );
-    const publicKey = eccryptoJS.ellipticDecompress(publicKeyCompressed);
+    const publicKey = ellipticLib.ellipticDecompress(publicKeyCompressed);
     expect(compare(publicKey, expectedPublicKey)).toBeTruthy();
   });
 
   it('should derive shared key successfully', () => {
-    const sharedKey = eccryptoJS.ellipticDerive(
-      eccryptoJS.ellipticGetPublic(privateKey),
+    const sharedKey = ellipticLib.ellipticDerive(
+      ellipticLib.ellipticGetPublic(privateKey),
       privateKey
     );
     expect(sharedKey).toBeTruthy();
@@ -68,44 +68,44 @@ describe('Elliptic', () => {
 
   it('should sign successfully with DER signatures', async () => {
     const { msg } = await getTestMessageToSign();
-    const sig = eccryptoJS.ellipticSign(msg, privateKey);
+    const sig = ellipticLib.ellipticSign(msg, privateKey);
     expect(sig).toBeTruthy();
   });
 
   it('should verify DER signatures successfully', async () => {
     const { msg } = await getTestMessageToSign();
-    const sig = eccryptoJS.ellipticSign(msg, privateKey);
-    const publicKey = eccryptoJS.ellipticGetPublic(privateKey);
-    await eccryptoJS.ellipticVerify(sig, msg, publicKey);
+    const sig = ellipticLib.ellipticSign(msg, privateKey);
+    const publicKey = ellipticLib.ellipticGetPublic(privateKey);
+    await ellipticLib.ellipticVerify(sig, msg, publicKey);
   });
 
   it('should throw when recovering from DER signatures', async () => {
     const { msg } = await getTestMessageToSign();
-    const sig = eccryptoJS.ellipticSign(msg, privateKey);
-    // const publicKey = eccryptoJS.ellipticGetPublic(privateKey);
-    expect(() => eccryptoJS.ellipticRecover(sig, msg)).toThrow(
+    const sig = ellipticLib.ellipticSign(msg, privateKey);
+    // const publicKey = ellipticLib.ellipticGetPublic(privateKey);
+    expect(() => ellipticLib.ellipticRecover(sig, msg)).toThrow(
       'Cannot recover from DER signatures'
     );
   });
 
   it('should sign successfully with RSV signatures', async () => {
     const { msg } = await getTestMessageToSign();
-    const sig = eccryptoJS.ellipticSign(msg, privateKey, true);
+    const sig = ellipticLib.ellipticSign(msg, privateKey, true);
     expect(sig).toBeTruthy();
   });
 
   it('should verify RSV signatures successfully', async () => {
     const { msg } = await getTestMessageToSign();
-    const sig = eccryptoJS.ellipticSign(msg, privateKey);
-    const publicKey = eccryptoJS.ellipticGetPublic(privateKey);
-    await eccryptoJS.ellipticVerify(sig, msg, publicKey);
+    const sig = ellipticLib.ellipticSign(msg, privateKey);
+    const publicKey = ellipticLib.ellipticGetPublic(privateKey);
+    await ellipticLib.ellipticVerify(sig, msg, publicKey);
   });
 
   it('should recover RSV signatures successfully', async () => {
     const { msg } = await getTestMessageToSign();
-    const sig = eccryptoJS.ellipticSign(msg, privateKey, true);
-    const publicKey = eccryptoJS.ellipticGetPublic(privateKey);
-    const recovered = eccryptoJS.ellipticRecover(sig, msg);
+    const sig = ellipticLib.ellipticSign(msg, privateKey, true);
+    const publicKey = ellipticLib.ellipticGetPublic(privateKey);
+    const recovered = ellipticLib.ellipticRecover(sig, msg);
     expect(compare(publicKey, recovered)).toBeTruthy();
   });
 });

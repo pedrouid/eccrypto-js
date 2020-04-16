@@ -1,11 +1,13 @@
-import { browserSha256, isBrowser, browserSha512 } from './lib/browser';
-import { nodeSha256, isNode, nodeSha512, nodeRipemd160 } from './lib/node';
+import { isBrowser, isNode } from './lib/env';
+
+import { browserSha256, browserSha512 } from './lib/browser';
+import { nodeSha256, nodeSha512, nodeRipemd160 } from './lib/node';
 import {
   fallbackSha256,
   fallbackSha512,
   fallbackRipemd160,
 } from './lib/fallback';
-import { EMPTY_BUFFER } from './helpers';
+import { EMPTY_BUFFER } from './constants';
 
 export async function sha256(msg: Buffer): Promise<Buffer> {
   let result = EMPTY_BUFFER;

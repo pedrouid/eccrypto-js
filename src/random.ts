@@ -1,6 +1,8 @@
 import { isValidKeyLength } from './helpers';
-import { isBrowser, browserRandomBytes } from './lib/browser';
-import { isNode, nodeRandomBytes } from './lib/node';
+
+import { isBrowser, isNode } from './lib/env';
+import { browserRandomBytes } from './lib/browser';
+import { nodeRandomBytes } from './lib/node';
 import { fallbackRandomBytes } from './lib/fallback';
 
 export function randomBytes(length: number): Buffer {

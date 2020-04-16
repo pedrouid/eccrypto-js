@@ -4,13 +4,8 @@ import * as hash from 'hash.js';
 
 import * as pkcs7 from './pkcs7';
 
-import {
-  arrayToBuffer,
-  hexToBuffer,
-  SHA256_NODE_ALGO,
-  HEX_ENC,
-  SHA512_NODE_ALGO,
-} from '../helpers';
+import { SHA256_NODE_ALGO, HEX_ENC, SHA512_NODE_ALGO } from '../constants';
+import { arrayToBuffer, hexToBuffer } from '../helpers';
 
 export function fallbackRandomBytes(length: number): Buffer {
   return randomBytes(length);

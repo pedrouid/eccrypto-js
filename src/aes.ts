@@ -1,5 +1,6 @@
-import { isBrowser, browserAesEncrypt, browserAesDecrypt } from './lib/browser';
-import { isNode, nodeAesEncrypt, nodeAesDecrypt } from './lib/node';
+import { isBrowser, isNode } from './lib/env';
+import { browserAesEncrypt, browserAesDecrypt } from './lib/browser';
+import { nodeAesEncrypt, nodeAesDecrypt } from './lib/node';
 import { fallbackAesEncrypt, fallbackAesDecrypt } from './lib/fallback';
 
 export async function aesCbcEncrypt(

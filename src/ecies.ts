@@ -12,13 +12,15 @@ import {
   MAC_LENGTH,
   PREFIXED_KEY_LENGTH,
   ERROR_BAD_MAC,
+} from './constants';
+import {
   isCompressed,
   PreEncryptOpts,
   isValidPrivateKey,
   Encrypted,
   assert,
+  concatBuffers,
 } from './helpers';
-import { concatBuffers } from 'enc-utils';
 
 async function getEncryptionKeys(privateKey: Buffer, publicKey: Buffer) {
   publicKey = isCompressed(publicKey) ? decompress(publicKey) : publicKey;

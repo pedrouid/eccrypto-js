@@ -2,6 +2,7 @@ import { ec as EC } from 'elliptic';
 import { Signature } from 'elliptic/lib/elliptic/ec/signature';
 
 import { randomBytes } from '../../random';
+import { HEX_ENC, KEY_LENGTH } from '../../constants';
 import {
   isValidPrivateKey,
   sanitizePublicKey,
@@ -11,8 +12,6 @@ import {
   importRecoveryParam,
   splitSignature,
   isValidDERSignature,
-  HEX_ENC,
-  KEY_LENGTH,
 } from '../../helpers';
 
 const ec = new EC('secp256k1');

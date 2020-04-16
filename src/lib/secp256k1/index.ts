@@ -3,8 +3,8 @@ import * as _secp256k1 from 'secp256k1';
 import { ISecp256k1 } from './typings';
 
 import { randomBytes } from '../../random';
+import { KEY_LENGTH } from '../../constants';
 import {
-  KEY_LENGTH,
   trimLeft,
   sanitizePublicKey,
   concatBuffers,

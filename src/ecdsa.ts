@@ -1,4 +1,4 @@
-import { isNode } from './lib/node';
+import { isNode } from './lib/env';
 import {
   secp256k1GeneratePrivate,
   secp256k1GetPublic,
@@ -21,11 +21,7 @@ import {
   ellipticSignatureExport,
   ellipticRecover,
 } from './lib/elliptic';
-
 import {
-  KeyPair,
-  assert,
-  isValidPrivateKey,
   KEY_LENGTH,
   MAX_MSG_LENGTH,
   PREFIXED_DECOMPRESSED_LENGTH,
@@ -34,7 +30,8 @@ import {
   ERROR_BAD_PUBLIC_KEY,
   ERROR_EMPTY_MESSAGE,
   ERROR_MESSAGE_TOO_LONG,
-} from './helpers';
+} from './constants';
+import { KeyPair, assert, isValidPrivateKey } from './helpers';
 
 export function generatePrivate() {
   return isNode() ? secp256k1GeneratePrivate() : ellipticGeneratePrivate();
