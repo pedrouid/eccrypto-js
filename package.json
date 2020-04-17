@@ -1,7 +1,7 @@
 {
   "name": "eccrypto-js",
   "description": "Elliptic curve cryptography library (NodeJS, Browser and Pure JS)",
-  "version": "5.0.0-beta.8",
+  "version": "5.0.0-beta.11",
   "author": "Pedro Gomes <github.com/pedrouid>",
   "license": "MIT",
   "keywords": [
@@ -38,7 +38,8 @@
     "build": "yarn clean && yarn build:cjs && yarn build:umd",
     "test": "tsdx test ./test",
     "lint": "tsdx lint src test",
-    "prepare": "yarn lint && yarn build && yarn test"
+    "prepare": "yarn lint && yarn build && yarn test",
+    "publish:beta": "yarn publish --tag=beta"
   },
   "dependencies": {
     "aes-js": "3.1.2",
