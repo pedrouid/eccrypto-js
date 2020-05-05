@@ -31,7 +31,13 @@ import {
   ERROR_EMPTY_MESSAGE,
   ERROR_MESSAGE_TOO_LONG,
 } from './constants';
-import { KeyPair, assert, isValidPrivateKey } from './helpers';
+import {
+  KeyPair,
+  assert,
+  isValidPrivateKey,
+  isCompressed,
+  isDecompressed,
+} from './helpers';
 
 export function generatePrivate() {
   return isNode() ? secp256k1GeneratePrivate() : ellipticGeneratePrivate();
@@ -62,10 +68,16 @@ export function checkMessage(msg: Buffer): void {
 }
 
 export function compress(publicKey: Buffer): Buffer {
+  if (isCompressed(publicKey)) {
+    return publicKey;
+  }
   return isNode() ? secp256k1Compress(publicKey) : ellipticCompress(publicKey);
 }
 
 export function decompress(publicKey: Buffer): Buffer {
+  if (isDecompressed(publicKey)) {
+    return publicKey;
+  }
   return isNode()
     ? secp256k1Decompress(publicKey)
     : ellipticDecompress(publicKey);
