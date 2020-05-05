@@ -24,7 +24,6 @@ import {
   ERROR_BAD_MAC,
 } from './constants';
 import {
-  isCompressed,
   PreEncryptOpts,
   isValidPrivateKey,
   Encrypted,
@@ -33,7 +32,7 @@ import {
 } from './helpers';
 
 function getSharedKey(privateKey: Buffer, publicKey: Buffer) {
-  publicKey = isCompressed(publicKey) ? decompress(publicKey) : publicKey;
+  publicKey = decompress(publicKey);
   return derive(privateKey, publicKey);
 }
 
