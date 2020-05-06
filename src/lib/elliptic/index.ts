@@ -13,6 +13,8 @@ import {
   splitSignature,
   isValidDERSignature,
   sanitizeHex,
+  removeHexLeadingZeros,
+  bufferToHex,
 } from '../../helpers';
 
 const ec = new EC('secp256k1');
@@ -89,11 +91,16 @@ export function ellipticRecover(sig: Buffer, msg: Buffer, compressed = false) {
     throw new Error('Cannot recover from DER signatures');
   }
   const signature = splitSignature(sig);
+  const recoveryParam = importRecoveryParam(signature.v);
   const hex = ec
     .recoverPubKey(
       msg,
-      { r: signature.r, s: signature.s },
-      importRecoveryParam(signature.v)
+      {
+        r: removeHexLeadingZeros(bufferToHex(signature.r)),
+        s: removeHexLeadingZeros(bufferToHex(signature.s)),
+        recoveryParam,
+      },
+      recoveryParam
     )
     .encode(HEX_ENC, compressed);
   return hexToBuffer(hex);

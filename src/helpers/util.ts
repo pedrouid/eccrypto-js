@@ -11,6 +11,8 @@ import {
   bufferToHex,
   hexToBuffer,
   sanitizeHex,
+  removeHexLeadingZeros,
+  hexToNumber,
 } from './encoding';
 
 export function isCompressed(publicKey: Buffer): boolean {
@@ -44,7 +46,7 @@ export function exportRecoveryParam(recoveryParam: number): Buffer {
 }
 
 export function importRecoveryParam(v: Buffer): number {
-  return parseInt(bufferToHex(v), 16) - 27;
+  return hexToNumber(removeHexLeadingZeros(bufferToHex(v))) - 27;
 }
 
 export function splitSignature(sig: Buffer): Signature {
