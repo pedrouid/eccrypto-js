@@ -12,6 +12,7 @@ import {
   importRecoveryParam,
   splitSignature,
   isValidDERSignature,
+  sanitizeHex,
 } from '../../helpers';
 
 const ec = new EC('secp256k1');
@@ -76,8 +77,8 @@ export function ellipticSign(
 
   return rsvSig
     ? concatBuffers(
-        hexToBuffer(signature.r.toString(16)),
-        hexToBuffer(signature.s.toString(16)),
+        hexToBuffer(sanitizeHex(signature.r.toString(16))),
+        hexToBuffer(sanitizeHex(signature.s.toString(16))),
         exportRecoveryParam(signature.recoveryParam || 0)
       )
     : Buffer.from(signature.toDER());
