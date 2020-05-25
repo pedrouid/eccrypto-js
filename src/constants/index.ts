@@ -27,6 +27,8 @@ export const HMAC_BROWSER = 'HMAC';
 export const SHA256_BROWSER_ALGO = 'SHA-256';
 export const SHA512_BROWSER_ALGO = 'SHA-512';
 
+export const PBKDF2_BROWSER_ALGO = 'PBKDF2';
+
 export const AES_NODE_ALGO = `aes-${AES_LENGTH}-cbc`;
 export const HMAC_NODE_ALGO = `sha${HMAC_LENGTH}`;
 

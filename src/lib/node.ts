@@ -5,11 +5,33 @@ import {
   SHA512_NODE_ALGO,
   SHA256_NODE_ALGO,
   RIPEMD160_NODE_ALGO,
+  KEY_LENGTH,
+  LENGTH_16,
+  LENGTH_1024,
 } from '../constants';
-import { concatBuffers } from '../helpers';
+import { concatBuffers, utf8ToBuffer } from '../helpers';
 
 export function nodeRandomBytes(length: number): Buffer {
   return crypto.randomBytes(length);
+}
+
+export async function nodePBKDF2(password: Buffer): Promise<Buffer> {
+  return new Promise((resolve, reject) => {
+    crypto.pbkdf2(
+      password,
+      nodeRandomBytes(LENGTH_16),
+      LENGTH_1024,
+      KEY_LENGTH,
+      SHA256_NODE_ALGO,
+      (err, derivedKey) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve(derivedKey);
+      }
+    );
+  });
 }
 
 export function nodeAesEncrypt(iv: Buffer, key: Buffer, data: Buffer): Buffer {

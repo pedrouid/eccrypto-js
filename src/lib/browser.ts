@@ -11,8 +11,11 @@ import {
   SHA256_BROWSER_ALGO,
   SHA512_BROWSER_ALGO,
   LENGTH_512,
+  PBKDF2_BROWSER_ALGO,
+  LENGTH_16,
+  LENGTH_1024,
 } from '../constants';
-import { arrayToBuffer } from '../helpers';
+import { arrayToBuffer, utf8ToBuffer } from '../helpers';
 import { fallbackRandomBytes } from './fallback';
 
 export function getBrowerCrypto(): Crypto {
@@ -49,15 +52,19 @@ export function browserRandomBytes(length: number): Buffer {
   return fallbackRandomBytes(length);
 }
 
-export async function browserDeriveKey(
-  algorithm: EcdhKeyDeriveParams | Pbkdf2Params,
-  baseKey: Buffer,
+export async function browserPBKDF2(
+  password: string,
   type: string = AES_BROWSER_ALGO
 ): Promise<Buffer> {
   const subtle = getSubtleCrypto();
   const cryptoKey = await subtle.deriveKey(
-    algorithm,
-    await browserImportKey(baseKey, type),
+    {
+      name: PBKDF2_BROWSER_ALGO,
+      hash: SHA256_BROWSER_ALGO,
+      salt: browserRandomBytes(LENGTH_16),
+      iterations: LENGTH_1024,
+    },
+    await browserImportKey(utf8ToBuffer(password), type),
     getAlgo(type),
     true,
     getOps(type)
