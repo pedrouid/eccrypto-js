@@ -143,6 +143,19 @@ const decrypted = await eccryptoJS.decrypt(keyPairB.privateKey, encrypted);
 // decrypted.toString() === str
 ```
 
+### PBKDF2
+
+```typescript
+import * as eccryptoJS from 'eccrypto-js';
+
+const password = 'password';
+const buffer = eccryptoJS.utf8ToBuffer(str);
+
+const key = await eccryptoJS.pbkdf2(buffer);
+
+// key.length === 32
+```
+
 ## React-Native Support
 
 This library is intended for use in a Browser or NodeJS environment, however it is possible to use in a React-Native environment if NodeJS modules are polyfilled with `react-native-crypto`, read more [here](https://github.com/tradle/react-native-crypto).
