@@ -50,13 +50,13 @@ export function browserRandomBytes(length: number): Buffer {
 }
 
 export async function browserDeriveKey(
-  algorithm: EcdhKeyDeriveParams | HkdfParams | Pbkdf2Params,
+  algorithm: EcdhKeyDeriveParams | Pbkdf2Params,
   baseKey: Buffer,
   type: string = AES_BROWSER_ALGO
 ): Promise<Buffer> {
   const subtle = getSubtleCrypto();
   const cryptoKey = await subtle.deriveKey(
-    algorithm as any,
+    algorithm,
     await browserImportKey(baseKey, type),
     getAlgo(type),
     true,
