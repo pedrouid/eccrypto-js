@@ -26,6 +26,21 @@ export function getSubtleCrypto(): SubtleCrypto {
   return browserCrypto.subtle || browserCrypto.webkitSubtle;
 }
 
+export function getAlgo(type: string): AesKeyAlgorithm | HmacImportParams {
+  return type === AES_BROWSER_ALGO
+    ? { length: AES_LENGTH, name: AES_BROWSER_ALGO }
+    : {
+        hash: { name: HMAC_BROWSER_ALGO },
+        name: HMAC_BROWSER,
+      };
+}
+
+export function getOps(type: string): string[] {
+  return type === AES_BROWSER_ALGO
+    ? [ENCRYPT_OP, DECRYPT_OP]
+    : [SIGN_OP, VERIFY_OP];
+}
+
 export function browserRandomBytes(length: number): Buffer {
   const browserCrypto = getBrowerCrypto();
   if (typeof browserCrypto.getRandomValues !== 'undefined') {
@@ -34,22 +49,43 @@ export function browserRandomBytes(length: number): Buffer {
   return fallbackRandomBytes(length);
 }
 
+export async function browserDeriveKey(
+  algorithm: EcdhKeyDeriveParams | HkdfParams | Pbkdf2Params,
+  baseKey: Buffer,
+  type: string = AES_BROWSER_ALGO
+): Promise<Buffer> {
+  const subtle = getSubtleCrypto();
+  const cryptoKey = await subtle.deriveKey(
+    algorithm as any,
+    await browserImportKey(baseKey, type),
+    getAlgo(type),
+    true,
+    getOps(type)
+  );
+  return browserExportKey(cryptoKey, type);
+}
+
+export async function browserExportKey(
+  cryptoKey: CryptoKey,
+  type: string = AES_BROWSER_ALGO
+): Promise<Buffer> {
+  const subtle = getSubtleCrypto();
+  return arrayToBuffer(
+    new Uint8Array(await subtle.exportKey('raw', cryptoKey))
+  );
+}
+
 export async function browserImportKey(
   buffer: Buffer,
   type: string = AES_BROWSER_ALGO
 ): Promise<CryptoKey> {
-  const subtle = getSubtleCrypto();
-  const algo: AesKeyAlgorithm | HmacImportParams =
-    type === AES_BROWSER_ALGO
-      ? { length: AES_LENGTH, name: AES_BROWSER_ALGO }
-      : {
-          hash: { name: HMAC_BROWSER_ALGO },
-          name: HMAC_BROWSER,
-        };
-  const ops =
-    type === AES_BROWSER_ALGO ? [ENCRYPT_OP, DECRYPT_OP] : [SIGN_OP, VERIFY_OP];
-  const cryptoKey = await subtle.importKey('raw', buffer, algo, true, ops);
-  return cryptoKey;
+  return getSubtleCrypto().importKey(
+    'raw',
+    buffer,
+    getAlgo(type),
+    true,
+    getOps(type)
+  );
 }
 
 export async function browserAesEncrypt(
