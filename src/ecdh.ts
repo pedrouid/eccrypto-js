@@ -2,7 +2,7 @@ import { isNode } from './lib/env';
 import { secp256k1Derive } from './lib/secp256k1';
 import { ellipticDerive } from './lib/elliptic';
 
-import { checkPrivateKey, checkPublicKey } from './ecdsa';
+import { checkPrivateKey, checkPublicKey } from './helpers';
 
 export function derive(privateKeyA: Buffer, publicKeyB: Buffer): Buffer {
   checkPrivateKey(privateKeyA);

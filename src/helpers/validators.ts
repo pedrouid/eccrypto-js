@@ -1,4 +1,17 @@
-import { ZERO32, EC_GROUP_ORDER, LENGTH_0, MAX_KEY_LENGTH } from '../constants';
+import {
+  KEY_LENGTH,
+  MAX_MSG_LENGTH,
+  PREFIXED_DECOMPRESSED_LENGTH,
+  PREFIXED_KEY_LENGTH,
+  ERROR_BAD_PRIVATE_KEY,
+  ERROR_BAD_PUBLIC_KEY,
+  ERROR_EMPTY_MESSAGE,
+  ERROR_MESSAGE_TOO_LONG,
+  ZERO32,
+  EC_GROUP_ORDER,
+  LENGTH_0,
+  MAX_KEY_LENGTH,
+} from '../constants';
 
 export function assert(condition: boolean, message: string): void {
   if (!condition) {
@@ -37,4 +50,28 @@ export function isValidKeyLength(length: number) {
     length > MAX_KEY_LENGTH ||
     parseInt(String(length)) !== length
   );
+}
+
+export function checkPrivateKey(privateKey: Buffer): void {
+  assert(privateKey.length === KEY_LENGTH, ERROR_BAD_PRIVATE_KEY);
+  assert(isValidPrivateKey(privateKey), ERROR_BAD_PRIVATE_KEY);
+}
+
+export function checkPublicKey(publicKey: Buffer): void {
+  assert(
+    publicKey.length === PREFIXED_DECOMPRESSED_LENGTH ||
+      publicKey.length === PREFIXED_KEY_LENGTH,
+    ERROR_BAD_PUBLIC_KEY
+  );
+  if (publicKey.length === PREFIXED_DECOMPRESSED_LENGTH) {
+    assert(publicKey[0] === 4, ERROR_BAD_PUBLIC_KEY);
+  }
+  if (publicKey.length === PREFIXED_KEY_LENGTH) {
+    assert(publicKey[0] === 2 || publicKey[0] === 3, ERROR_BAD_PUBLIC_KEY);
+  }
+}
+
+export function checkMessage(msg: Buffer): void {
+  assert(msg.length > 0, ERROR_EMPTY_MESSAGE);
+  assert(msg.length <= MAX_MSG_LENGTH, ERROR_MESSAGE_TOO_LONG);
 }

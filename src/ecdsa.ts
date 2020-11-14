@@ -22,49 +22,16 @@ import {
   ellipticRecover,
 } from './lib/elliptic';
 import {
-  KEY_LENGTH,
-  MAX_MSG_LENGTH,
-  PREFIXED_DECOMPRESSED_LENGTH,
-  PREFIXED_KEY_LENGTH,
-  ERROR_BAD_PRIVATE_KEY,
-  ERROR_BAD_PUBLIC_KEY,
-  ERROR_EMPTY_MESSAGE,
-  ERROR_MESSAGE_TOO_LONG,
-} from './constants';
-import {
   KeyPair,
-  assert,
-  isValidPrivateKey,
   isCompressed,
   isDecompressed,
+  checkPrivateKey,
+  checkMessage,
+  checkPublicKey,
 } from './helpers';
 
 export function generatePrivate() {
   return isNode() ? secp256k1GeneratePrivate() : ellipticGeneratePrivate();
-}
-
-export function checkPrivateKey(privateKey: Buffer): void {
-  assert(privateKey.length === KEY_LENGTH, ERROR_BAD_PRIVATE_KEY);
-  assert(isValidPrivateKey(privateKey), ERROR_BAD_PRIVATE_KEY);
-}
-
-export function checkPublicKey(publicKey: Buffer): void {
-  assert(
-    publicKey.length === PREFIXED_DECOMPRESSED_LENGTH ||
-      publicKey.length === PREFIXED_KEY_LENGTH,
-    ERROR_BAD_PUBLIC_KEY
-  );
-  if (publicKey.length === PREFIXED_DECOMPRESSED_LENGTH) {
-    assert(publicKey[0] === 4, ERROR_BAD_PUBLIC_KEY);
-  }
-  if (publicKey.length === PREFIXED_KEY_LENGTH) {
-    assert(publicKey[0] === 2 || publicKey[0] === 3, ERROR_BAD_PUBLIC_KEY);
-  }
-}
-
-export function checkMessage(msg: Buffer): void {
-  assert(msg.length > 0, ERROR_EMPTY_MESSAGE);
-  assert(msg.length <= MAX_MSG_LENGTH, ERROR_MESSAGE_TOO_LONG);
 }
 
 export function compress(publicKey: Buffer): Buffer {
