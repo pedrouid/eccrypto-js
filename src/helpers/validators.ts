@@ -1,3 +1,4 @@
+import { getBrowerCrypto, getSubtleCrypto } from '@pedrouid/iso-crypto';
 import {
   KEY_LENGTH,
   MAX_MSG_LENGTH,
@@ -12,6 +13,18 @@ import {
   LENGTH_0,
   MAX_KEY_LENGTH,
 } from '../constants';
+
+export function isBrowser(): boolean {
+  return !!getBrowerCrypto() && !!getSubtleCrypto();
+}
+
+export function isNode(): boolean {
+  return (
+    typeof process !== 'undefined' &&
+    typeof process.versions !== 'undefined' &&
+    typeof process.versions.node !== 'undefined'
+  );
+}
 
 export function assert(condition: boolean, message: string): void {
   if (!condition) {

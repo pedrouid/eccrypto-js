@@ -1,6 +1,6 @@
-import { isNode } from './lib/env';
-import { secp256k1Derive } from './lib/secp256k1';
-import { ellipticDerive } from './lib/elliptic';
+import { isNode } from './helpers';
+import { secp256k1Derive } from './lib';
+import { ellipticDerive } from './lib';
 
 import { checkPrivateKey, checkPublicKey } from './helpers';
 

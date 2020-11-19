@@ -1,5 +1,5 @@
 import * as eccryptoJS from '../src';
-import * as ellipticLib from '../src/lib/elliptic';
+import * as ellipticLib from '../src/lib';
 import { testGenerateKeyPair, testSign, compare } from './common';
 
 describe('ECDSA', () => {

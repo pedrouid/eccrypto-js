@@ -1,6 +1,7 @@
 import crypto from 'crypto';
+import * as isoCrypto from '@pedrouid/iso-crypto';
+
 import * as eccryptoJS from '../../src';
-import * as nodeLib from '../../src/lib/node';
 import { TEST_MESSAGE_STR } from './constants';
 
 export function testGenerateKeyPair(lib: eccryptoJS.IEccrypto = eccryptoJS) {

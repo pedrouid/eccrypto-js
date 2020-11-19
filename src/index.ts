@@ -1,7 +1,9 @@
+export * from "@pedrouid/iso-crypto"
+
 export * from './constants';
 export * from './helpers';
 
-export * from './aes';
+
 export * from './ecdh';
 export * from './ecdsa';
 export * from './ecies';

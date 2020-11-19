@@ -1,4 +1,4 @@
-import * as ellipticLib from '../src/lib/elliptic';
+import * as ellipticLib from '../src/lib';
 import {
   TEST_PRIVATE_KEY,
   TEST_PUBLIC_KEY,

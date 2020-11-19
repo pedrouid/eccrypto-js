@@ -1,4 +1,4 @@
-import { isNode } from './lib/env';
+import { isNode } from './helpers';
 import {
   secp256k1GeneratePrivate,
   secp256k1GetPublic,
@@ -9,7 +9,7 @@ import {
   secp256k1Decompress,
   secp256k1SignatureExport,
   secp256k1Recover,
-} from './lib/secp256k1';
+} from './lib';
 import {
   ellipticGeneratePrivate,
   ellipticGetPublic,
@@ -20,7 +20,7 @@ import {
   ellipticCompress,
   ellipticSignatureExport,
   ellipticRecover,
-} from './lib/elliptic';
+} from './lib';
 import {
   KeyPair,
   isCompressed,

@@ -5,7 +5,7 @@ import {
   PREFIXED_DECOMPRESSED_LENGTH,
 } from '../constants';
 import { Signature } from './types';
-import { SignResult } from '../lib/secp256k1/typings';
+import { SignResult } from '../lib/typings';
 import {
   concatBuffers,
   bufferToHex,

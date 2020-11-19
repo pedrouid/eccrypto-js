@@ -1,5 +1,5 @@
 import { ec as EC } from 'elliptic';
-import { Signature } from 'elliptic/lib/elliptic/ec/signature';
+import { Signature } from 'elliptic/lib/ec/signature';
 
 import { randomBytes } from '../../random';
 import { HEX_ENC, KEY_LENGTH } from '../../constants';

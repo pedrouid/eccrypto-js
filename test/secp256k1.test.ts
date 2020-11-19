@@ -1,4 +1,4 @@
-import * as secp256k1Lib from '../src/lib/secp256k1';
+import * as secp256k1Lib from '../src/lib';
 import {
   TEST_PRIVATE_KEY,
   TEST_PUBLIC_KEY,
