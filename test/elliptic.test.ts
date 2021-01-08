@@ -1,3 +1,6 @@
+import { ec as EC } from 'elliptic';
+import BN from 'bn.js';
+import * as eccryptoJS from '../src';
 import * as ellipticLib from '../src/lib/elliptic';
 import {
   TEST_PRIVATE_KEY,
@@ -107,5 +110,25 @@ describe('Elliptic', () => {
     const publicKey = ellipticLib.ellipticGetPublic(privateKey);
     const recovered = ellipticLib.ellipticRecover(sig, msg);
     expect(compare(publicKey, recovered)).toBeTruthy();
+  });
+
+  it('should sanitize RSV signatures correctly', async () => {
+    // this test ensures that browser RSV signatures are padded correctly to 64 bytes for each scalar
+    const signature: EC.Signature = {
+      r: new BN(
+        '73a234f798e877c7cf3aebefc4c200fff728c147e9c5bacffaac451fdea4f553',
+        'hex'
+      ),
+      s: new BN(
+        '79992a90274bb8d7690684f4406f28684fa19ac1fff68a97fc356aef8911a8',
+        'hex'
+      ),
+      recoveryParam: 1,
+      toDER: (enc?: string | null): any => {},
+    };
+    const result = ellipticLib.ellipticRSVSignature(signature);
+    const expected =
+      '73a234f798e877c7cf3aebefc4c200fff728c147e9c5bacffaac451fdea4f5530079992a90274bb8d7690684f4406f28684fa19ac1fff68a97fc356aef8911a81c';
+    expect(eccryptoJS.bufferToHex(result)).toEqual(expected);
   });
 });

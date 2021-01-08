@@ -13,11 +13,25 @@ import {
   splitSignature,
   isValidDERSignature,
   sanitizeHex,
+  removeHexPrefix,
   removeHexLeadingZeros,
   bufferToHex,
+  padLeft,
 } from '../../helpers';
 
 const ec = new EC('secp256k1');
+
+export function ellipticRSVSignature(signature: EC.Signature): Buffer {
+  return concatBuffers(
+    hexToBuffer(
+      padLeft(removeHexPrefix(sanitizeHex(signature.r.toString(16))), 64)
+    ),
+    hexToBuffer(
+      padLeft(removeHexPrefix(sanitizeHex(signature.s.toString(16))), 64)
+    ),
+    exportRecoveryParam(signature.recoveryParam || 0)
+  );
+}
 
 export function ellipticCompress(publicKey: Buffer): Buffer {
   publicKey = sanitizePublicKey(publicKey);
@@ -78,11 +92,7 @@ export function ellipticSign(
   const signature = ec.sign(msg, privateKey, { canonical: true });
 
   return rsvSig
-    ? concatBuffers(
-        hexToBuffer(sanitizeHex(signature.r.toString(16))),
-        hexToBuffer(sanitizeHex(signature.s.toString(16))),
-        exportRecoveryParam(signature.recoveryParam || 0)
-      )
+    ? ellipticRSVSignature(signature)
     : Buffer.from(signature.toDER());
 }
 
