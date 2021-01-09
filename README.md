@@ -155,6 +155,9 @@ const key = await eccryptoJS.pbkdf2(buffer);
 
 // key.length === 32
 ```
+## CDN
+
+https://unpkg.com/eccrypto-js@5.3.0/dist/umd/index.min.js
 
 ## React-Native Support
 
