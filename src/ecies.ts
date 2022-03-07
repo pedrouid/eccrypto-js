@@ -115,10 +115,7 @@ export function encryptSync(
   return { iv, ephemPublicKey, ciphertext, mac: mac };
 }
 
-export function decryptSync(
-  privateKey: Buffer,
-  opts: Encrypted
-): Buffer {
+export function decryptSync(privateKey: Buffer, opts: Encrypted): Buffer {
   const { ephemPublicKey, iv, mac, ciphertext } = opts;
   const { encryptionKey, macKey } = getEciesKeysSync(
     privateKey,

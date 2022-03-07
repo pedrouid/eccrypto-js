@@ -20,10 +20,27 @@ describe('ECIES', () => {
     expect(decrypted).toBeTruthy();
   });
 
+  it('should decrypt synchronously successfully', async () => {
+    const { encrypted } = await testEncrypt(keyPair.publicKey);
+
+    const decrypted = await eccryptoJS.decryptSync(keyPair.privateKey, encrypted);
+    expect(decrypted).toBeTruthy();
+  });
+
   it('decrypted result should match input', async () => {
     const { str, encrypted } = await testEncrypt(keyPair.publicKey);
 
     const decrypted = await eccryptoJS.decrypt(keyPair.privateKey, encrypted);
+    expect(decrypted).toBeTruthy();
+
+    const isMatch = decrypted.toString() === str;
+    expect(isMatch).toBeTruthy();
+  });
+
+  it('synchronously decrypted result should match input', async () => {
+    const { str, encrypted } = await testEncrypt(keyPair.publicKey);
+
+    const decrypted = await eccryptoJS.decryptSync(keyPair.privateKey, encrypted);
     expect(decrypted).toBeTruthy();
 
     const isMatch = decrypted.toString() === str;
