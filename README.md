@@ -136,9 +136,9 @@ const keyPair = eccryptoJS.generateKeyPair();
 const str = 'test message to encrypt';
 const msg = eccryptoJS.utf8ToBuffer(str);
 
-const encrypted = await eccryptoJS.encrypt(keyPairB.publicKey, msg);
+const encrypted = await eccryptoJS.encrypt(keyPair.publicKey, msg);
 
-const decrypted = await eccryptoJS.decrypt(keyPairB.privateKey, encrypted);
+const decrypted = await eccryptoJS.decrypt(keyPair.privateKey, encrypted);
 
 // decrypted.toString() === str
 ```
