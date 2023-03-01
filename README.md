@@ -102,7 +102,7 @@ const sig = await eccryptoJS.sign(keyPair.privateKey, hash);
 
 await eccryptoJS.verify(keyPair.publicKey, msg, sig);
 
-// verify will throw if signature is BAD
+// verify will throw error if signature is BAD
 ```
 
 ### ECDH
